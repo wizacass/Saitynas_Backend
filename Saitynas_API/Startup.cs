@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Saitynas_API.Middleware;
 using Saitynas_API.Models;
 using Saitynas_API.Services.HeadersValidator;
 
@@ -52,7 +53,7 @@ namespace Saitynas_API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Saitynas_API v1"));
             }
 
-            app.UseHttpsRedirection();
+            app.UseRequestMiddleware();
 
             app.UseRouting();
 
