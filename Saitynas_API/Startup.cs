@@ -5,17 +5,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Saitynas_API.Models;
+using Saitynas_API.Services.HeadersValidator;
 
 namespace Saitynas_API
 {
     public class Startup
     {
+        private IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -32,6 +33,13 @@ namespace Saitynas_API
                     });
                 });
             services.AddSwaggerGenNewtonsoftSupport();
+
+            RegisterCustomServices(services);
+        }
+
+        private static void RegisterCustomServices(IServiceCollection services)
+        {
+            services.AddScoped<IHeadersValidator, HeadersValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
