@@ -4,9 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Saitynas_API.Configuration;
 using Saitynas_API.Middleware;
 using Saitynas_API.Models;
 using Saitynas_API.Services.HeadersValidator;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Saitynas_API
 {
@@ -25,17 +27,25 @@ namespace Saitynas_API
             services.AddDbContext<ApiContext>();
             services.AddControllers().AddNewtonsoftJson();
 
-            services.AddSwaggerGen(c =>
-                {
-                    c.SwaggerDoc("v1", new OpenApiInfo
-                    {
-                        Title = "Saitynas_API",
-                        Version = "v1"
-                    });
-                });
-            services.AddSwaggerGenNewtonsoftSupport();
-
+            SetupSwagger(services);
+            
             RegisterCustomServices(services);
+        }
+
+        private static void SetupSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(SetupSwaggerOptions);
+            services.AddSwaggerGenNewtonsoftSupport();
+        }
+
+        private static void SetupSwaggerOptions(SwaggerGenOptions options)
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Saitynas API",
+                Version = "v1"
+            });
+            options.OperationFilter<SwaggerConfiguration>();
         }
 
         private static void RegisterCustomServices(IServiceCollection services)
@@ -50,7 +60,7 @@ namespace Saitynas_API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Saitynas_API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Saitynas API v1"));
             }
 
             app.UseRequestMiddleware();
