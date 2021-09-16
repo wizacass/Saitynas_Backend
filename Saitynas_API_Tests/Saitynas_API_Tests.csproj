@@ -16,4 +16,8 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.2.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Saitynas_API\Saitynas_API.csproj" />
+    </ItemGroup>
+
 </Project>
