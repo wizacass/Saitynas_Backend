@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Saitynas API",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1": {
+      "get": {
+        "tags": [
+          "Welcome"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MessageData": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MessageDTO": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/MessageData"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Meta": {
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  }
+}
