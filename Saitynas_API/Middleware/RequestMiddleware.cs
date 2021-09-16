@@ -25,7 +25,7 @@ namespace Saitynas_API.Middleware
                 return JsonConvert.SerializeObject(error, Formatting.Indented);
             }
         }
-        
+
         public RequestMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -36,17 +36,19 @@ namespace Saitynas_API.Middleware
             if (IsApiRequestInvalid(httpContext, headersValidator))
             {
                 httpContext.Response.StatusCode = 400;
+                httpContext.Response.ContentType = "application/json";
 
                 await httpContext.Response.WriteAsync(SerializedError);
                 return;
             }
-            
+
             await _next(httpContext);
         }
 
         private static bool IsApiRequestInvalid(HttpContext httpContext, IHeadersValidator headersValidator)
         {
-            return IsApiRequest(httpContext) && !headersValidator.IsRequestHeaderValid(httpContext.Request.Headers);
+            return IsApiRequest(httpContext) &&
+                   !headersValidator.IsRequestHeaderValid(httpContext.Request.Headers);
         }
 
         private static bool IsApiRequest(HttpContext httpContext)
