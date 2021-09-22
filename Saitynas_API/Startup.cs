@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,9 @@ using MySql.Data.MySqlClient;
 using Saitynas_API.Configuration;
 using Saitynas_API.Middleware;
 using Saitynas_API.Models;
+using Saitynas_API.Models.Common;
+using Saitynas_API.Models.Common.Interfaces;
+using Saitynas_API.Models.Messages;
 using Saitynas_API.Services.HeadersValidator;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -51,8 +55,6 @@ namespace Saitynas_API
                 SslMode = MySqlSslMode.None
             };
 
-            string connectionString = builder.ConnectionString;
-            
             services.AddDbContext<ApiContext>(opt => opt.UseMySQL(builder.ConnectionString));
         }
         
@@ -98,6 +100,13 @@ namespace Saitynas_API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Saitynas API v1"));
             }
 
+            if (env.IsProduction())
+            {
+                context.Database.Migrate();
+            }
+
+            _ = SeedDatabase(context);
+            
             app.UseRequestMiddleware();
 
             app.UseRouting();
@@ -110,6 +119,16 @@ namespace Saitynas_API
                 {
                     endpoints.MapControllers();
                 });
+        }
+
+        private static async Task SeedDatabase(ApiContext context)
+        {
+            var seeders = new ISeed[]
+            {
+                new MessageSeed(context)
+            };
+            
+            await new Seeder(context, seeders).Seed();
         }
     }
 }
