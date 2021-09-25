@@ -5,6 +5,223 @@
     "version": "v1"
   },
   "paths": {
+    "/api/v1/Evaluations": {
+      "get": {
+        "tags": [
+          "Evaluations"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEvaluationDTOGetListDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Evaluations"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEvaluationDTOGetObjectDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Evaluations/{id}": {
+      "get": {
+        "tags": [
+          "Evaluations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEvaluationDTOGetObjectDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Evaluations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditEvaluationDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditEvaluationDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditEvaluationDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditEvaluationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEvaluationDTOGetObjectDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Evaluations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/v1": {
       "get": {
         "tags": [
@@ -256,6 +473,81 @@
   },
   "components": {
     "schemas": {
+      "EditEvaluationDTO": {
+        "type": "object",
+        "properties": {
+          "evaluation": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EvaluationDTO": {
+        "type": "object",
+        "properties": {
+          "evaluation": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetEvaluationDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "evaluation": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetEvaluationDTOGetListDTO": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetEvaluationDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetEvaluationDTOGetObjectDTO": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetEvaluationDTO"
+          }
+        },
+        "additionalProperties": false
+      },
       "GetWorkplaceDTO": {
         "type": "object",
         "properties": {
