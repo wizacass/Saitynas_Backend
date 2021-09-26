@@ -1,4 +1,4 @@
-namespace Saitynas_API.Models.Workplaces
+namespace Saitynas_API.Models.WorkplaceEntity
 {
     public class Workplace
     {

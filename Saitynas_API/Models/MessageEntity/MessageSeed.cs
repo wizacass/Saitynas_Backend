@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Saitynas_API.Models.Common.Interfaces;
 
-namespace Saitynas_API.Models.Messages
+namespace Saitynas_API.Models.MessageEntity
 {
     public class MessageSeed : ISeed
     {

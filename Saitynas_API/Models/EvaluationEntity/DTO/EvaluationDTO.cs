@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Saitynas_API.Models.Evaluations.DTO
+namespace Saitynas_API.Models.EvaluationEntity.DTO
 {
     public class EvaluationDTO
     {

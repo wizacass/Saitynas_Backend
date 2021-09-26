@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Saitynas_API.Models.Messages;
+using Saitynas_API.Models.MessageEntity;
 
 namespace Saitynas_API.Models
 {

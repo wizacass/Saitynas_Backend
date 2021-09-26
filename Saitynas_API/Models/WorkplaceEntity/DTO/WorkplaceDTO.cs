@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Saitynas_API.Models.Workplaces.DTO
+namespace Saitynas_API.Models.WorkplaceEntity.DTO
 {
     public class WorkplaceDTO
     {

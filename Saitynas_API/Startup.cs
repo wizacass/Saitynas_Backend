@@ -13,7 +13,7 @@ using Saitynas_API.Middleware;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
-using Saitynas_API.Models.Messages;
+using Saitynas_API.Models.MessageEntity;
 using Saitynas_API.Services.HeadersValidator;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

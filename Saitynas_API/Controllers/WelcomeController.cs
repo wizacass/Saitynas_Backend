@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
-using Saitynas_API.Models.Messages.DTO;
+using Saitynas_API.Models.MessageEntity.DTO;
 
 namespace Saitynas_API.Controllers
 {

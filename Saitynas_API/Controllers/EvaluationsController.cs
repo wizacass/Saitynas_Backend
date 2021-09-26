@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
-using Saitynas_API.Models.Evaluations.DTO;
-using Saitynas_API.Models.Messages.DTO;
+using Saitynas_API.Models.EvaluationEntity.DTO;
+using Saitynas_API.Models.MessageEntity.DTO;
 
 namespace Saitynas_API.Controllers
 {

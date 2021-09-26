@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Saitynas_API.Models.Common;
 
-namespace Saitynas_API.Models.Messages.DTO
+namespace Saitynas_API.Models.MessageEntity.DTO
 {
     public class GetListDTO<T>
     {
