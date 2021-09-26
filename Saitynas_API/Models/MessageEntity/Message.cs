@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Saitynas_API.Models.Messages
+namespace Saitynas_API.Models.MessageEntity
 {
     public class Message
     {
