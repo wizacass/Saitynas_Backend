@@ -157,22 +157,22 @@
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/EditEvaluationDTO"
+                "$ref": "#/components/schemas/EvaluationDTO"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EditEvaluationDTO"
+                "$ref": "#/components/schemas/EvaluationDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/EditEvaluationDTO"
+                "$ref": "#/components/schemas/EvaluationDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/EditEvaluationDTO"
+                "$ref": "#/components/schemas/EvaluationDTO"
               }
             }
           }
@@ -1124,21 +1124,6 @@
   },
   "components": {
     "schemas": {
-      "EditEvaluationDTO": {
-        "type": "object",
-        "properties": {
-          "evaluation": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "EnumDTO": {
         "type": "object",
         "properties": {
@@ -1164,7 +1149,7 @@
       "EvaluationDTO": {
         "type": "object",
         "properties": {
-          "evaluation": {
+          "value": {
             "type": "integer",
             "format": "int32"
           },
@@ -1224,7 +1209,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "evaluation": {
+          "value": {
             "type": "integer",
             "format": "int32"
           },

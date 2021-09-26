@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Saitynas_API.Models.UsersEntity.DTO
+namespace Saitynas_API.Models.UserEntity.DTO
 {
     public class UserDTO
     {

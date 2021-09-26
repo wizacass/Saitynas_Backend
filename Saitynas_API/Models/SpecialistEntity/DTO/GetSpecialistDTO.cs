@@ -1,4 +1,4 @@
-namespace Saitynas_API.Models.SpecialistsEntity.DTO
+namespace Saitynas_API.Models.SpecialistEntity.DTO
 {
     public class GetSpecialistDTO : SpecialistDTO
     {

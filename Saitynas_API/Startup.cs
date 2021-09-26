@@ -13,6 +13,7 @@ using Saitynas_API.Middleware;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
+using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.MessageEntity;
 using Saitynas_API.Services.HeadersValidator;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -42,6 +43,8 @@ namespace Saitynas_API
             SetupCors(services);
             
             RegisterCustomServices(services);
+
+            RegisterRepositories(services);
         }
 
         private void SetupDatabase(IServiceCollection services)
@@ -88,6 +91,11 @@ namespace Saitynas_API
         private static void RegisterCustomServices(IServiceCollection services)
         {
             services.AddScoped<IHeadersValidator, HeadersValidator>();
+        }
+        
+        private static void RegisterRepositories(IServiceCollection services)
+        {
+            services.AddScoped<IEvaluationsRepository, EvaluationsRepositoryMock>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

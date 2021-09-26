@@ -7,11 +7,13 @@ namespace Saitynas_API.Models.EvaluationEntity.DTO
         [JsonProperty("id")]
         public int Id { get; set; }
 
-        public static GetEvaluationDTO Mocked => new()
+        public GetEvaluationDTO() { }
+
+        public GetEvaluationDTO(Evaluation e)
         {
-            Id = 1,
-            Evaluation = 5,
-            Comment = "Very nice!"
-        };
+            Id = e.Id;
+            Value = e.Value;
+            Comment = e.Comment;
+        }
     }
 }

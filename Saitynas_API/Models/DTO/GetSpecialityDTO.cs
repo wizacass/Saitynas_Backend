@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Saitynas_API.Models.SpecialistsEntity.DTO;
+using Saitynas_API.Models.SpecialistEntity.DTO;
 
 namespace Saitynas_API.Models.DTO
 {

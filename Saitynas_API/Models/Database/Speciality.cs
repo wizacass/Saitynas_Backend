@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Saitynas_API.Models.SpecialistsEntity;
+using Saitynas_API.Models.SpecialistEntity;
 
 namespace Saitynas_API.Models.Database
 {
