@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Saitynas_API.Models.Common;
 
-namespace Saitynas_API.Models.MessageEntity.DTO
+namespace Saitynas_API.Models.DTO.Common
 {
     public class GetObjectDTO<T>
     {
