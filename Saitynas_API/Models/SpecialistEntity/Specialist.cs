@@ -1,7 +1,7 @@
-using Saitynas_API.Models.UsersEntity;
+using Saitynas_API.Models.UserEntity;
 using Saitynas_API.Models.WorkplaceEntity;
 
-namespace Saitynas_API.Models.SpecialistsEntity
+namespace Saitynas_API.Models.SpecialistEntity
 {
     public class Specialist : User
     {

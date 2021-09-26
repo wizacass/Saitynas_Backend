@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Database;
 using Saitynas_API.Models.DTO.Common;
-using Saitynas_API.Models.SpecialistsEntity.DTO;
+using Saitynas_API.Models.SpecialistEntity.DTO;
 
 namespace Saitynas_API.Controllers
 {

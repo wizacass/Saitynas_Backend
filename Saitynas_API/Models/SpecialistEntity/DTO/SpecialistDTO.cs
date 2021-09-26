@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
-using Saitynas_API.Models.UsersEntity.DTO;
+using Saitynas_API.Models.UserEntity.DTO;
 
-namespace Saitynas_API.Models.SpecialistsEntity.DTO
+namespace Saitynas_API.Models.SpecialistEntity.DTO
 {
     public class SpecialistDTO : UserDTO
     {

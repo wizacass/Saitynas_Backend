@@ -1,6 +1,6 @@
 using System;
 
-namespace Saitynas_API.Models.UsersEntity
+namespace Saitynas_API.Models.UserEntity
 {
     public class User
     {
