@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models.EvaluationEntity;
 using Saitynas_API.Models.MessageEntity;
+using Saitynas_API.Models.WorkplaceEntity;
 
 namespace Saitynas_API.Models
 {
@@ -8,6 +9,7 @@ namespace Saitynas_API.Models
     {
         public DbSet<Message> Messages { get; set; }
         public DbSet<Evaluation> Evaluations { get; set; }
+        public DbSet<Workplace> Workplaces { get; set; } 
 
         public ApiContext(DbContextOptions<ApiContext> options) : base(options) { }
 

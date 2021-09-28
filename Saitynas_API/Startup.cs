@@ -15,6 +15,7 @@ using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.MessageEntity;
+using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Services.HeadersValidator;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -133,7 +134,8 @@ namespace Saitynas_API
         {
             var seeders = new ISeed[]
             {
-                new MessageSeed(context)
+                new MessageSeed(context),
+                new WorkplaceSeed(context)
             };
             
             await new Seeder(context, seeders).Seed();
