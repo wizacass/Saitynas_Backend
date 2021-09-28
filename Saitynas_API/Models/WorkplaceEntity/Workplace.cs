@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Saitynas_API.Models.WorkplaceEntity.DTO;
 
 namespace Saitynas_API.Models.WorkplaceEntity
 {
@@ -15,5 +16,13 @@ namespace Saitynas_API.Models.WorkplaceEntity
         [Required]
         [StringLength(255)]
         public string City { get; set; }
+
+        public Workplace() { }
+
+        public Workplace(WorkplaceDTO dto)
+        {
+            Address = dto.Address;
+            City = dto.City;
+        }
     }
 }
