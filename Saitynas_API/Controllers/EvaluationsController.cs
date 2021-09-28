@@ -59,7 +59,7 @@ namespace Saitynas_API.Controllers
         {
             var evaluation = new Evaluation(id, dto);
             
-            await _repository.UpdateAsync(evaluation);
+            await _repository.UpdateAsync(id, evaluation);
 
             return Ok(new GetObjectDTO<GetEvaluationDTO>(new GetEvaluationDTO(evaluation)));
         }
@@ -67,13 +67,8 @@ namespace Saitynas_API.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteEvaluation(int id)
         {
-            var evaluation = await _repository.GetAsync(id);
-
-            if (evaluation != null)
-            {
-                await _repository.DeleteAsync(evaluation);
-            }
-            
+            await _repository.DeleteAsync(id);
+                
             return NoContent();
         }
     }

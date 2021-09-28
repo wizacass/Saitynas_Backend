@@ -24,5 +24,11 @@ namespace Saitynas_API.Models.WorkplaceEntity
             Address = dto.Address;
             City = dto.City;
         }
+
+        public void Update(Workplace w)
+        {
+            Address = w.Address ?? Address;
+            City = w.City ?? City;
+        }
     }
 }

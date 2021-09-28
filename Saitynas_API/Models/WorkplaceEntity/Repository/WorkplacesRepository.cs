@@ -1,44 +1,55 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Saitynas_API.Models.WorkplaceEntity.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace Saitynas_API.Models.WorkplaceEntity.Repository
 {
     public class WorkplacesRepository : IWorkplacesRepository
     {
-        public Task<IEnumerable<Workplace>> GetAllAsync()
+        private readonly ApiContext _context;
+        
+        public WorkplacesRepository(ApiContext context)
         {
-            throw new System.NotImplementedException();
+            _context = context;
+        }
+        
+        public async Task<IEnumerable<Workplace>> GetAllAsync()
+        {
+            var workplaces = await _context.Workplaces.ToListAsync();
+
+            return workplaces;
         }
 
-        public Task<Workplace> GetAsync(int id)
+        public async Task<Workplace> GetAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var workplace = await _context.Workplaces.FirstOrDefaultAsync(w => w.Id == id);
+
+            return workplace;
         }
 
-        public Task InsertAsync(Workplace data)
+        public async Task InsertAsync(Workplace data)
         {
-            throw new System.NotImplementedException();
+            await _context.Workplaces.AddAsync(data);
+            await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(Workplace data)
+        public async Task UpdateAsync(int id, Workplace data)
         {
-            throw new System.NotImplementedException();
+            var workplace = await GetAsync(id);
+            workplace.Update(data);
+            
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(Workplace data)
+        public async Task DeleteAsync(int id)
         {
-            throw new System.NotImplementedException();
-        }
+            var w = _context.Workplaces.FirstOrDefault(w => w.Id == id);
+            
+            if(w == null) return;
 
-        public Task CreateFromDTO(CreateWorkplaceDTO dto)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task EditFromDTO(int id, EditWorkplaceDTO dto)
-        {
-            throw new System.NotImplementedException();
+            _context.Workplaces.Remove(w);
+            await _context.SaveChangesAsync();
         }
     }
 }
