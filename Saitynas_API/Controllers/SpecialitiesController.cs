@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Database;
 using Saitynas_API.Models.DTO.Common;
+using Saitynas_API.Models.SpecialistEntity.DTO;
 
 namespace Saitynas_API.Controllers
 {
@@ -42,6 +44,36 @@ namespace Saitynas_API.Controllers
             {
                 Name = SpecialityId.Allergologist.ToString()
             };
+
+            return Ok(dto);
+        }
+        
+        [HttpGet("{id:int}/specialists")]
+        public ActionResult<GetListDTO<GetSpecialistDTO>> GetSpecialitySpecialists(int id)
+        {
+            if (id != 1) return ApiNotFound();
+            
+            var specialists = new List<GetSpecialistDTO>
+            {
+                new()
+                {
+                    Id = 3,
+                    FirstName = "Test",
+                    LastName = "Doctor",
+                    Address = "Test str. 22",
+                    Speciality = SpecialityId.Other.ToString()
+                },
+                new()
+                {
+                    Id = 2,
+                    FirstName = "Good",
+                    LastName = "Doktor",
+                    Address = "Test str. 22",
+                    Speciality = SpecialityId.Other.ToString()
+                }
+            };
+        
+            var dto = new GetListDTO<GetSpecialistDTO>(specialists);
 
             return Ok(dto);
         }

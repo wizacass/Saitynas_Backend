@@ -45,7 +45,7 @@ namespace Saitynas_API.Controllers
         }
         
         [HttpGet("{id:int}")]
-        public ActionResult<GetObjectDTO<GetVisitDTO>> GetSpecialist(int id)
+        public ActionResult<GetObjectDTO<GetVisitDTO>> GetVisit(int id)
         {
             if (id != 1) return ApiNotFound();
 

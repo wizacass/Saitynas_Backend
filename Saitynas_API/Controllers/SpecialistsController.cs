@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Database;
 using Saitynas_API.Models.DTO.Common;
 using Saitynas_API.Models.SpecialistEntity.DTO;
+using Saitynas_API.Models.VisitEntity.DTO;
 
 namespace Saitynas_API.Controllers
 {
@@ -19,7 +21,7 @@ namespace Saitynas_API.Controllers
         [HttpGet]
         public ActionResult<GetListDTO<GetSpecialistDTO>> GetSpecialists()
         {
-            var evaluations = new List<GetSpecialistDTO>
+            var specialists = new List<GetSpecialistDTO>
             {
                 new()
                 {
@@ -39,7 +41,7 @@ namespace Saitynas_API.Controllers
                 }
             };
         
-            var dto = new GetListDTO<GetSpecialistDTO>(evaluations);
+            var dto = new GetListDTO<GetSpecialistDTO>(specialists);
         
             return Ok(dto);
         }
@@ -57,6 +59,34 @@ namespace Saitynas_API.Controllers
                 Address = "Test str. 22",
                 Speciality = SpecialityId.GeneralPractician.ToString()
             });
+        
+            return Ok(dto);
+        }
+        
+        [HttpGet("{id:int}/visits")]
+        public ActionResult<GetListDTO<GetVisitDTO>> GetSpecialistVisits(int id)
+        {
+            var evaluations = new List<GetVisitDTO>
+            {
+                new()
+                {
+                    Id = 1,
+                    SpecialistName = "Good Doctor",
+                    PatientName = "John Doe",
+                    VisitStart = DateTime.Now.ToString("O"),
+                    VisitEnd = DateTime.Now.AddHours(1).ToString("O")
+                },
+                new()
+                {
+                    Id = 2,
+                    SpecialistName = "Good Doctor",
+                    PatientName = "John Doe",
+                    VisitStart = DateTime.Now.ToString("O"),
+                    VisitEnd = DateTime.Now.AddHours(1).ToString("O")
+                }
+            };
+        
+            var dto = new GetListDTO<GetVisitDTO>(evaluations);
         
             return Ok(dto);
         }
