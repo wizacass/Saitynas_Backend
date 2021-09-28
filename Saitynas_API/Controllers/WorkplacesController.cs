@@ -1,10 +1,18 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Saitynas_API.Exceptions;
 using Saitynas_API.Models;
+using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Database;
 using Saitynas_API.Models.DTO.Common;
 using Saitynas_API.Models.SpecialistEntity.DTO;
+using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO;
+using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
+using Saitynas_API.Models.WorkplaceEntity.Repository;
 
 namespace Saitynas_API.Controllers
 {
@@ -15,42 +23,47 @@ namespace Saitynas_API.Controllers
     {
         protected override string ModelName => "workplace";
 
-        public WorkplacesController(ApiContext context) : base(context) { }
+        private readonly IWorkplacesRepository _repository;
+        private readonly IWorkplaceDTOValidator _validator;
+
+        public WorkplacesController(
+            ApiContext context,
+            IWorkplacesRepository repository,
+            IWorkplaceDTOValidator validator
+        ) : base(context)
+        {
+            _repository = repository;
+            _validator = validator;
+        }
 
         [HttpGet]
-        public ActionResult<GetListDTO<GetWorkplaceDTO>> GetWorkplaces()
+        public async Task<ActionResult<GetListDTO<GetWorkplaceDTO>>> GetWorkplaces()
         {
-            var workplaces = new List<GetWorkplaceDTO>
-            {
-                GetWorkplaceDTO.Mocked,
-                new()
-                {
-                    Id = 2,
-                    Address = "Test str. 22",
-                    City = "Vilnius"
-                }
-            };
+            var workplaces = await _repository.GetAllAsync();
 
-            var dto = new GetListDTO<GetWorkplaceDTO>(workplaces);
+            var dto = new GetListDTO<GetWorkplaceDTO>(
+                workplaces.Select(w => new GetWorkplaceDTO(w))
+            );
 
             return Ok(dto);
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult<GetObjectDTO<GetWorkplaceDTO>> GetWorkplace(int id)
+        public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> GetWorkplace(int id)
         {
-            if (id != 1) return ApiNotFound();
-            
-            var dto = new GetObjectDTO<GetWorkplaceDTO>(GetWorkplaceDTO.Mocked);
+            var workplace = await _repository.GetAsync(id);
 
-            return Ok(dto);
+            if (workplace == null) return ApiNotFound(ApiErrorSlug.ResourceNotFound, ModelName);
+            
+            var dto = new GetWorkplaceDTO(workplace);
+            return Ok(new GetObjectDTO<GetWorkplaceDTO>(dto));
         }
-        
+
         [HttpGet("{id:int}/specialists")]
         public ActionResult<GetListDTO<GetSpecialistDTO>> GetWorkplaceSpecialists(int id)
         {
             if (id != 1) return ApiNotFound();
-            
+
             var specialists = new List<GetSpecialistDTO>
             {
                 new()
@@ -70,38 +83,49 @@ namespace Saitynas_API.Controllers
                     Speciality = SpecialityId.Other.ToString()
                 }
             };
-        
+
             var dto = new GetListDTO<GetSpecialistDTO>(specialists);
 
             return Ok(dto);
         }
 
         [HttpPost]
-        public ActionResult<GetObjectDTO<GetWorkplaceDTO>> CreateWorkplace([FromBody] WorkplaceDTO dto)
+        public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> CreateWorkplace([FromBody] CreateWorkplaceDTO dto)
         {
-            var workplace = new GetWorkplaceDTO
+            try
             {
-                Id = 10,
-                Address = dto.Address,
-                City = dto.City
-            };
-
-            return ApiCreated(new GetObjectDTO<GetWorkplaceDTO>(workplace));
+                _validator.ValidateCreateWorkplaceDTO(dto);
+                await _repository.InsertAsync(new Workplace(dto));
+                
+                return NoContent();
+            }
+            catch (DTOValidationException ex)
+            {
+                return ApiBadRequest(ex.Message, ex.Parameter);
+            }
         }
-        
-        [HttpPut("{id:int}")]
-        public ActionResult<GetObjectDTO<GetWorkplaceDTO>> EditWorkplace(int id, [FromBody] WorkplaceDTO dto)
-        {
-            var workplace = GetWorkplaceDTO.Mocked;
-            workplace.Address = (dto.Address ?? workplace.Address);
-            workplace.City = (dto.City ?? workplace.City);
 
-            return Ok(new GetObjectDTO<GetWorkplaceDTO>(workplace));
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> EditWorkplace(int id, [FromBody] EditWorkplaceDTO dto)
+        {
+            try
+            {
+                _validator.ValidateEditWorkplaceDTO(dto);
+                await _repository.UpdateAsync(id, new Workplace(id, dto));
+                
+                return NoContent();
+            }
+            catch (DTOValidationException ex)
+            {
+                return ApiBadRequest(ex.Message, ex.Parameter);
+            }
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteWorkplace(int id)
+        public async Task<IActionResult> DeleteWorkplace(int id)
         {
+            await _repository.DeleteAsync(id);
+            
             return NoContent();
         }
     }

@@ -18,11 +18,16 @@ namespace Saitynas_API.Models.WorkplaceEntity
         public string City { get; set; }
 
         public Workplace() { }
-
+        
         public Workplace(WorkplaceDTO dto)
         {
             Address = dto.Address;
             City = dto.City;
+        }
+
+        public Workplace(int id, WorkplaceDTO dto) : this(dto)
+        {
+            Id = id;
         }
 
         public void Update(Workplace w)

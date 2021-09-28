@@ -16,6 +16,7 @@ using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.MessageEntity;
 using Saitynas_API.Models.WorkplaceEntity;
+using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
 using Saitynas_API.Models.WorkplaceEntity.Repository;
 using Saitynas_API.Services.HeadersValidator;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -93,6 +94,7 @@ namespace Saitynas_API
         private static void RegisterCustomServices(IServiceCollection services)
         {
             services.AddScoped<IHeadersValidator, HeadersValidator>();
+            services.AddScoped<IWorkplaceDTOValidator, WorkplaceDTOValidator>();
         }
         
         private static void RegisterRepositories(IServiceCollection services)

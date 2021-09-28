@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Saitynas_API.Exceptions;
+using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO;
 using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
 using static NUnit.Framework.Assert;
@@ -35,7 +36,9 @@ namespace Saitynas_API_Tests
 
             _validator.ValidateCreateWorkplaceDTO(dto);
 
-            Pass();
+            var workplace = new Workplace(dto);
+            
+            IsNotNull(workplace);
         }
 
         [Test]

@@ -1034,22 +1034,22 @@
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/WorkplaceDTO"
+                "$ref": "#/components/schemas/CreateWorkplaceDTO"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WorkplaceDTO"
+                "$ref": "#/components/schemas/CreateWorkplaceDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/WorkplaceDTO"
+                "$ref": "#/components/schemas/CreateWorkplaceDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/WorkplaceDTO"
+                "$ref": "#/components/schemas/CreateWorkplaceDTO"
               }
             }
           }
@@ -1136,22 +1136,22 @@
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/WorkplaceDTO"
+                "$ref": "#/components/schemas/EditWorkplaceDTO"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WorkplaceDTO"
+                "$ref": "#/components/schemas/EditWorkplaceDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/WorkplaceDTO"
+                "$ref": "#/components/schemas/EditWorkplaceDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/WorkplaceDTO"
+                "$ref": "#/components/schemas/EditWorkplaceDTO"
               }
             }
           }
@@ -1244,6 +1244,34 @@
   },
   "components": {
     "schemas": {
+      "CreateWorkplaceDTO": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EditWorkplaceDTO": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "EnumDTO": {
         "type": "object",
         "properties": {
@@ -1612,20 +1640,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/VisitDTO"
-          }
-        },
-        "additionalProperties": false
-      },
-      "WorkplaceDTO": {
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false

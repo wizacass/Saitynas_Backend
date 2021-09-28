@@ -18,12 +18,24 @@ namespace Saitynas_API.Controllers
         {
             Context = context;
         }
-        
+
         protected ActionResult ApiCreated(object data)
         {
             return StatusCode(201, data);
         }
-        
+
+        protected BadRequestObjectResult ApiBadRequest(string message, string details = null)
+        {
+            var error = new ErrorDTO
+            {
+                Type = 400,
+                Title = message,
+                Details = details
+            };
+
+            return BadRequest(error);
+        }
+
         protected NotFoundObjectResult ApiNotFound()
         {
             var error = new ErrorDTO
@@ -32,6 +44,7 @@ namespace Saitynas_API.Controllers
                 Title = ApiErrorSlug.ResourceNotFound,
                 Details = ModelName
             };
+
             return NotFound(error);
         }
 
@@ -43,6 +56,7 @@ namespace Saitynas_API.Controllers
                 Title = title,
                 Details = details
             };
+
             return NotFound(error);
         }
     }
