@@ -27,6 +27,7 @@ namespace Saitynas_API.Models
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration());
         }
     }
 }

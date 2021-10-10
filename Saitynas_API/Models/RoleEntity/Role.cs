@@ -22,5 +22,10 @@ namespace Saitynas_API.Models.RoleEntity
         public string Name { get; set; }
 
         public ICollection<User> Users { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
