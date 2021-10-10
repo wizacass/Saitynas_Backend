@@ -13,7 +13,7 @@ namespace Saitynas_API.Models.UserEntity
         
         [Required]
         [StringLength(255)]
-        public string Username { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [StringLength(255)]

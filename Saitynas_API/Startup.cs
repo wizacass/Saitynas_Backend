@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,18 +16,21 @@ using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.MessageEntity;
+using Saitynas_API.Models.UserEntity;
 using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
 using Saitynas_API.Models.WorkplaceEntity.Repository;
+using Saitynas_API.Services;
 using Saitynas_API.Services.HeadersValidator;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using static Saitynas_API.Configuration.IdentityConfiguration;
 
 namespace Saitynas_API
 {
     public class Startup
     {
         private const string CorsPolicyName = "AllowAll";
-        
+
         private IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -38,13 +42,15 @@ namespace Saitynas_API
         public void ConfigureServices(IServiceCollection services)
         {
             SetupDatabase(services);
-            
+
             services.AddControllers().AddNewtonsoftJson();
 
             SetupSwagger(services);
 
             SetupCors(services);
-            
+
+            SetupAuthentication(services);
+
             RegisterCustomServices(services);
 
             RegisterRepositories(services);
@@ -54,16 +60,18 @@ namespace Saitynas_API
         {
             var builder = new MySqlConnectionStringBuilder(Configuration.GetConnectionString("DefaultConnection"))
             {
-                Server = Configuration["Server"] ?? Environment.GetEnvironmentVariable("Server"),
-                Database = Configuration["Database"] ?? Environment.GetEnvironmentVariable("Database"),
-                UserID = Configuration["Username"] ?? Environment.GetEnvironmentVariable("Username"),
-                Password = Configuration["DbPassword"] ?? Environment.GetEnvironmentVariable("DbPassword"),
+                Server = GetEnvVar("Server"),
+                Database = GetEnvVar("Database"),
+                UserID = GetEnvVar("Username"),
+                Password = GetEnvVar("DbPassword"),
                 SslMode = MySqlSslMode.None
             };
 
             services.AddDbContext<ApiContext>(opt => opt.UseMySQL(builder.ConnectionString));
         }
-        
+
+        private string GetEnvVar(string key) => Configuration[key] ?? Environment.GetEnvironmentVariable(key);
+
         private static void SetupSwagger(IServiceCollection services)
         {
             services.AddSwaggerGen(SetupSwaggerOptions);
@@ -91,12 +99,27 @@ namespace Saitynas_API
             options.OperationFilter<SwaggerConfiguration>();
         }
 
+        private void SetupAuthentication(IServiceCollection services)
+        {
+            services.AddIdentityCore<User>();
+            services.AddScoped<IUserStore<User>, ApiUserStore>();
+            services.AddScoped<IUserRoleStore<User>, ApiUserStore>();
+
+            services.AddAuthentication(AuthenticationOptions)
+                .AddJwtBearer(
+                    o => JwtOptions(o, GetEnvVar("JwtSecret")
+                    )
+                );
+
+            services.Configure<IdentityOptions>(IdentityOptions);
+        }
+
         private static void RegisterCustomServices(IServiceCollection services)
         {
             services.AddScoped<IHeadersValidator, HeadersValidator>();
             services.AddScoped<IWorkplaceDTOValidator, WorkplaceDTOValidator>();
         }
-        
+
         private static void RegisterRepositories(IServiceCollection services)
         {
             services.AddScoped<IEvaluationsRepository, EvaluationsRepositoryMock>();
@@ -119,12 +142,14 @@ namespace Saitynas_API
             }
 
             _ = SeedDatabase(context);
-            
+
             app.UseRequestMiddleware();
 
             app.UseRouting();
 
             app.UseCors(CorsPolicyName);
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
@@ -138,10 +163,10 @@ namespace Saitynas_API
         {
             var seeders = new ISeed[]
             {
-                new MessageSeed(context),
+                new MessageSeed(context), 
                 new WorkplaceSeed(context)
             };
-            
+
             await new Seeder(context, seeders).Seed();
         }
     }
