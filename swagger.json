@@ -1403,19 +1403,19 @@
             "type": "integer",
             "format": "int32"
           },
-          "speciality": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
           "firstName": {
             "type": "string",
             "nullable": true
           },
           "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "speciality": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
             "type": "string",
             "nullable": true
           }
@@ -1579,19 +1579,19 @@
       "SpecialistDTO": {
         "type": "object",
         "properties": {
-          "speciality": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
           "firstName": {
             "type": "string",
             "nullable": true
           },
           "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "speciality": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
             "type": "string",
             "nullable": true
           }
