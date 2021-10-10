@@ -74,7 +74,7 @@ namespace Saitynas_API_Tests
         public void TestInvalidEditAddress()
         {
             var dto = ValidEditDTO;
-            dto.Address = "";
+            dto.Address = new string('x', 256);
 
             Throws<DTOValidationException>(() => _validator.ValidateEditWorkplaceDTO(dto));
         }
@@ -83,7 +83,7 @@ namespace Saitynas_API_Tests
         public void TestInvalidEditCity()
         {
             var dto = ValidEditDTO;
-            dto.City = "";
+            dto.Address = new string('x', 256);
 
             Throws<DTOValidationException>(() => _validator.ValidateEditWorkplaceDTO(dto));
         }

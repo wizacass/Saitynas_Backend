@@ -12,7 +12,8 @@ namespace Saitynas_API.Models.WorkplaceEntity.DTO.Validator
 
         public void ValidateEditWorkplaceDTO(EditWorkplaceDTO dto)
         {
-            ValidateWorkplaceDTO(dto);
+            ValidateStringLength(dto.Address, "address");
+            ValidateStringLength(dto.City, "city");
         }
 
         private static void ValidateWorkplaceDTO(WorkplaceDTO dto)
@@ -25,6 +26,14 @@ namespace Saitynas_API.Models.WorkplaceEntity.DTO.Validator
         {
             if (string.IsNullOrEmpty(parameter))
                 throw new DTOValidationException(ApiErrorSlug.EmptyParameter, name);
+            
+            ValidateStringLength(parameter, name);
+        }
+
+        private static void ValidateStringLength(string parameter, string name)
+        {
+            if (parameter.Length > 255)
+                throw new DTOValidationException(ApiErrorSlug.StringTooLong, name);
         }
     }
 }
