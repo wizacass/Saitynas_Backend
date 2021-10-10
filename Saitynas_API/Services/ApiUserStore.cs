@@ -9,7 +9,7 @@ using Saitynas_API.Models.UserEntity;
 
 namespace Saitynas_API.Services
 {
-    public class ApiUserStore : IUserStore<User>, IUserPasswordStore<User>, IUserEmailStore<User>,
+    public class ApiUserStore : IUserPasswordStore<User>, IUserEmailStore<User>,
         IUserRoleStore<User>
     {
         private readonly ApiContext _context;
@@ -97,7 +97,7 @@ namespace Saitynas_API.Services
 
         public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(user.Password);
         }
 
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)

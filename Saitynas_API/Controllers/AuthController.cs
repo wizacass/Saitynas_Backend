@@ -30,7 +30,7 @@ namespace Saitynas_API.Controllers
 
         [HttpPost("signup")]
         [AllowAnonymous]
-        public async Task<IActionResult> Signup([FromBody] SignupDTO dto)
+        public async Task<ActionResult<object>> Signup([FromBody] SignupDTO dto)
         {
             var user = new User(dto);
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -44,7 +44,7 @@ namespace Saitynas_API.Controllers
             }
 
             string token = GenerateToken(user);
-            return Ok(new
+            return ApiCreated(new
             {
                 jwt = token
             });
@@ -54,7 +54,19 @@ namespace Saitynas_API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<object>> Login([FromBody] LoginDTO dto)
         {
-            return StatusCode(500);
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+
+            if (user == null) return ApiBadRequest(ApiErrorSlug.InvalidCredentials);
+            if (!await _userManager.CheckPasswordAsync(user, dto.Password))
+            {
+                return ApiBadRequest(ApiErrorSlug.InvalidCredentials);
+            }
+
+            string token = GenerateToken(user);
+            return Ok(new
+            {
+                jwt = token
+            });
         }
 
         private string GenerateToken(User user)
