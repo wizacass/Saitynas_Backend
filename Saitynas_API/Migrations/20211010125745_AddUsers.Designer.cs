@@ -9,7 +9,7 @@ using Saitynas_API.Models;
 namespace Saitynas_API.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    [Migration("20211010105737_AddUsers")]
+    [Migration("20211010125745_AddUsers")]
     partial class AddUsers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,11 @@ namespace Saitynas_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -86,11 +91,6 @@ namespace Saitynas_API.Migrations
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
