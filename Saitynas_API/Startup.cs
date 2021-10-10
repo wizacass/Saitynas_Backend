@@ -7,9 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using MySql.Data.MySqlClient;
-using Saitynas_API.Configuration;
 using Saitynas_API.Middleware;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Common;
@@ -23,8 +21,8 @@ using Saitynas_API.Models.WorkplaceEntity.Repository;
 using Saitynas_API.Services;
 using Saitynas_API.Services.HeadersValidator;
 using Saitynas_API.Services.JwtService;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using static Saitynas_API.Configuration.IdentityConfiguration;
+using static Saitynas_API.Configuration.SwaggerConfiguration;
 
 namespace Saitynas_API
 {
@@ -75,7 +73,7 @@ namespace Saitynas_API
 
         private static void SetupSwagger(IServiceCollection services)
         {
-            services.AddSwaggerGen(SetupSwaggerOptions);
+            services.AddSwaggerGen(SwaggerGenOptions);
             services.AddSwaggerGenNewtonsoftSupport();
         }
 
@@ -89,17 +87,7 @@ namespace Saitynas_API
                         });
                 });
         }
-
-        private static void SetupSwaggerOptions(SwaggerGenOptions options)
-        {
-            options.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "Saitynas API",
-                Version = "v1"
-            });
-            options.OperationFilter<SwaggerConfiguration>();
-        }
-
+        
         private void SetupAuthentication(IServiceCollection services)
         {
             services.AddIdentityCore<User>();
@@ -136,7 +124,7 @@ namespace Saitynas_API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Saitynas API v1"));
+                app.UseSwaggerUI(SwaggerUIOptions);
             }
 
             if (env.IsProduction())
