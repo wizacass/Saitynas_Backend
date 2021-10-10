@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Saitynas_API.Models.SpecialistEntity;
 
-namespace Saitynas_API.Models.Database
+namespace Saitynas_API.Models.SpecialityEntity
 {
     public enum SpecialityId
     {
@@ -35,11 +35,23 @@ namespace Saitynas_API.Models.Database
     {
         [Key]
         [Required]
-        public SpecialityId Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }
         
         public ICollection<Specialist> Specialists { get; set; }
+
+        public Speciality()
+        {
+            Specialists = new List<Specialist>();
+        }
+
+        public Speciality(int id, string name)
+        {
+            Id = id;
+            Name = name;
+            Specialists = new List<Specialist>();
+        }
     }
 }

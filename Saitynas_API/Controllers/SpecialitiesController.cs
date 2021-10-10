@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
-using Saitynas_API.Models.Database;
 using Saitynas_API.Models.DTO.Common;
 using Saitynas_API.Models.SpecialistEntity.DTO;
+using Saitynas_API.Models.SpecialityEntity;
 
 namespace Saitynas_API.Controllers
 {

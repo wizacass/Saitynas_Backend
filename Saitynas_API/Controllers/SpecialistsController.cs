@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
-using Saitynas_API.Models.Database;
 using Saitynas_API.Models.DTO.Common;
 using Saitynas_API.Models.SpecialistEntity.DTO;
+using Saitynas_API.Models.SpecialityEntity;
 using Saitynas_API.Models.VisitEntity.DTO;
 
 namespace Saitynas_API.Controllers

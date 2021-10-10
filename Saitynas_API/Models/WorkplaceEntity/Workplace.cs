@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Saitynas_API.Models.SpecialistEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO;
 
 namespace Saitynas_API.Models.WorkplaceEntity
@@ -16,13 +18,19 @@ namespace Saitynas_API.Models.WorkplaceEntity
         [Required]
         [StringLength(255)]
         public string City { get; set; }
+        
+        public ICollection<Specialist> Specialists { get; set; }
 
-        public Workplace() { }
+        public Workplace()
+        {
+            Specialists = new List<Specialist>();
+        }
         
         public Workplace(WorkplaceDTO dto)
         {
             Address = dto.Address;
             City = dto.City;
+            Specialists = new List<Specialist>();
         }
 
         public Workplace(int id, WorkplaceDTO dto) : this(dto)

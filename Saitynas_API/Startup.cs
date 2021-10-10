@@ -14,6 +14,8 @@ using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.MessageEntity;
+using Saitynas_API.Models.SpecialistEntity;
+using Saitynas_API.Models.SpecialityEntity;
 using Saitynas_API.Models.UserEntity;
 using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
@@ -155,8 +157,10 @@ namespace Saitynas_API
             var seeders = new ISeed[]
             {
                 new MessageSeed(context), 
+                new UserSeed(context, userManager),
                 new WorkplaceSeed(context),
-                new UserSeed(context, userManager)
+                new SpecialitySeed(context),
+                new SpecialistSeed(context)
             };
 
             await new Seeder(context, seeders).Seed();
