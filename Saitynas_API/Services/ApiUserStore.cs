@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Saitynas_API.Models;
+using Saitynas_API.Models.RoleEntity;
 using Saitynas_API.Models.UserEntity;
 
 namespace Saitynas_API.Services
@@ -142,27 +143,42 @@ namespace Saitynas_API.Services
 
         public Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var roleId = (RoleId) Enum.Parse(typeof(RoleId), roleName, true);
+            user.RoleId = roleId;
+
+            _context.Users.Update(user);
+            _context.SaveChanges();
+
+            return Task.FromResult(IdentityResult.Success);
         }
 
         public Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            user.RoleId = RoleId.None;
+
+            _context.Users.Update(user);
+            _context.SaveChanges();
+
+            return Task.FromResult(IdentityResult.Success);
         }
 
         public Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            IList<string> roles = new List<string> { user.Role.ToString() };
+
+            return Task.FromResult(roles);
         }
 
         public Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(user.Role.ToString() == roleName);
         }
 
         public Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            IList<User> list = _context.Users.Where(x => x.Role.ToString() == roleName).ToList();
+
+            return Task.FromResult(list);
         }
     }
 }
