@@ -130,7 +130,7 @@ namespace Saitynas_API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApiContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApiContext context, UserManager<User> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -144,7 +144,7 @@ namespace Saitynas_API
                 context.Database.Migrate();
             }
 
-            _ = SeedDatabase(context);
+            _ = SeedDatabase(context, userManager);
 
             app.UseRequestMiddleware();
 
@@ -162,12 +162,13 @@ namespace Saitynas_API
                 });
         }
 
-        private static async Task SeedDatabase(ApiContext context)
+        private static async Task SeedDatabase(ApiContext context, UserManager<User> userManager)
         {
             var seeders = new ISeed[]
             {
                 new MessageSeed(context), 
-                new WorkplaceSeed(context)
+                new WorkplaceSeed(context),
+                new UserSeed(context, userManager)
             };
 
             await new Seeder(context, seeders).Seed();
