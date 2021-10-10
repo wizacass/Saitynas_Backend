@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Exceptions;
 using Saitynas_API.Models;
@@ -36,6 +37,7 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = AllRoles)]
         public async Task<ActionResult<GetListDTO<GetWorkplaceDTO>>> GetWorkplaces()
         {
             var workplaces = await _repository.GetAllAsync();
@@ -48,6 +50,7 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = AllRoles)]
         public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> GetWorkplace(int id)
         {
             var workplace = await _repository.GetAsync(id);
@@ -59,6 +62,7 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpGet("{id:int}/specialists")]
+        [Authorize(Roles = AllRoles)]
         public ActionResult<GetListDTO<GetSpecialistDTO>> GetWorkplaceSpecialists(int id)
         {
             if (id != 1) return ApiNotFound();
@@ -89,6 +93,7 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Specialist")]
         public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> CreateWorkplace([FromBody] CreateWorkplaceDTO dto)
         {
             try
@@ -105,6 +110,7 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> EditWorkplace(int id, [FromBody] EditWorkplaceDTO dto)
         {
             try
@@ -121,6 +127,7 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteWorkplace(int id)
         {
             await _repository.DeleteAsync(id);
