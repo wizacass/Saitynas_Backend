@@ -164,19 +164,19 @@ namespace Saitynas_API.Services
 
         public Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
         {
-            IList<string> roles = new List<string> { user.Role.ToString() };
+            IList<string> roles = new List<string> { user.RoleId.ToString() };
 
             return Task.FromResult(roles);
         }
 
         public Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.Role.ToString() == roleName);
+            return Task.FromResult(user.RoleId.ToString() == roleName);
         }
 
         public Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
-            IList<User> list = _context.Users.Where(x => x.Role.ToString() == roleName).ToList();
+            IList<User> list = _context.Users.Where(x => x.RoleId.ToString() == roleName).ToList();
 
             return Task.FromResult(list);
         }
