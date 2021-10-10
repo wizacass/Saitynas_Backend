@@ -140,6 +140,8 @@ namespace Saitynas_API
 
             app.UseRouting();
 
+            app.UseSentryTracing();
+
             app.UseCors(CorsPolicyName);
 
             app.UseAuthentication();
