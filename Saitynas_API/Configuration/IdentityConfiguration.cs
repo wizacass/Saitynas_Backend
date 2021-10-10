@@ -10,7 +10,7 @@ namespace Saitynas_API.Configuration
     public static class IdentityConfiguration
     {
         private const string AllowedUsernameCharacters =
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.@";
 
         public static void IdentityOptions(IdentityOptions options)
         {

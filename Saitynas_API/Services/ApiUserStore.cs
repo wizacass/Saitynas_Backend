@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -8,25 +9,29 @@ using Saitynas_API.Models.UserEntity;
 
 namespace Saitynas_API.Services
 {
-    public class ApiUserStore : IUserStore<User>, IUserPasswordStore<User>, IUserEmailStore<User>, IUserRoleStore<User>
+    public class ApiUserStore : IUserStore<User>, IUserPasswordStore<User>, IUserEmailStore<User>,
+        IUserRoleStore<User>
     {
         private readonly ApiContext _context;
-        
+
         public ApiUserStore(ApiContext context)
         {
             _context = context;
         }
-        
-        public void Dispose() { }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
 
         public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(user.Id.ToString());
         }
 
         public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(user.Email);
         }
 
         public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
@@ -39,14 +44,28 @@ namespace Saitynas_API.Services
             throw new System.NotImplementedException();
         }
 
-        public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
+        public Task SetNormalizedUserNameAsync(
+            User user,
+            string normalizedName,
+            CancellationToken cancellationToken
+        )
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(IdentityResult.Success);
         }
 
         public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+                return Task.FromResult(IdentityResult.Success);
+            }
+            catch (Exception)
+            {
+                return Task.FromResult(IdentityResult.Failed());
+            }
         }
 
         public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
@@ -66,12 +85,14 @@ namespace Saitynas_API.Services
 
         public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(_context.Users.FirstOrDefault(a => a.Email == normalizedUserName));
         }
 
         public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            user.Password = passwordHash;
+
+            return Task.FromResult(IdentityResult.Success);
         }
 
         public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
@@ -91,7 +112,7 @@ namespace Saitynas_API.Services
 
         public Task<string> GetEmailAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(user.Email);
         }
 
         public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
@@ -106,7 +127,7 @@ namespace Saitynas_API.Services
 
         public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(_context.Users.FirstOrDefault(a => a.Email == normalizedEmail));
         }
 
         public Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
@@ -116,7 +137,7 @@ namespace Saitynas_API.Services
 
         public Task SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(IdentityResult.Success);
         }
 
         public Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
