@@ -8,5 +8,6 @@ namespace Saitynas_API.Models.Common
         public const string StringTooLong = "string_too_long";
         public const string AuthenticationError = "authentication_error";
         public const string InvalidCredentials = "not_valid_credentials";
+        public const string InvalidRole = "role_not_valid";
     }
 }
