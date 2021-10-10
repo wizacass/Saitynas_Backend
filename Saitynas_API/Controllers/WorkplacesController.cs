@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Exceptions;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Common;
@@ -40,12 +42,10 @@ namespace Saitynas_API.Controllers
         [Authorize(Roles = AllRoles)]
         public async Task<ActionResult<GetListDTO<GetWorkplaceDTO>>> GetWorkplaces()
         {
-            var workplaces = await _repository.GetAllAsync();
+            var workplaces = (await _repository.GetAllAsync())
+                .Select(w => new GetWorkplaceDTO(w));
 
-            var dto = new GetListDTO<GetWorkplaceDTO>(
-                workplaces.Select(w => new GetWorkplaceDTO(w))
-            );
-
+            var dto = new GetListDTO<GetWorkplaceDTO>(workplaces);
             return Ok(dto);
         }
 
@@ -63,32 +63,16 @@ namespace Saitynas_API.Controllers
 
         [HttpGet("{id:int}/specialists")]
         [Authorize(Roles = AllRoles)]
-        public ActionResult<GetListDTO<GetSpecialistDTO>> GetWorkplaceSpecialists(int id)
-        {
-            if (id != 1) return ApiNotFound();
-
-            var specialists = new List<GetSpecialistDTO>
-            {
-                new()
-                {
-                    Id = 3,
-                    FirstName = "Test",
-                    LastName = "Doctor",
-                    Address = "Test str. 22",
-                    Speciality = SpecialityId.Other.ToString()
-                },
-                new()
-                {
-                    Id = 2,
-                    FirstName = "Good",
-                    LastName = "Doktor",
-                    Address = "Test str. 22",
-                    Speciality = SpecialityId.Other.ToString()
-                }
-            };
-
+        public async Task<ActionResult<GetListDTO<GetSpecialistDTO>>> GetWorkplaceSpecialists(int id)
+        { 
+            var specialists = await Context.Specialists
+                .Where(s => s.WorkplaceId == id)
+                .Include(s => s.Speciality)
+                .Include(s => s.Workplace)
+                .Select(s => new GetSpecialistDTO(s))
+                .ToListAsync();
+            
             var dto = new GetListDTO<GetSpecialistDTO>(specialists);
-
             return Ok(dto);
         }
 

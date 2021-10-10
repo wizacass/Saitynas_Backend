@@ -18,5 +18,13 @@ namespace Saitynas_API.Models.SpecialistEntity.DTO
         public string Address { get; set; }
 
         public SpecialistDTO() { }
+
+        public SpecialistDTO(Specialist s)
+        {
+            FirstName = s.FirstName;
+            LastName = s.LastName;
+            Speciality = s.Speciality.Name;
+            Address = s.Workplace.Address ?? "No Address";
+        }
     }
 }

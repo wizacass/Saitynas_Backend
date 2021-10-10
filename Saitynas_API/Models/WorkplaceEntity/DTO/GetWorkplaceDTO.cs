@@ -15,12 +15,5 @@ namespace Saitynas_API.Models.WorkplaceEntity.DTO
             Address = w.Address;
             City = w.City;
         }
-
-        public static GetWorkplaceDTO Mocked => new()
-        {
-            Id = 1,
-            Address = "Test str. 22",
-            City = "Kaunas"
-        };
     }
 }
