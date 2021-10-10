@@ -7,9 +7,9 @@ namespace Saitynas_API.Models.RoleEntity
     public enum RoleId
     {
         None = 1,
-        Patient,
-        Specialist,
         Admin,
+        Patient,
+        Specialist
     }
 
     public class Role
