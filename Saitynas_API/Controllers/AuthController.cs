@@ -1,10 +1,8 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Saitynas_API.Exceptions;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.Authentication.DTO;
@@ -34,29 +32,22 @@ namespace Saitynas_API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<object>> Signup([FromBody] SignupDTO dto)
         {
-            try
-            {
-                var user = new User(dto);
-                var result = await _userManager.CreateAsync(user, dto.Password);
+            var user = new User(dto);
+            var result = await _userManager.CreateAsync(user, dto.Password);
 
-                if (!result.Succeeded)
-                {
-                    return ApiBadRequest(
-                        ApiErrorSlug.AuthenticationError,
-                        result.Errors.First().Description
-                    );
-                }
-
-                string token = GenerateToken(user);
-                return ApiCreated(new
-                {
-                    jwt = token
-                });
-            }
-            catch (DTOValidationException ex)
+            if (!result.Succeeded)
             {
-                return ApiBadRequest(ex.Message, ex.Parameter);
+                return ApiBadRequest(
+                    ApiErrorSlug.AuthenticationError,
+                    result.Errors.First().Description
+                );
             }
+
+            string token = GenerateToken(user);
+            return ApiCreated(new
+            {
+                jwt = token
+            });
         }
 
         [HttpPost("login")]

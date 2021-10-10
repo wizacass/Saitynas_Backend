@@ -3,7 +3,7 @@ using Saitynas_API.Models.Common;
 
 namespace Saitynas_API.Models.WorkplaceEntity.DTO.Validator
 {
-    public class WorkplaceDTOValidator : IWorkplaceDTOValidator
+    public class WorkplaceDTOValidator : DTOValidator, IWorkplaceDTOValidator
     {
         public void ValidateCreateWorkplaceDTO(CreateWorkplaceDTO dto)
         {
@@ -20,22 +20,6 @@ namespace Saitynas_API.Models.WorkplaceEntity.DTO.Validator
         {
             ValidateString(dto.Address, "address");
             ValidateString(dto.City, "city");
-        }
-        
-        private static void ValidateString(string parameter, string name)
-        {
-            if (string.IsNullOrEmpty(parameter))
-                throw new DTOValidationException(ApiErrorSlug.EmptyParameter, name);
-            
-            ValidateStringLength(parameter, name);
-        }
-
-        private static void ValidateStringLength(string parameter, string name)
-        {
-            if (parameter == null) return;
-
-            if (parameter.Length > 255)
-                throw new DTOValidationException(ApiErrorSlug.StringTooLong, name);
         }
     }
 }

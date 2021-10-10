@@ -12,5 +12,14 @@ namespace Saitynas_API.Models.DTO.Common
         
         [JsonProperty("details")]
         public string Details { get; set; }
+
+        public ErrorDTO() { }
+
+        public ErrorDTO(long type, string title, string details = "")
+        {
+            Type = type;
+            Title = title;
+            Details = details;
+        }
     }
 }
