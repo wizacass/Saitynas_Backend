@@ -32,6 +32,8 @@ namespace Saitynas_API.Models.WorkplaceEntity.DTO.Validator
 
         private static void ValidateStringLength(string parameter, string name)
         {
+            if (parameter == null) return;
+
             if (parameter.Length > 255)
                 throw new DTOValidationException(ApiErrorSlug.StringTooLong, name);
         }
