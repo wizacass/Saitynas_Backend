@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Saitynas_API.Models.EvaluationEntity.Repository
@@ -67,13 +68,14 @@ namespace Saitynas_API.Models.EvaluationEntity.Repository
             _evaluations.Add(evaluation);
         }
 
-        public async Task UpdateAsync(Evaluation data)
+        public async Task UpdateAsync(int id, Evaluation data)
         {
             _evaluations[data.Id] = data;
         }
 
-        public async Task DeleteAsync(Evaluation data)
+        public async Task DeleteAsync(int id)
         {
+            var data = _evaluations.FirstOrDefault(e => e.Id == id);
             _evaluations.Remove(data);
         }
     }

@@ -11,8 +11,8 @@ namespace Saitynas_API.Models.Common.Interfaces
         
         Task InsertAsync(T data);
         
-        Task UpdateAsync(T data);
+        Task UpdateAsync(int id, T data);
         
-        Task DeleteAsync(T data);
+        Task DeleteAsync(int id);
     }
 }

@@ -15,6 +15,9 @@ using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.MessageEntity;
+using Saitynas_API.Models.WorkplaceEntity;
+using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
+using Saitynas_API.Models.WorkplaceEntity.Repository;
 using Saitynas_API.Services.HeadersValidator;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -91,11 +94,13 @@ namespace Saitynas_API
         private static void RegisterCustomServices(IServiceCollection services)
         {
             services.AddScoped<IHeadersValidator, HeadersValidator>();
+            services.AddScoped<IWorkplaceDTOValidator, WorkplaceDTOValidator>();
         }
         
         private static void RegisterRepositories(IServiceCollection services)
         {
             services.AddScoped<IEvaluationsRepository, EvaluationsRepositoryMock>();
+            services.AddScoped<IWorkplacesRepository, WorkplacesRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -133,7 +138,8 @@ namespace Saitynas_API
         {
             var seeders = new ISeed[]
             {
-                new MessageSeed(context)
+                new MessageSeed(context),
+                new WorkplaceSeed(context)
             };
             
             await new Seeder(context, seeders).Seed();
