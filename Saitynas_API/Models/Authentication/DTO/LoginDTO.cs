@@ -1,11 +1,11 @@
 using Newtonsoft.Json;
 
-namespace Saitynas_API.Models.DTO
+namespace Saitynas_API.Models.Authentication.DTO
 {
     public class LoginDTO
     {
-        [JsonProperty("username")]
-        public string Username { get; set; }
+        [JsonProperty("email")]
+        public string Email { get; set; }
 
         [JsonProperty("password")]
         public string Password { get; set; }

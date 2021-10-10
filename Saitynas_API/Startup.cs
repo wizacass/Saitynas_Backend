@@ -22,6 +22,7 @@ using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
 using Saitynas_API.Models.WorkplaceEntity.Repository;
 using Saitynas_API.Services;
 using Saitynas_API.Services.HeadersValidator;
+using Saitynas_API.Services.JwtService;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using static Saitynas_API.Configuration.IdentityConfiguration;
 
@@ -117,6 +118,8 @@ namespace Saitynas_API
         private static void RegisterCustomServices(IServiceCollection services)
         {
             services.AddScoped<IHeadersValidator, HeadersValidator>();
+            services.AddScoped<IJwtService, JwtService>();
+                
             services.AddScoped<IWorkplaceDTOValidator, WorkplaceDTOValidator>();
         }
 
