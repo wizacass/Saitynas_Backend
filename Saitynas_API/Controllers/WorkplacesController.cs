@@ -1,16 +1,12 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Saitynas_API.Exceptions;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.DTO.Common;
 using Saitynas_API.Models.SpecialistEntity.DTO;
-using Saitynas_API.Models.SpecialityEntity;
 using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO;
 using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
@@ -56,7 +52,7 @@ namespace Saitynas_API.Controllers
             var workplace = await _repository.GetAsync(id);
 
             if (workplace == null) return ApiNotFound(ApiErrorSlug.ResourceNotFound, ModelName);
-            
+
             var dto = new GetWorkplaceDTO(workplace);
             return Ok(new GetObjectDTO<GetWorkplaceDTO>(dto));
         }
@@ -64,50 +60,41 @@ namespace Saitynas_API.Controllers
         [HttpGet("{id:int}/specialists")]
         [Authorize(Roles = AllRoles)]
         public async Task<ActionResult<GetListDTO<GetSpecialistDTO>>> GetWorkplaceSpecialists(int id)
-        { 
+        {
             var specialists = await Context.Specialists
                 .Where(s => s.WorkplaceId == id)
                 .Include(s => s.Speciality)
                 .Include(s => s.Workplace)
                 .Select(s => new GetSpecialistDTO(s))
                 .ToListAsync();
-            
+
             var dto = new GetListDTO<GetSpecialistDTO>(specialists);
             return Ok(dto);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin, Specialist")]
-        public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> CreateWorkplace([FromBody] CreateWorkplaceDTO dto)
+        public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> CreateWorkplace(
+            [FromBody] CreateWorkplaceDTO dto
+        )
         {
-            try
-            {
-                _validator.ValidateCreateWorkplaceDTO(dto);
-                await _repository.InsertAsync(new Workplace(dto));
-                
-                return NoContent();
-            }
-            catch (DTOValidationException ex)
-            {
-                return ApiBadRequest(ex.Message, ex.Parameter);
-            }
+            _validator.ValidateCreateWorkplaceDTO(dto);
+            await _repository.InsertAsync(new Workplace(dto));
+
+            return NoContent();
         }
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> EditWorkplace(int id, [FromBody] EditWorkplaceDTO dto)
+        public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> EditWorkplace(
+            int id,
+            [FromBody] EditWorkplaceDTO dto
+        )
         {
-            try
-            {
-                _validator.ValidateEditWorkplaceDTO(dto);
-                await _repository.UpdateAsync(id, new Workplace(id, dto));
-                
-                return NoContent();
-            }
-            catch (DTOValidationException ex)
-            {
-                return ApiBadRequest(ex.Message, ex.Parameter);
-            }
+            _validator.ValidateEditWorkplaceDTO(dto);
+            await _repository.UpdateAsync(id, new Workplace(id, dto));
+
+            return NoContent();
         }
 
         [HttpDelete("{id:int}")]
@@ -115,7 +102,7 @@ namespace Saitynas_API.Controllers
         public async Task<IActionResult> DeleteWorkplace(int id)
         {
             await _repository.DeleteAsync(id);
-            
+
             return NoContent();
         }
     }

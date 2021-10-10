@@ -137,6 +137,8 @@ namespace Saitynas_API
             _ = SeedDatabase(context, userManager);
 
             app.UseRequestMiddleware();
+            
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseRouting();
 
