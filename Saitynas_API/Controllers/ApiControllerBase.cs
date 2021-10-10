@@ -9,6 +9,7 @@ namespace Saitynas_API.Controllers
     {
         protected const string ApiContentType = "application/json";
         protected const string RoutePrefix = "api/v1";
+        protected const string AllRoles = "Admin, Specialist, Patient";
 
         protected abstract string ModelName { get; }
 

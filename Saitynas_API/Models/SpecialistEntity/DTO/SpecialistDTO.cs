@@ -5,6 +5,12 @@ namespace Saitynas_API.Models.SpecialistEntity.DTO
 {
     public class SpecialistDTO : UserDTO
     {
+        [JsonProperty("firstName")]
+        public string FirstName { get; set; }
+        
+        [JsonProperty("lastName")]
+        public string LastName { get; set; }
+        
         [JsonProperty("speciality")]
         public string Speciality { get; set; }
 

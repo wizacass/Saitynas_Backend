@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Saitynas_API.Models;
 
 namespace Saitynas_API.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    partial class ApiContextModelSnapshot : ModelSnapshot
+    [Migration("20211010125745_AddUsers")]
+    partial class AddUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,17 +56,17 @@ namespace Saitynas_API.Migrations
                         new
                         {
                             Id = 2,
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 3,
                             Name = "Patient"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = 3,
                             Name = "Specialist"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Admin"
                         });
                 });
 

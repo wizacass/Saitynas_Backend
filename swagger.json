@@ -5,6 +5,102 @@
     "version": "v1"
   },
   "paths": {
+    "/api/v1/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/v1/Evaluations": {
       "get": {
         "tags": [
@@ -736,6 +832,30 @@
         }
       }
     },
+    "/api/v1/Users/me": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/v1/Visits": {
       "get": {
         "tags": [
@@ -1403,6 +1523,14 @@
             "type": "integer",
             "format": "int32"
           },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
           "speciality": {
             "type": "string",
             "nullable": true
@@ -1411,11 +1539,11 @@
             "type": "string",
             "nullable": true
           },
-          "firstName": {
+          "email": {
             "type": "string",
             "nullable": true
           },
-          "lastName": {
+          "registrationDate": {
             "type": "string",
             "nullable": true
           }
@@ -1550,6 +1678,20 @@
         },
         "additionalProperties": false
       },
+      "LoginDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "MessageData": {
         "type": "object",
         "properties": {
@@ -1576,9 +1718,35 @@
         "type": "object",
         "additionalProperties": false
       },
+      "SignupDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "SpecialistDTO": {
         "type": "object",
         "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
           "speciality": {
             "type": "string",
             "nullable": true
@@ -1587,11 +1755,11 @@
             "type": "string",
             "nullable": true
           },
-          "firstName": {
+          "email": {
             "type": "string",
             "nullable": true
           },
-          "lastName": {
+          "registrationDate": {
             "type": "string",
             "nullable": true
           }
