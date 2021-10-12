@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Saitynas_API.Models.SpecialistEntity.DTO;
 using Saitynas_API.Models.SpecialityEntity;
 using Saitynas_API.Models.WorkplaceEntity;
 
@@ -17,6 +18,7 @@ namespace Saitynas_API.Models.SpecialistEntity
         [StringLength(255)]
         public string LastName { get; set; }
         
+        [StringLength(255)]
         public string Address { get; set; }
         
         [Required]
@@ -28,6 +30,27 @@ namespace Saitynas_API.Models.SpecialistEntity
         public int? WorkplaceId { get; set; }
         
         public Workplace Workplace { get; set; }
+
+        public Specialist() { }
+        
+        public Specialist(CreateSpecialistDTO dto)
+        {
+            FirstName = dto.FirstName;
+            LastName = dto.LastName;
+            Address = dto.Address;
+            SpecialityId = dto.SpecialityId;
+            WorkplaceId = dto.WorkplaceId;
+        }
+
+        public Specialist(int id, EditSpecialistDTO dto)
+        {
+            Id = id;
+            FirstName = dto.FirstName;
+            LastName = dto.LastName;
+            Address = dto.Address;
+            SpecialityId = dto.SpecialityId;
+            WorkplaceId = dto.WorkplaceId;
+        }
 
         public void Update(Specialist s)
         {
