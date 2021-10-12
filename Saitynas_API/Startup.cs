@@ -15,6 +15,7 @@ using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.MessageEntity;
 using Saitynas_API.Models.SpecialistEntity;
+using Saitynas_API.Models.SpecialistEntity.Repository;
 using Saitynas_API.Models.SpecialityEntity;
 using Saitynas_API.Models.UserEntity;
 using Saitynas_API.Models.WorkplaceEntity;
@@ -117,6 +118,7 @@ namespace Saitynas_API
         {
             services.AddScoped<IEvaluationsRepository, EvaluationsRepositoryMock>();
             services.AddScoped<IWorkplacesRepository, WorkplacesRepository>();
+            services.AddScoped<ISpecialistsRepository, SpecialistsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
