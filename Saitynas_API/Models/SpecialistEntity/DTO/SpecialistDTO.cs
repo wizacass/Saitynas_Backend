@@ -1,9 +1,8 @@
 using Newtonsoft.Json;
-using Saitynas_API.Models.UserEntity.DTO;
 
 namespace Saitynas_API.Models.SpecialistEntity.DTO
 {
-    public class SpecialistDTO : UserDTO
+    public class SpecialistDTO
     {
         [JsonProperty("firstName")]
         public string FirstName { get; set; }
@@ -24,7 +23,7 @@ namespace Saitynas_API.Models.SpecialistEntity.DTO
             FirstName = s.FirstName;
             LastName = s.LastName;
             Speciality = s.Speciality.Name;
-            Address = s.Workplace.Address ?? "No Address";
+            Address = s.Workplace?.Address ?? s.Address;
         }
     }
 }
