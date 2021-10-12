@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
-using Saitynas_API.Models.Common;
 using Saitynas_API.Models.DTO.Common;
 using Saitynas_API.Models.SpecialistEntity.DTO;
 using Saitynas_API.Models.WorkplaceEntity;
@@ -51,7 +50,7 @@ namespace Saitynas_API.Controllers
         {
             var workplace = await _repository.GetAsync(id);
 
-            if (workplace == null) return ApiNotFound(ApiErrorSlug.ResourceNotFound, ModelName);
+            if (workplace == null) return ApiNotFound();
 
             var dto = new GetWorkplaceDTO(workplace);
             return Ok(new GetObjectDTO<GetWorkplaceDTO>(dto));
@@ -74,7 +73,7 @@ namespace Saitynas_API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, Specialist")]
-        public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> CreateWorkplace(
+        public async Task<IActionResult> CreateWorkplace(
             [FromBody] CreateWorkplaceDTO dto
         )
         {
@@ -86,7 +85,7 @@ namespace Saitynas_API.Controllers
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> EditWorkplace(
+        public async Task<IActionResult> EditWorkplace(
             int id,
             [FromBody] EditWorkplaceDTO dto
         )
