@@ -10,5 +10,6 @@ namespace Saitynas_API.Models.Common
         public const string AuthenticationError = "authentication_error";
         public const string InvalidCredentials = "not_valid_credentials";
         public const string InvalidRole = "role_not_valid";
+        public const string InvalidNumber = "invalid_numeric_value";
     }
 }

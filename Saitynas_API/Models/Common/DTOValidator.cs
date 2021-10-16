@@ -24,5 +24,20 @@ namespace Saitynas_API.Models.Common
                 throw new DTOValidationException(ApiErrorSlug.StringTooLong, name);
             }
         }
+
+        protected static void ValidateIntegerIsPositive(int number, string name)
+        {
+            if (number <= 0)
+            {
+                throw new DTOValidationException(ApiErrorSlug.InvalidNumber, name);
+            }
+        }
+        
+        protected static void ValidateIntegerIsPositive(int? number, string name)
+        {
+            if (number == null) return;
+            
+            ValidateIntegerIsPositive((int)number, name);
+        }
     }
 }

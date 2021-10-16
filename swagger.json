@@ -368,36 +368,29 @@
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/SpecialistDTO"
+                "$ref": "#/components/schemas/CreateSpecialistDTO"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SpecialistDTO"
+                "$ref": "#/components/schemas/CreateSpecialistDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/SpecialistDTO"
+                "$ref": "#/components/schemas/CreateSpecialistDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/SpecialistDTO"
+                "$ref": "#/components/schemas/CreateSpecialistDTO"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetSpecialistDTOGetObjectDTO"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
@@ -470,36 +463,29 @@
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/SpecialistDTO"
+                "$ref": "#/components/schemas/EditSpecialistDTO"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SpecialistDTO"
+                "$ref": "#/components/schemas/EditSpecialistDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/SpecialistDTO"
+                "$ref": "#/components/schemas/EditSpecialistDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/SpecialistDTO"
+                "$ref": "#/components/schemas/EditSpecialistDTO"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpecialistDTOGetObjectDTO"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       },
@@ -572,7 +558,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1/Specialities": {
@@ -1176,14 +1163,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkplaceDTOGetObjectDTO"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
@@ -1278,14 +1258,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkplaceDTOGetObjectDTO"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       },
@@ -1364,6 +1337,33 @@
   },
   "components": {
     "schemas": {
+      "CreateSpecialistDTO": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "specialityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "workplaceId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateWorkplaceDTO": {
         "type": "object",
         "properties": {
@@ -1373,6 +1373,34 @@
           },
           "city": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EditSpecialistDTO": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "specialityId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "workplaceId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },
@@ -1536,14 +1564,6 @@
             "nullable": true
           },
           "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "registrationDate": {
             "type": "string",
             "nullable": true
           }
@@ -1732,48 +1752,6 @@
           "role": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "SpecialistDTO": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "speciality": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "registrationDate": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "SpecialistDTOGetObjectDTO": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/Meta"
-          },
-          "data": {
-            "$ref": "#/components/schemas/SpecialistDTO"
           }
         },
         "additionalProperties": false

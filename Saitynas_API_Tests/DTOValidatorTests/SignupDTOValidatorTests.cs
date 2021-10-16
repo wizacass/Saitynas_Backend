@@ -4,7 +4,7 @@ using Saitynas_API.Models.Authentication.DTO;
 using Saitynas_API.Models.Authentication.DTO.Validator;
 using static NUnit.Framework.Assert;
 
-namespace Saitynas_API_Tests
+namespace Saitynas_API_Tests.DTOValidatorTests
 {
     public class SignupDTOValidatorTests
     {

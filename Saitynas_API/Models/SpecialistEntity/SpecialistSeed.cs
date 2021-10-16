@@ -33,7 +33,8 @@ namespace Saitynas_API.Models.SpecialistEntity
                     Id = 2,
                     FirstName = "Private",
                     LastName = "Doctor",
-                    SpecialityId = 1
+                    SpecialityId = 1,
+                    Address = "Private address 7"
                 }
             };
 
