@@ -6,6 +6,7 @@ using static NUnit.Framework.Assert;
 
 namespace Saitynas_API_Tests
 {
+    [TestFixture]
     public class HeadersValidatorTests
     {
         private IHeadersValidator _headersValidator;
