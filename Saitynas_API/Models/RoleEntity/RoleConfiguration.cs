@@ -21,7 +21,7 @@ namespace Saitynas_API.Models.RoleEntity
             );
 
             builder
-                .HasMany(d => d.Users)
+                .HasMany(r => r.Users)
                 .WithOne(u => u.Role);
         }
     }

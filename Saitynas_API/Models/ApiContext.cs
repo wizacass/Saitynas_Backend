@@ -28,6 +28,7 @@ namespace Saitynas_API.Models
 
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new WorkplaceConfiguration());
         }
     }
 }
