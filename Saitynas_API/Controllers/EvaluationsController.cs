@@ -13,7 +13,6 @@ namespace Saitynas_API.Controllers
     [Route(RoutePrefix + "/[Controller]")]
     [ApiController]
     [Produces(ApiContentType)]
-    [Obsolete]
     public class EvaluationsController : ApiControllerBase
     {
         protected override string ModelName => "evaluation";
@@ -25,6 +24,7 @@ namespace Saitynas_API.Controllers
             _repository = repository;
         }
         
+        [Obsolete]
         [HttpGet]
         public async Task<ActionResult<GetListDTO<GetEvaluationDTO>>> GetEvaluations()
         {
@@ -34,6 +34,7 @@ namespace Saitynas_API.Controllers
             return Ok(new GetListDTO<GetEvaluationDTO>(evaluations));
         }
 
+        [Obsolete]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> GetEvaluation(int id)
         {
@@ -46,6 +47,7 @@ namespace Saitynas_API.Controllers
             return Ok(dto);
         }
 
+        [Obsolete]
         [HttpPost]
         public ActionResult<GetObjectDTO<GetEvaluationDTO>> CreateEvaluation([FromBody] EvaluationDTO dto)
         {
@@ -56,6 +58,7 @@ namespace Saitynas_API.Controllers
             return ApiCreated(new GetObjectDTO<GetEvaluationDTO>(new GetEvaluationDTO(evaluation)));
         }
         
+        [Obsolete]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> EditEvaluation(int id, [FromBody] EvaluationDTO dto)
         {
@@ -66,6 +69,7 @@ namespace Saitynas_API.Controllers
             return Ok(new GetObjectDTO<GetEvaluationDTO>(new GetEvaluationDTO(evaluation)));
         }
 
+        [Obsolete]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteEvaluation(int id)
         {

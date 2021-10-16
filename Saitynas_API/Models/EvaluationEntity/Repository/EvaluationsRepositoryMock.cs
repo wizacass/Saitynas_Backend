@@ -22,14 +22,14 @@ namespace Saitynas_API.Models.EvaluationEntity.Repository
                   Value = 5,
                   Comment = "Very good!",
                   SpecialistId = 1,
-                  PatientId = 1
+                  UserId = 1
               },
               new Evaluation
               {
                   Id = ++_lastInserted,
                   Value = 3,
                   SpecialistId = 1,
-                  PatientId = 2
+                  UserId = 2
               }
            });
         }
@@ -59,8 +59,8 @@ namespace Saitynas_API.Models.EvaluationEntity.Repository
                 Id = ++_lastInserted,
                 Comment = data.Comment,
                 Value = data.Value,
-                Patient = data.Patient,
-                PatientId = data.PatientId,
+                User = data.User,
+                UserId = data.UserId,
                 Specialist = data.Specialist,
                 SpecialistId = data.SpecialistId
             };

@@ -15,6 +15,7 @@ namespace Saitynas_API.Models.EvaluationEntity
         [Required]
         public int Value { get; set; }
         
+        [StringLength(255)]
         public string Comment { get; set; }
         
         [Required]
@@ -24,10 +25,10 @@ namespace Saitynas_API.Models.EvaluationEntity
         public Specialist Specialist { get; set; }
         
         [Required]
-        public int PatientId { get; set; }
+        public int UserId { get; set; }
         
         [Required]
-        public Patient Patient { get; set; }
+        public User User { get; set; }
 
         public Evaluation() { }
 
