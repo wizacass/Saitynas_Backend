@@ -58,8 +58,8 @@ namespace Saitynas_API.Controllers
             return Ok(dto);
         }
         
+        [Obsolete("This is a mock implementation")]
         [HttpGet("{id:int}/visits")]
-        //[Deprecated]
         public ActionResult<GetListDTO<GetVisitDTO>> GetSpecialistVisits(int id)
         {
             var evaluations = new List<GetVisitDTO>
