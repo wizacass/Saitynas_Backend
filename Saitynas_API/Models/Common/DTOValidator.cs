@@ -39,5 +39,12 @@ namespace Saitynas_API.Models.Common
             
             ValidateIntegerIsPositive((int)number, name);
         }
+
+        protected static void ValidateEntityId(bool isValid, string name)
+        {
+            if (isValid) return;
+
+            throw new DTOValidationException(ApiErrorSlug.InvalidId, name);
+        }
     }
 }

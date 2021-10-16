@@ -6,6 +6,7 @@ using static NUnit.Framework.Assert;
 
 namespace Saitynas_API_Tests.DTOValidatorTests
 {
+    [TestFixture]
     public class SignupDTOValidatorTests
     {
         private ISignupDTOValidator _validator;

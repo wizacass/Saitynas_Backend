@@ -1,16 +1,47 @@
+using Moq;
 using NUnit.Framework;
 using Saitynas_API.Exceptions;
 using Saitynas_API.Models.SpecialistEntity;
 using Saitynas_API.Models.SpecialistEntity.DTO;
 using Saitynas_API.Models.SpecialistEntity.DTO.Validator;
+using Saitynas_API.Services.EntityValidator;
 using static NUnit.Framework.Assert;
 
 namespace Saitynas_API_Tests.DTOValidatorTests
 {
+    [TestFixture]
     public class SpecialistDTOValidatorTests
     {
         private ISpecialistDTOValidator _validator;
-        
+
+        private static IEntityValidator EntityValidatorMock
+        {
+            get
+            {
+                var entityValidatorMock = new Mock<IEntityValidator>();
+
+                entityValidatorMock
+                    .Setup(v => v.IsWorkplaceIdValid(It.IsAny<int?>()))
+                    .Returns(true);
+
+                entityValidatorMock
+                    .Setup(v => v.IsWorkplaceIdValid(0))
+                    .Returns(false);
+
+                entityValidatorMock
+                    .Setup(v => v.IsSpecialityIdValid(
+                        It.IsInRange(1, 10, Range.Inclusive)
+                    ))
+                    .Returns(true);
+                
+                entityValidatorMock
+                    .Setup(v => v.IsSpecialityIdValid(null))
+                    .Returns(true);
+
+                return entityValidatorMock.Object;
+            }
+        }
+
         private static CreateSpecialistDTO ValidCreateDTO => new()
         {
             FirstName = "Test",
@@ -19,7 +50,7 @@ namespace Saitynas_API_Tests.DTOValidatorTests
             Address = "Test Address",
             WorkplaceId = 1
         };
-        
+
         private static EditSpecialistDTO ValidEditDTO => new()
         {
             FirstName = "Edited Name",
@@ -31,9 +62,9 @@ namespace Saitynas_API_Tests.DTOValidatorTests
         [SetUp]
         public void SetUp()
         {
-            _validator = new SpecialistDTOValidator();
+            _validator = new SpecialistDTOValidator(EntityValidatorMock);
         }
-        
+
         [Test]
         public void TestValidCreateDto()
         {
@@ -42,7 +73,7 @@ namespace Saitynas_API_Tests.DTOValidatorTests
             _validator.ValidateCreateSpecialistDTO(dto);
 
             var specialist = new Specialist(dto);
-            
+
             IsNotNull(specialist);
         }
 
@@ -55,7 +86,7 @@ namespace Saitynas_API_Tests.DTOValidatorTests
 
             Throws<DTOValidationException>(() => _validator.ValidateCreateSpecialistDTO(dto));
         }
-        
+
         [Test]
         public void TestInvalidCreateSpecialityId()
         {
@@ -64,7 +95,7 @@ namespace Saitynas_API_Tests.DTOValidatorTests
 
             Throws<DTOValidationException>(() => _validator.ValidateCreateSpecialistDTO(dto));
         }
-        
+
         [Test]
         public void TestValidEditDto()
         {
@@ -82,6 +113,15 @@ namespace Saitynas_API_Tests.DTOValidatorTests
             dto.Address = new string('x', 256);
 
             Throws<DTOValidationException>(() => _validator.ValidateEditSpecialistDTO(dto));
+        }
+        
+        [Test]
+        public void TestEditSpecialityId()
+        {
+            var dto = ValidEditDTO;
+            dto.SpecialityId = 5;
+
+            Pass();
         }
     }
 }

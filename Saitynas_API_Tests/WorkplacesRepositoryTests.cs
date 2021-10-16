@@ -9,6 +9,7 @@ using static NUnit.Framework.Assert;
 
 namespace Saitynas_API_Tests
 {
+    [TestFixture]
     public class WorkplacesRepositoryTests
     {
         private ApiContext _context;
