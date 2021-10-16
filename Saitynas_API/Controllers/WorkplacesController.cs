@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -58,6 +59,7 @@ namespace Saitynas_API.Controllers
 
         [HttpGet("{id:int}/specialists")]
         [Authorize(Roles = AllRoles)]
+        [Obsolete]
         public async Task<ActionResult<GetListDTO<GetSpecialistDTO>>> GetWorkplaceSpecialists(int id)
         {
             var specialists = await Context.Specialists

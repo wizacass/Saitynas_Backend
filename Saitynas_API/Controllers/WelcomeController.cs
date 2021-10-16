@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
@@ -16,6 +17,7 @@ namespace Saitynas_API.Controllers
         public WelcomeController(ApiContext context) : base(context) { }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<MessageDTO>> GetMessage()
         {
             var message = await Context.Messages.FirstOrDefaultAsync(m => m.Id == 1);

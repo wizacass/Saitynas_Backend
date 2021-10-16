@@ -10,6 +10,7 @@ namespace Saitynas_API.Controllers
     [Route(RoutePrefix + "/[Controller]")]
     [ApiController]
     [Produces(ApiContentType)]
+    [Obsolete]
     public class VisitsController : ApiControllerBase
     { 
         protected override string ModelName => "visit";

@@ -12,6 +12,7 @@ namespace Saitynas_API.Controllers
     [Route(RoutePrefix + "/[Controller]")]
     [ApiController]
     [Produces(ApiContentType)]
+    [Obsolete]
     public class SpecialitiesController : ApiControllerBase
     {
         protected override string ModelName => "speciality";
