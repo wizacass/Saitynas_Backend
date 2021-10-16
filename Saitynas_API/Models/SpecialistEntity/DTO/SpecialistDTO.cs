@@ -22,8 +22,8 @@ namespace Saitynas_API.Models.SpecialistEntity.DTO
         {
             FirstName = s.FirstName;
             LastName = s.LastName;
+            Address = (s.Workplace?.Address) ?? s.Address;
             Speciality = s.Speciality.Name;
-            Address = s.Workplace?.Address ?? s.Address;
         }
     }
 }

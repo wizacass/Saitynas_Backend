@@ -26,7 +26,11 @@ namespace Saitynas_API.Models.SpecialistEntity.Repository
 
         public async Task<Specialist> GetAsync(int id)
         {
-            var specialist = await _context.Specialists.FirstOrDefaultAsync(s => s.Id == id);
+            var specialist = await _context.Specialists.
+                Where(s => s.Id == id)
+                .Include(s => s.Speciality)
+                .Include(s => s.Workplace)
+                .FirstOrDefaultAsync();
 
             return specialist;
         }

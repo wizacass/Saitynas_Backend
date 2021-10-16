@@ -8,6 +8,7 @@ namespace Saitynas_API.Models.SpecialistEntity
     public class Specialist
     {
         [Key]
+        [Required]
         public int Id { get; init; }
         
         [Required]
