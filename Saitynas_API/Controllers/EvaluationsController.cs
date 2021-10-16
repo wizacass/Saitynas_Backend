@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace Saitynas_API.Controllers
     [Route(RoutePrefix + "/[Controller]")]
     [ApiController]
     [Produces(ApiContentType)]
+    [Obsolete]
     public class EvaluationsController : ApiControllerBase
     {
         protected override string ModelName => "evaluation";

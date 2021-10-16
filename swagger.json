@@ -129,7 +129,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       },
       "post": {
         "tags": [
@@ -182,7 +183,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1/Evaluations/{id}": {
@@ -222,7 +224,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       },
       "put": {
         "tags": [
@@ -284,7 +287,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       },
       "delete": {
         "tags": [
@@ -315,7 +319,8 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1/Specialists": {
@@ -590,7 +595,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       },
       "post": {
         "tags": [
@@ -643,7 +649,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1/Specialities/{id}": {
@@ -683,7 +690,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       },
       "put": {
         "tags": [
@@ -745,7 +753,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       },
       "delete": {
         "tags": [
@@ -776,7 +785,8 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1/Specialities/{id}/specialists": {
@@ -816,7 +826,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1/Users/me": {
@@ -871,7 +882,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       },
       "post": {
         "tags": [
@@ -924,7 +936,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1/Visits/{id}": {
@@ -964,7 +977,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       },
       "put": {
         "tags": [
@@ -1026,7 +1040,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       },
       "delete": {
         "tags": [
@@ -1057,7 +1072,8 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1": {
@@ -1331,7 +1347,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     }
   },
