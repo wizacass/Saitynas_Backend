@@ -2,12 +2,14 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
 using Saitynas_API.Models.DTO.Common;
 using Saitynas_API.Models.EvaluationEntity;
 using Saitynas_API.Models.EvaluationEntity.DTO;
 using Saitynas_API.Models.EvaluationEntity.Repository;
+using Saitynas_API.Models.UserEntity;
 
 namespace Saitynas_API.Controllers
 {
@@ -20,7 +22,11 @@ namespace Saitynas_API.Controllers
 
         private readonly IEvaluationsRepository _repository;
 
-        public EvaluationsController(ApiContext context, IEvaluationsRepository repository) : base(context)
+        public EvaluationsController(
+            ApiContext context, 
+            IEvaluationsRepository repository,
+            UserManager<User> userManager
+            ) : base(context, userManager)
         {
             _repository = repository;
         }
@@ -47,16 +53,17 @@ namespace Saitynas_API.Controllers
 
             return Ok(dto);
         }
-
-        [Obsolete]
+        
         [HttpPost]
-        public ActionResult<GetObjectDTO<GetEvaluationDTO>> CreateEvaluation([FromBody] EvaluationDTO dto)
+        [Authorize(Roles = "Patient")]
+        public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> CreateEvaluation([FromBody] EvaluationDTO dto)
         {
-            var evaluation = new Evaluation(dto);
+            var user = await GetCurrentUser();
+            var evaluation = new Evaluation(user, dto);
 
-            _repository.InsertAsync(evaluation);
+            await _repository.InsertAsync(evaluation);
 
-            return ApiCreated(new GetObjectDTO<GetEvaluationDTO>(new GetEvaluationDTO(evaluation)));
+            return NoContent();
         }
 
         [Obsolete]

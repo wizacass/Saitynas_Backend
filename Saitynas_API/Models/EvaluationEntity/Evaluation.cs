@@ -35,6 +35,7 @@ namespace Saitynas_API.Models.EvaluationEntity
         {
             Value = dto.Value;
             Comment = dto.Comment;
+            SpecialistId = dto.SpecialistId;
         }
 
         public Evaluation(int id, EvaluationDTO dto) : this(dto)
