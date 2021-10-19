@@ -182,8 +182,7 @@
               }
             }
           }
-        },
-        "deprecated": true
+        }
       }
     },
     "/api/v1/Evaluations/{id}": {
@@ -1471,14 +1470,6 @@
           "specialistId": {
             "type": "integer",
             "format": "int32"
-          },
-          "specialist": {
-            "type": "string",
-            "nullable": true
-          },
-          "author": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1532,6 +1523,14 @@
             "type": "integer",
             "format": "int32"
           },
+          "specialist": {
+            "type": "string",
+            "nullable": true
+          },
+          "author": {
+            "type": "string",
+            "nullable": true
+          },
           "value": {
             "type": "integer",
             "format": "int32"
@@ -1543,14 +1542,6 @@
           "specialistId": {
             "type": "integer",
             "format": "int32"
-          },
-          "specialist": {
-            "type": "string",
-            "nullable": true
-          },
-          "author": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
