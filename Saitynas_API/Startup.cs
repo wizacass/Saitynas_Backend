@@ -120,7 +120,7 @@ namespace Saitynas_API
 
         private static void RegisterRepositories(IServiceCollection services)
         {
-            services.AddScoped<IEvaluationsRepository, EvaluationsRepositoryMock>();
+            services.AddScoped<IEvaluationsRepository, EvaluationsRepository>();
             services.AddScoped<IWorkplacesRepository, WorkplacesRepository>();
             services.AddScoped<ISpecialistsRepository, SpecialistsRepository>();
         }
