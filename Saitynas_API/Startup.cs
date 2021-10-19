@@ -12,6 +12,7 @@ using Saitynas_API.Middleware;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
+using Saitynas_API.Models.EvaluationEntity;
 using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.MessageEntity;
 using Saitynas_API.Models.SpecialistEntity;
@@ -170,7 +171,8 @@ namespace Saitynas_API
                 new UserSeed(context, userManager),
                 new WorkplaceSeed(context),
                 new SpecialitySeed(context),
-                new SpecialistSeed(context)
+                new SpecialistSeed(context),
+                new EvaluationsSeed(context)
             };
 
             await new Seeder(context, seeders).Seed();
