@@ -9,11 +9,9 @@ namespace Saitynas_API.Models.EvaluationEntity.DTO
 
         public GetEvaluationDTO() { }
 
-        public GetEvaluationDTO(Evaluation e)
+        public GetEvaluationDTO(Evaluation e) : base(e)
         {
             Id = e.Id;
-            Value = e.Value;
-            Comment = e.Comment;
         }
     }
 }
