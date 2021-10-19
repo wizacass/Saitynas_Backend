@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
 using Saitynas_API.Models.DTO.Common;
@@ -23,9 +24,9 @@ namespace Saitynas_API.Controllers
         {
             _repository = repository;
         }
-        
-        [Obsolete]
+
         [HttpGet]
+        [Authorize(Roles = AllRoles)]
         public async Task<ActionResult<GetListDTO<GetEvaluationDTO>>> GetEvaluations()
         {
             var evaluations = (await _repository.GetAllAsync())
@@ -33,15 +34,15 @@ namespace Saitynas_API.Controllers
 
             return Ok(new GetListDTO<GetEvaluationDTO>(evaluations));
         }
-
-        [Obsolete]
+        
         [HttpGet("{id:int}")]
+        [Authorize(Roles = AllRoles)]
         public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> GetEvaluation(int id)
         {
             var evaluation = await _repository.GetAsync(id);
-            
+
             if (evaluation == null) return ApiNotFound();
-            
+
             var dto = new GetObjectDTO<GetEvaluationDTO>(new GetEvaluationDTO(evaluation));
 
             return Ok(dto);
@@ -57,13 +58,16 @@ namespace Saitynas_API.Controllers
 
             return ApiCreated(new GetObjectDTO<GetEvaluationDTO>(new GetEvaluationDTO(evaluation)));
         }
-        
+
         [Obsolete]
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> EditEvaluation(int id, [FromBody] EvaluationDTO dto)
+        public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> EditEvaluation(
+            int id,
+            [FromBody] EvaluationDTO dto
+        )
         {
             var evaluation = new Evaluation(id, dto);
-            
+
             await _repository.UpdateAsync(id, evaluation);
 
             return Ok(new GetObjectDTO<GetEvaluationDTO>(new GetEvaluationDTO(evaluation)));
@@ -74,7 +78,7 @@ namespace Saitynas_API.Controllers
         public async Task<IActionResult> DeleteEvaluation(int id)
         {
             await _repository.DeleteAsync(id);
-                
+
             return NoContent();
         }
     }

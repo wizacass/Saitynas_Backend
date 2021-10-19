@@ -223,8 +223,7 @@
               }
             }
           }
-        },
-        "deprecated": true
+        }
       },
       "put": {
         "tags": [
