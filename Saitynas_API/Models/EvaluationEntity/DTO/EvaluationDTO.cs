@@ -17,7 +17,7 @@ namespace Saitynas_API.Models.EvaluationEntity.DTO
 
         public EvaluationDTO(Evaluation e)
         {
-            Value = e.Value;
+            Value = e.Value ?? 0;
             Comment = e.Comment;
             SpecialistId = e.SpecialistId;
         }

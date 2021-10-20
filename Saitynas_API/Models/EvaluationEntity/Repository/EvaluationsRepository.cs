@@ -34,7 +34,9 @@ namespace Saitynas_API.Models.EvaluationEntity.Repository
 
         public async Task UpdateAsync(int id, Evaluation data)
         {
-            _context.Evaluations.Update(data);
+            var evaluation = await GetAsync(id);
+            evaluation.Update(data);
+            
             await _context.SaveChangesAsync();
         }
 

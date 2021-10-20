@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -23,10 +22,10 @@ namespace Saitynas_API.Controllers
         private readonly IEvaluationsRepository _repository;
 
         public EvaluationsController(
-            ApiContext context, 
+            ApiContext context,
             IEvaluationsRepository repository,
             UserManager<User> userManager
-            ) : base(context, userManager)
+        ) : base(context, userManager)
         {
             _repository = repository;
         }
@@ -40,7 +39,7 @@ namespace Saitynas_API.Controllers
 
             return Ok(new GetListDTO<GetEvaluationDTO>(evaluations));
         }
-        
+
         [HttpGet("{id:int}")]
         [Authorize(Roles = AllRoles)]
         public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> GetEvaluation(int id)
@@ -53,10 +52,12 @@ namespace Saitynas_API.Controllers
 
             return Ok(dto);
         }
-        
+
         [HttpPost]
         [Authorize(Roles = "Patient")]
-        public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> CreateEvaluation([FromBody] EvaluationDTO dto)
+        public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> CreateEvaluation(
+            [FromBody] EvaluationDTO dto
+        )
         {
             var user = await GetCurrentUser();
             var evaluation = new Evaluation(user, dto);
@@ -66,21 +67,17 @@ namespace Saitynas_API.Controllers
             return NoContent();
         }
 
-        [Obsolete]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> EditEvaluation(
             int id,
-            [FromBody] EvaluationDTO dto
+            [FromBody] EditEvaluationDTO dto
         )
         {
-            var evaluation = new Evaluation(id, dto);
+            await _repository.UpdateAsync(id, new Evaluation(dto));
 
-            await _repository.UpdateAsync(id, evaluation);
-
-            return Ok(new GetObjectDTO<GetEvaluationDTO>(new GetEvaluationDTO(evaluation)));
+            return NoContent();
         }
 
-        [Obsolete]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteEvaluation(int id)
         {

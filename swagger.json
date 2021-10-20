@@ -253,22 +253,22 @@
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/EvaluationDTO"
+                "$ref": "#/components/schemas/EditEvaluationDTO"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EvaluationDTO"
+                "$ref": "#/components/schemas/EditEvaluationDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/EvaluationDTO"
+                "$ref": "#/components/schemas/EditEvaluationDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/EvaluationDTO"
+                "$ref": "#/components/schemas/EditEvaluationDTO"
               }
             }
           }
@@ -284,8 +284,7 @@
               }
             }
           }
-        },
-        "deprecated": true
+        }
       },
       "delete": {
         "tags": [
@@ -1386,6 +1385,21 @@
             "nullable": true
           },
           "city": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EditEvaluationDTO": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "comment": {
             "type": "string",
             "nullable": true
           }

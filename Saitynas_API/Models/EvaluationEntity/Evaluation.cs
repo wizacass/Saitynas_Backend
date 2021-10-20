@@ -12,7 +12,7 @@ namespace Saitynas_API.Models.EvaluationEntity
         public int Id { get; init; }
 
         [Required]
-        public int Value { get; set; }
+        public int? Value { get; set; }
 
         [StringLength(255)]
         public string Comment { get; set; }
@@ -46,6 +46,18 @@ namespace Saitynas_API.Models.EvaluationEntity
         public Evaluation(User user, EvaluationDTO dto) : this(dto)
         {
             User = user;
+        }
+
+        public Evaluation(EditEvaluationDTO dto)
+        {
+            Comment = dto.Comment;
+            Value = dto.Value;
+        }
+
+        public void Update(Evaluation e)
+        {
+            Value = e.Value ?? Value;
+            Comment = e.Comment ?? Comment;
         }
     }
 }
