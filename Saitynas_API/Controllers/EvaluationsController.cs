@@ -31,7 +31,7 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = AllRoles)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GetListDTO<GetEvaluationDTO>>> GetEvaluations()
         {
             var evaluations = (await _repository.GetAllAsync())
@@ -41,7 +41,7 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Roles = AllRoles)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> GetEvaluation(int id)
         {
             var evaluation = await _repository.GetAsync(id);
@@ -68,6 +68,7 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> EditEvaluation(
             int id,
             [FromBody] EditEvaluationDTO dto
@@ -79,6 +80,7 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteEvaluation(int id)
         {
             await _repository.DeleteAsync(id);

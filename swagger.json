@@ -315,8 +315,7 @@
           "200": {
             "description": "Success"
           }
-        },
-        "deprecated": true
+        }
       }
     },
     "/api/v1/Specialists": {
