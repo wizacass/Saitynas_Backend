@@ -23,7 +23,11 @@ namespace Saitynas_API.Models.EvaluationEntity.Repository
 
         public async Task<Evaluation> GetAsync(int id)
         {
-            return await _context.Evaluations.FirstOrDefaultAsync(e => e.Id == id);
+            var evaluation =  await _context.Evaluations.FirstOrDefaultAsync(e => e.Id == id);
+
+            if (evaluation == null) throw new KeyNotFoundException();
+            
+            return evaluation;
         }
 
         public async Task InsertAsync(Evaluation data)

@@ -173,14 +173,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetEvaluationDTOGetObjectDTO"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
@@ -275,14 +268,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetEvaluationDTOGetObjectDTO"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       },
