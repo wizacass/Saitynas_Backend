@@ -33,7 +33,7 @@ namespace Saitynas_API_Tests.DTOValidatorTests
                         It.IsInRange(1, 10, Range.Inclusive)
                     ))
                     .Returns(true);
-                
+
                 entityValidatorMock
                     .Setup(v => v.IsSpecialityIdValid(null))
                     .Returns(true);
@@ -102,8 +102,6 @@ namespace Saitynas_API_Tests.DTOValidatorTests
             var dto = ValidEditDTO;
 
             _validator.ValidateEditSpecialistDTO(dto);
-
-            Pass();
         }
 
         [Test]
@@ -113,15 +111,6 @@ namespace Saitynas_API_Tests.DTOValidatorTests
             dto.Address = new string('x', 256);
 
             Throws<DTOValidationException>(() => _validator.ValidateEditSpecialistDTO(dto));
-        }
-        
-        [Test]
-        public void TestEditSpecialityId()
-        {
-            var dto = ValidEditDTO;
-            dto.SpecialityId = 5;
-
-            Pass();
         }
     }
 }

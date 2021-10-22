@@ -15,7 +15,7 @@ namespace Saitynas_API.Models
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         
-        // public DbSet<Evaluation> Evaluations { get; set; }
+        public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<Workplace> Workplaces { get; set; }
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<Specialist> Specialists { get; set; }
@@ -29,6 +29,7 @@ namespace Saitynas_API.Models
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new WorkplaceConfiguration());
+            builder.ApplyConfiguration(new SpecialistConfiguration());
         }
     }
 }

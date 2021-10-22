@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,30 +17,18 @@ namespace Saitynas_API.Controllers
     {
         protected override string ModelName => "user";
 
-        private readonly UserManager<User> _userManager;
-
-        public UsersController(ApiContext context, UserManager<User> userManager) : base(context)
-        {
-            _userManager = userManager;
-        }
+        public UsersController(ApiContext context, UserManager<User> userManager) : base(context, userManager) { }
 
         [HttpGet("me")]
         [Authorize(Roles = AllRoles)]
         public async Task<IActionResult> GetUser()
         {
             var user = await GetCurrentUser();
-            
+
             if (user == null) return ApiNotFound(ApiErrorSlug.ResourceNotFound, ModelName);
 
             var dto = new UserDTO(user);
             return Ok(new GetObjectDTO<UserDTO>(dto));
-        }
-        
-        private async Task<User> GetCurrentUser()
-        {
-            string email = User.FindFirst(ClaimTypes.Email)?.Value;
-
-            return await _userManager.FindByEmailAsync(email);
         }
     }
 }

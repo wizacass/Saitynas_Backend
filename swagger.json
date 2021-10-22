@@ -129,8 +129,7 @@
               }
             }
           }
-        },
-        "deprecated": true
+        }
       },
       "post": {
         "tags": [
@@ -174,17 +173,9 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetEvaluationDTOGetObjectDTO"
-                }
-              }
-            }
+            "description": "Success"
           }
-        },
-        "deprecated": true
+        }
       }
     },
     "/api/v1/Evaluations/{id}": {
@@ -224,8 +215,7 @@
               }
             }
           }
-        },
-        "deprecated": true
+        }
       },
       "put": {
         "tags": [
@@ -256,39 +246,31 @@
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/EvaluationDTO"
+                "$ref": "#/components/schemas/EditEvaluationDTO"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EvaluationDTO"
+                "$ref": "#/components/schemas/EditEvaluationDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/EvaluationDTO"
+                "$ref": "#/components/schemas/EditEvaluationDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/EvaluationDTO"
+                "$ref": "#/components/schemas/EditEvaluationDTO"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetEvaluationDTOGetObjectDTO"
-                }
-              }
-            }
+            "description": "Success"
           }
-        },
-        "deprecated": true
+        }
       },
       "delete": {
         "tags": [
@@ -319,8 +301,7 @@
           "200": {
             "description": "Success"
           }
-        },
-        "deprecated": true
+        }
       }
     },
     "/api/v1/Specialists": {
@@ -1395,6 +1376,21 @@
         },
         "additionalProperties": false
       },
+      "EditEvaluationDTO": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "EditSpecialistDTO": {
         "type": "object",
         "properties": {
@@ -1469,6 +1465,10 @@
           "comment": {
             "type": "string",
             "nullable": true
+          },
+          "specialistId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1522,6 +1522,14 @@
             "type": "integer",
             "format": "int32"
           },
+          "specialist": {
+            "type": "string",
+            "nullable": true
+          },
+          "author": {
+            "type": "string",
+            "nullable": true
+          },
           "value": {
             "type": "integer",
             "format": "int32"
@@ -1529,6 +1537,10 @@
           "comment": {
             "type": "string",
             "nullable": true
+          },
+          "specialistId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

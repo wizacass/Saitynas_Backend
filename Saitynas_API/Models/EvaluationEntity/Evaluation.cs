@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using Saitynas_API.Models.EvaluationEntity.DTO;
 using Saitynas_API.Models.SpecialistEntity;
@@ -6,28 +5,29 @@ using Saitynas_API.Models.UserEntity;
 
 namespace Saitynas_API.Models.EvaluationEntity
 {
-    public class Evaluation : IEquatable<Evaluation>
+    public class Evaluation
     {
         [Key]
         [Required]
         public int Id { get; init; }
-        
+
         [Required]
-        public int Value { get; set; }
-        
+        public int? Value { get; set; }
+
+        [StringLength(255)]
         public string Comment { get; set; }
-        
+
         [Required]
         public int SpecialistId { get; set; }
 
         [Required]
         public Specialist Specialist { get; set; }
-        
+
         [Required]
-        public int PatientId { get; set; }
-        
+        public int UserId { get; set; }
+
         [Required]
-        public Patient Patient { get; set; }
+        public User User { get; set; }
 
         public Evaluation() { }
 
@@ -35,34 +35,29 @@ namespace Saitynas_API.Models.EvaluationEntity
         {
             Value = dto.Value;
             Comment = dto.Comment;
+            SpecialistId = dto.SpecialistId;
         }
-        
-        public Evaluation(int id, EvaluationDTO dto)
+
+        public Evaluation(int id, EvaluationDTO dto) : this(dto)
         {
             Id = id;
-            Value = dto.Value;
+        }
+
+        public Evaluation(User user, EvaluationDTO dto) : this(dto)
+        {
+            User = user;
+        }
+
+        public Evaluation(EditEvaluationDTO dto)
+        {
             Comment = dto.Comment;
+            Value = dto.Value;
         }
 
-        public bool Equals(Evaluation other)
+        public void Update(Evaluation e)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            
-            return Id == other.Id;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            
-            return obj.GetType() == this.GetType() && Equals((Evaluation)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Id;
+            Value = e.Value ?? Value;
+            Comment = e.Comment ?? Comment;
         }
     }
 }
