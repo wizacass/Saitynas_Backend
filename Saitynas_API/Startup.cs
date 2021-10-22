@@ -13,6 +13,7 @@ using Saitynas_API.Models;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.EvaluationEntity;
+using Saitynas_API.Models.EvaluationEntity.DTO.Validator;
 using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.MessageEntity;
 using Saitynas_API.Models.SpecialistEntity;
@@ -117,6 +118,7 @@ namespace Saitynas_API
                 
             services.AddScoped<IWorkplaceDTOValidator, WorkplaceDTOValidator>();
             services.AddScoped<ISpecialistDTOValidator, SpecialistDTOValidator>();
+            services.AddScoped<IEvaluationDTOValidator, EvaluationDTOValidator>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)

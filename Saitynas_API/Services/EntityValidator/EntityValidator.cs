@@ -6,7 +6,7 @@ namespace Saitynas_API.Services.EntityValidator
     public class EntityValidator : IEntityValidator
     {
         private readonly ApiContext _context;
-        
+
         public EntityValidator(ApiContext context)
         {
             _context = context;
@@ -30,6 +30,16 @@ namespace Saitynas_API.Services.EntityValidator
         public bool IsSpecialityIdValid(int id)
         {
             return _context.Specialities.Any(w => w.Id == id);
+        }
+
+        public bool IsSpecialistIdValid(int? id)
+        {
+            return id == null || IsSpecialistIdValid((int)id);
+        }
+
+        public bool IsSpecialistIdValid(int id)
+        {
+            return _context.Specialists.Any(s => s.Id == id);
         }
     }
 }

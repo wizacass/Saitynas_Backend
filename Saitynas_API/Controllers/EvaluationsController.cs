@@ -7,6 +7,7 @@ using Saitynas_API.Models;
 using Saitynas_API.Models.DTO.Common;
 using Saitynas_API.Models.EvaluationEntity;
 using Saitynas_API.Models.EvaluationEntity.DTO;
+using Saitynas_API.Models.EvaluationEntity.DTO.Validator;
 using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.UserEntity;
 
@@ -20,14 +21,17 @@ namespace Saitynas_API.Controllers
         protected override string ModelName => "evaluation";
 
         private readonly IEvaluationsRepository _repository;
+        private readonly IEvaluationDTOValidator _validator;
 
         public EvaluationsController(
             ApiContext context,
             IEvaluationsRepository repository,
+            IEvaluationDTOValidator validator,
             UserManager<User> userManager
         ) : base(context, userManager)
         {
             _repository = repository;
+            _validator = validator;
         }
 
         [HttpGet]
@@ -59,6 +63,8 @@ namespace Saitynas_API.Controllers
             [FromBody] EvaluationDTO dto
         )
         {
+            _validator.ValidateCreateEvaluationDTO(dto);
+            
             var user = await GetCurrentUser();
             var evaluation = new Evaluation(user, dto);
 
@@ -74,6 +80,8 @@ namespace Saitynas_API.Controllers
             [FromBody] EditEvaluationDTO dto
         )
         {
+            _validator.ValidateEditEvaluationDTO(dto);
+            
             await _repository.UpdateAsync(id, new Evaluation(dto));
 
             return NoContent();

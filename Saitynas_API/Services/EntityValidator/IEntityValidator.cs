@@ -7,5 +7,8 @@ namespace Saitynas_API.Services.EntityValidator
 
         public bool IsSpecialityIdValid(int? id);
         public bool IsSpecialityIdValid(int id);
+        
+        public bool IsSpecialistIdValid(int? id);
+        public bool IsSpecialistIdValid(int id);
     }
 }
