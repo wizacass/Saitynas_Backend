@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
 using Saitynas_API.Middleware;
 using Saitynas_API.Models;
+using Saitynas_API.Models.Authentication.DTO.Validator;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.EvaluationEntity;
@@ -115,7 +116,8 @@ namespace Saitynas_API
             services.AddScoped<IHeadersValidator, HeadersValidator>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IEntityValidator, EntityValidator>();
-                
+
+            services.AddScoped<ISignupDTOValidator, SignupDTOValidator>();
             services.AddScoped<IWorkplaceDTOValidator, WorkplaceDTOValidator>();
             services.AddScoped<ISpecialistDTOValidator, SpecialistDTOValidator>();
             services.AddScoped<IEvaluationDTOValidator, EvaluationDTOValidator>();

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.Authentication.DTO;
+using Saitynas_API.Models.Authentication.DTO.Validator;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.UserEntity;
 using Saitynas_API.Services.JwtService;
@@ -19,11 +20,13 @@ namespace Saitynas_API.Controllers
     {
         protected override string ModelName => "user";
 
+        private readonly ISignupDTOValidator _validator;
         private readonly UserManager<User> _userManager;
         private readonly IJwtService _jwt;
 
-        public AuthController(ApiContext context, UserManager<User> userManager, IJwtService jwt) : base(context)
+        public AuthController(ApiContext context, ISignupDTOValidator validator, UserManager<User> userManager, IJwtService jwt) : base(context)
         {
+            _validator = validator;
             _userManager = userManager;
             _jwt = jwt;
         }
@@ -32,6 +35,8 @@ namespace Saitynas_API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<object>> Signup([FromBody] SignupDTO dto)
         {
+            _validator.ValidateSignupDTO(dto);
+            
             var user = new User(dto);
             var result = await _userManager.CreateAsync(user, dto.Password);
 
