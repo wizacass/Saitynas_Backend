@@ -48,7 +48,14 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationDTO"
+                }
+              }
+            }
           }
         }
       }
@@ -1342,6 +1349,20 @@
   },
   "components": {
     "schemas": {
+      "AuthenticationDTO": {
+        "type": "object",
+        "properties": {
+          "jwt": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateSpecialistDTO": {
         "type": "object",
         "properties": {

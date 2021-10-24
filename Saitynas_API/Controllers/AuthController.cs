@@ -9,6 +9,7 @@ using Saitynas_API.Models.Authentication.DTO;
 using Saitynas_API.Models.Authentication.DTO.Validator;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.UserEntity;
+using Saitynas_API.Services.AuthenticationService;
 using Saitynas_API.Services.JwtService;
 
 namespace Saitynas_API.Controllers
@@ -22,37 +23,26 @@ namespace Saitynas_API.Controllers
 
         private readonly ISignupDTOValidator _validator;
         private readonly UserManager<User> _userManager;
+        private readonly IAuthenticationService _authService;
         private readonly IJwtService _jwt;
 
-        public AuthController(ApiContext context, ISignupDTOValidator validator, UserManager<User> userManager, IJwtService jwt) : base(context)
+        public AuthController(ApiContext context, ISignupDTOValidator validator, UserManager<User> userManager, IAuthenticationService authService, IJwtService jwt) : base(context)
         {
             _validator = validator;
             _userManager = userManager;
+            _authService = authService;
             _jwt = jwt;
         }
 
         [HttpPost("signup")]
         [AllowAnonymous]
-        public async Task<ActionResult<object>> Signup([FromBody] SignupDTO dto)
+        public async Task<ActionResult<AuthenticationDTO>> Signup([FromBody] SignupDTO requestDto)
         {
-            _validator.ValidateSignupDTO(dto);
+            _validator.ValidateSignupDTO(requestDto);
             
-            var user = new User(dto);
-            var result = await _userManager.CreateAsync(user, dto.Password);
+            var responseDto = await _authService.Signup(requestDto);
 
-            if (!result.Succeeded)
-            {
-                return ApiBadRequest(
-                    ApiErrorSlug.AuthenticationError,
-                    result.Errors.First().Description
-                );
-            }
-
-            string token = GenerateToken(user);
-            return ApiCreated(new
-            {
-                jwt = token
-            });
+            return ApiCreated(responseDto);
         }
 
         [HttpPost("login")]
@@ -67,14 +57,14 @@ namespace Saitynas_API.Controllers
                 return ApiBadRequest(ApiErrorSlug.InvalidCredentials);
             }
 
-            string token = GenerateToken(user);
+            string token = GenerateAccessToken(user);
             return Ok(new
             {
                 jwt = token
             });
         }
 
-        private string GenerateToken(User user)
+        private string GenerateAccessToken(User user)
         {
             return _jwt.GenerateSecurityToken(new JwtUser(user.Email, user.RoleId));
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
 using Saitynas_API.Models.RoleEntity;
 using Saitynas_API.Models.UserEntity;
@@ -37,12 +38,12 @@ namespace Saitynas_API.Services
 
         public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task SetNormalizedUserNameAsync(
@@ -71,22 +72,27 @@ namespace Saitynas_API.Services
 
         public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            _context.Users.Update(user);
+            _context.SaveChanges();
+
+            return Task.FromResult(IdentityResult.Success);
         }
 
         public Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_context.Users.FirstOrDefault(a => a.Email == normalizedUserName));
+            var user = GetUserByEmail(normalizedUserName);
+            
+            return Task.FromResult(user);
         }
 
         public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
@@ -103,12 +109,12 @@ namespace Saitynas_API.Services
 
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task SetEmailAsync(User user, string email, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<string> GetEmailAsync(User user, CancellationToken cancellationToken)
@@ -118,22 +124,24 @@ namespace Saitynas_API.Services
 
         public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_context.Users.FirstOrDefault(a => a.Email == normalizedEmail));
+            var user = GetUserByEmail(normalizedEmail);
+            
+            return Task.FromResult(user);
         }
 
         public Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
@@ -143,7 +151,7 @@ namespace Saitynas_API.Services
 
         public Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            var roleId = (RoleId) Enum.Parse(typeof(RoleId), roleName, true);
+            var roleId = (RoleId)Enum.Parse(typeof(RoleId), roleName, true);
             user.RoleId = roleId;
 
             _context.Users.Update(user);
@@ -164,7 +172,10 @@ namespace Saitynas_API.Services
 
         public Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
         {
-            IList<string> roles = new List<string> { user.RoleId.ToString() };
+            IList<string> roles = new List<string>
+            {
+                user.RoleId.ToString()
+            };
 
             return Task.FromResult(roles);
         }
@@ -179,6 +190,16 @@ namespace Saitynas_API.Services
             IList<User> list = _context.Users.Where(x => x.RoleId.ToString() == roleName).ToList();
 
             return Task.FromResult(list);
+        }
+
+        private User GetUserByEmail(string email)
+        {
+            var user = _context.Users
+                .Where(u => u.Email == email)
+                .Include(u => u.RefreshTokens)
+                .FirstOrDefault();
+
+            return user;
         }
     }
 }

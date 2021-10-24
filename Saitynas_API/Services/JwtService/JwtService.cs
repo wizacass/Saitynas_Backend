@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Saitynas_API.Models.Authentication;
+using Saitynas_API.Models.UserEntity;
 
 namespace Saitynas_API.Services.JwtService
 {
@@ -78,7 +79,7 @@ namespace Saitynas_API.Services.JwtService
             }
         }
         
-        public RefreshToken GenerateRefreshToken()
+        public RefreshToken GenerateRefreshToken(User user)
         {
             using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
             byte[] randomBytes = new byte[64];
@@ -88,6 +89,7 @@ namespace Saitynas_API.Services.JwtService
             {
                 Token = Convert.ToBase64String(randomBytes),
                 ExpiresAt = DateTime.UtcNow.AddDays(7),
+                UserId = user.Id
             };
 
             return refreshToken;

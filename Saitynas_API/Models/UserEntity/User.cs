@@ -43,7 +43,7 @@ namespace Saitynas_API.Models.UserEntity
             RefreshTokens = new List<RefreshToken>();
         }
 
-        public User(SignupDTO dto)
+        public User(SignupDTO dto) : this()
         {
             Email = dto.Email;
             RoleId = (RoleId)dto.Role;

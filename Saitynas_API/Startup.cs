@@ -26,6 +26,7 @@ using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
 using Saitynas_API.Models.WorkplaceEntity.Repository;
 using Saitynas_API.Services;
+using Saitynas_API.Services.AuthenticationService;
 using Saitynas_API.Services.EntityValidator;
 using Saitynas_API.Services.HeadersValidator;
 using Saitynas_API.Services.JwtService;
@@ -118,6 +119,7 @@ namespace Saitynas_API
         {
             services.AddScoped<IHeadersValidator, HeadersValidator>();
             services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEntityValidator, EntityValidator>();
 
             services.AddScoped<ISignupDTOValidator, SignupDTOValidator>();

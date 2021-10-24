@@ -19,10 +19,8 @@ namespace Saitynas_API.Models.Authentication
         [Required]
         public DateTime CreatedAt { get; set; }
         
-        [Required]
-        public DateTime? Revoked { get; set; }
+        public DateTime? RevokedAt { get; set; }
         
-        [Required]
         public string ReplacedByToken { get; set; }
         
         [Required]
@@ -33,7 +31,7 @@ namespace Saitynas_API.Models.Authentication
         
         public bool IsExpired => DateTime.UtcNow >= ExpiresAt;
         
-        public bool IsRevoked => Revoked != null;
+        public bool IsRevoked => RevokedAt != null;
         
         public bool IsActive => !IsRevoked && !IsExpired;
 
