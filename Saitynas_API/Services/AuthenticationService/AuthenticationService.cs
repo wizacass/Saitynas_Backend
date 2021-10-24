@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Saitynas_API.Exceptions;
 using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.Authentication.DTO;
+using Saitynas_API.Models.Common;
 using Saitynas_API.Models.UserEntity;
 using Saitynas_API.Services.JwtService;
 
@@ -31,6 +32,24 @@ namespace Saitynas_API.Services.AuthenticationService
                 throw new AuthenticationException(error);
             }
             
+            return await GenerateTokens(user);
+        }
+
+        public async Task<AuthenticationDTO> Login(LoginDTO dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            
+            if (user == null) throw new AuthenticationException(ApiErrorSlug.InvalidCredentials);
+            if (!await _userManager.CheckPasswordAsync(user, dto.Password))
+            {
+                throw new AuthenticationException(ApiErrorSlug.InvalidCredentials);
+            }
+            
+            return await GenerateTokens(user);
+        }
+
+        private async Task<AuthenticationDTO> GenerateTokens(User user)
+        {
             string accessToken = GenerateAccessToken(user);
             var refreshToken = _jwt.GenerateRefreshToken(user);
 
@@ -38,11 +57,6 @@ namespace Saitynas_API.Services.AuthenticationService
             await _userManager.UpdateAsync(user);
             
             return new AuthenticationDTO(accessToken, refreshToken.Token);
-        }
-
-        public Task<AuthenticationDTO> Login()
-        {
-            throw new System.NotImplementedException();
         }
         
         private string GenerateAccessToken(User user)

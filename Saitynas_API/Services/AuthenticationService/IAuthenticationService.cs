@@ -7,7 +7,7 @@ namespace Saitynas_API.Services.AuthenticationService
     {
         Task<AuthenticationDTO> Signup(SignupDTO dto);
 
-        Task<AuthenticationDTO> Login();
+        Task<AuthenticationDTO> Login(LoginDTO dto);
         
        // AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
        //AuthenticateResponse RefreshToken(string token, string ipAddress);
