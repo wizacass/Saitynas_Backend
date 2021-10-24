@@ -77,7 +77,10 @@ namespace Saitynas_API
             services.AddDbContext<ApiContext>(opt => opt.UseMySQL(builder.ConnectionString));
         }
 
-        private string GetEnvVar(string key) => Configuration[key] ?? Environment.GetEnvironmentVariable(key);
+        private string GetEnvVar(string key)
+        {
+            return Configuration[key] ?? Environment.GetEnvironmentVariable(key);
+        }
 
         private static void SetupSwagger(IServiceCollection services)
         {
@@ -95,7 +98,7 @@ namespace Saitynas_API
                         });
                 });
         }
-        
+
         private void SetupAuthentication(IServiceCollection services)
         {
             services.AddIdentityCore<User>();
@@ -131,7 +134,12 @@ namespace Saitynas_API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApiContext context, UserManager<User> userManager)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            ApiContext context,
+            UserManager<User> userManager
+        )
         {
             if (env.IsDevelopment())
             {
@@ -140,16 +148,11 @@ namespace Saitynas_API
                 app.UseSwaggerUI(SwaggerUIOptions);
             }
 
-            if (env.IsProduction())
-            {
-                context.Database.Migrate();
-            }
+            if (env.IsProduction()) context.Database.Migrate();
 
             _ = SeedDatabase(context, userManager);
 
-            app.UseRequestMiddleware();
-            
-            app.UseMiddleware<ErrorHandlerMiddleware>();
+            RegisterCustomMiddlewares(app);
 
             app.UseRouting();
 
@@ -167,11 +170,18 @@ namespace Saitynas_API
                 });
         }
 
+        private static void RegisterCustomMiddlewares(IApplicationBuilder app)
+        {
+            app.UseRequestMiddleware();
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseMiddleware<JwtMiddleware>();
+        }
+
         private static async Task SeedDatabase(ApiContext context, UserManager<User> userManager)
         {
             var seeders = new ISeed[]
             {
-                new MessageSeed(context), 
+                new MessageSeed(context),
                 new UserSeed(context, userManager),
                 new WorkplaceSeed(context),
                 new SpecialitySeed(context),
