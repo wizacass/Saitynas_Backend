@@ -47,5 +47,14 @@ namespace Saitynas_API.Controllers
 
             return ApiCreated(responseDto);
         }
+
+        [HttpPost("refresh-token")]
+        [AllowAnonymous]
+        public async Task<ActionResult<AuthenticationDTO>> RefreshToken([FromBody] RefreshTokenDTO requestDto)
+        {
+            var responseDto = await _authService.RefreshToken(requestDto.Token);
+
+            return Ok(responseDto);
+        }
     }
 }

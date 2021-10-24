@@ -9,10 +9,10 @@ using Saitynas_API.Models;
 using Saitynas_API.Models.RoleEntity;
 using Saitynas_API.Models.UserEntity;
 
-namespace Saitynas_API.Services
+namespace Saitynas_API.Services.UserStore
 {
     public class ApiUserStore : IUserPasswordStore<User>, IUserEmailStore<User>,
-        IUserRoleStore<User>
+        IUserRoleStore<User>, IApiUserStore
     {
         private readonly ApiContext _context;
 
@@ -198,6 +198,16 @@ namespace Saitynas_API.Services
                 .Where(u => u.Email == email)
                 .Include(u => u.RefreshTokens)
                 .FirstOrDefault();
+
+            return user;
+        }
+
+        public async Task<User> GetUserByRefreshToken(string token)
+        {
+            var user = await _context.Users
+                .Where(u => u.RefreshTokens.Any(t => t.Token == token))
+                .Include(u => u.RefreshTokens)
+                .FirstOrDefaultAsync();
 
             return user;
         }

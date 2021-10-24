@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -32,7 +33,7 @@ namespace Saitynas_API.Models.UserEntity
         [Required]
         public DateTime RegistrationDate { get; set; }
         
-        public ICollection<RefreshToken> RefreshTokens { get; set; }
+        public List<RefreshToken> RefreshTokens { get; set; }
 
         public ICollection<Evaluation> Evaluations { get; set; }
 
@@ -47,6 +48,11 @@ namespace Saitynas_API.Models.UserEntity
         {
             Email = dto.Email;
             RoleId = (RoleId)dto.Role;
+        }
+
+        public void RemoveOldTokens()
+        {
+            RefreshTokens?.RemoveAll(t => !t.IsActive && t.IsExpired);
         }
     }
 }

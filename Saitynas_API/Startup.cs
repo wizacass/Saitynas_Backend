@@ -30,6 +30,7 @@ using Saitynas_API.Services.AuthenticationService;
 using Saitynas_API.Services.EntityValidator;
 using Saitynas_API.Services.HeadersValidator;
 using Saitynas_API.Services.JwtService;
+using Saitynas_API.Services.UserStore;
 using static Saitynas_API.Configuration.IdentityConfiguration;
 using static Saitynas_API.Configuration.SwaggerConfiguration;
 
@@ -119,6 +120,7 @@ namespace Saitynas_API
         {
             services.AddScoped<IHeadersValidator, HeadersValidator>();
             services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IApiUserStore, ApiUserStore>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEntityValidator, EntityValidator>();
 

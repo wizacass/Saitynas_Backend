@@ -39,5 +39,11 @@ namespace Saitynas_API.Models.Authentication
         {
             CreatedAt = DateTime.UtcNow;
         }
+
+        public void Revoke(string replacedByToken = null)
+        {
+            RevokedAt = DateTime.UtcNow;
+            ReplacedByToken = replacedByToken;
+        }
     }
 }
