@@ -1,6 +1,3 @@
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Common;
@@ -19,23 +16,14 @@ namespace Saitynas_API.Controllers
 
         protected ApiContext Context { get; }
 
-        private readonly UserManager<User> _userManager;
-
         protected ApiControllerBase(ApiContext context)
         {
             Context = context;
         }
-        
-        protected ApiControllerBase(ApiContext context, UserManager<User> userManager) : this(context)
-        {
-            _userManager = userManager;
-        }
 
-        protected async Task<User> GetCurrentUser()
+        protected User GetCurrentUser()
         {
-            string email = User.FindFirst(ClaimTypes.Email)?.Value;
-
-            return await _userManager.FindByEmailAsync(email);
+            return HttpContext.Items[nameof(User)] as User;
         }
 
         protected ActionResult ApiCreated(object data)
