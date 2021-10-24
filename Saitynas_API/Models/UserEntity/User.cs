@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.Authentication.DTO;
 using Saitynas_API.Models.EvaluationEntity;
 using Saitynas_API.Models.RoleEntity;
@@ -30,13 +31,16 @@ namespace Saitynas_API.Models.UserEntity
 
         [Required]
         public DateTime RegistrationDate { get; set; }
+        
+        public ICollection<RefreshToken> RefreshTokens { get; set; }
 
         public ICollection<Evaluation> Evaluations { get; set; }
 
         public User()
         {
-            RegistrationDate = DateTime.Now;
+            RegistrationDate = DateTime.UtcNow;
             Evaluations = new List<Evaluation>();
+            RefreshTokens = new List<RefreshToken>();
         }
 
         public User(SignupDTO dto)

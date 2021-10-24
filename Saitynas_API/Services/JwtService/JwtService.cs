@@ -2,6 +2,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,7 @@ namespace Saitynas_API.Services.JwtService
         private SymmetricSecurityKey SecurityKey => new(Encoding.ASCII.GetBytes(_secret));
 
         private readonly string _secret;
+        //TODO: Fix expiration date for tokens
         private readonly int _expirationDays;
         private readonly TokenValidationParameters _tokenValidationParameters;
 
@@ -37,14 +39,16 @@ namespace Saitynas_API.Services.JwtService
         public string GenerateSecurityToken(JwtUser jwtUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
+            var claims = new ClaimsIdentity(new[]
+            {
+                new Claim("token_id", Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Email, jwtUser.Email),
+                new Claim(ClaimTypes.Role, jwtUser.RoleId.ToString())
+            });
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim("token_id", Guid.NewGuid().ToString()),
-                    new Claim(ClaimTypes.Email, jwtUser.Email),
-                    new Claim(ClaimTypes.Role, jwtUser.RoleId.ToString())
-                }),
+                Subject = claims,
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256Signature)
             };
@@ -72,6 +76,21 @@ namespace Saitynas_API.Services.JwtService
             {
                 return null;
             }
+        }
+        
+        public RefreshToken GenerateRefreshToken()
+        {
+            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            byte[] randomBytes = new byte[64];
+            rngCryptoServiceProvider.GetBytes(randomBytes);
+            
+            var refreshToken = new RefreshToken
+            {
+                Token = Convert.ToBase64String(randomBytes),
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
+            };
+
+            return refreshToken;
         }
     }
 }

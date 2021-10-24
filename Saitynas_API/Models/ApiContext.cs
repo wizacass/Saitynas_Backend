@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.EvaluationEntity;
 using Saitynas_API.Models.MessageEntity;
 using Saitynas_API.Models.RoleEntity;
@@ -14,7 +15,8 @@ namespace Saitynas_API.Models
         public DbSet<Message> Messages { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
-        
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
         public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<Workplace> Workplaces { get; set; }
         public DbSet<Speciality> Specialities { get; set; }
