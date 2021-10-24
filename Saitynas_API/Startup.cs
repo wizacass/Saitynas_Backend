@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
 using Saitynas_API.Middleware;
 using Saitynas_API.Models;
+using Saitynas_API.Models.Authentication;
+using Saitynas_API.Models.Authentication.DTO.Validator;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.EvaluationEntity;
@@ -25,9 +27,11 @@ using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
 using Saitynas_API.Models.WorkplaceEntity.Repository;
 using Saitynas_API.Services;
+using Saitynas_API.Services.AuthenticationService;
 using Saitynas_API.Services.EntityValidator;
 using Saitynas_API.Services.HeadersValidator;
 using Saitynas_API.Services.JwtService;
+using Saitynas_API.Services.UserStore;
 using static Saitynas_API.Configuration.IdentityConfiguration;
 using static Saitynas_API.Configuration.SwaggerConfiguration;
 
@@ -56,6 +60,8 @@ namespace Saitynas_API
             SetupCors(services);
 
             SetupAuthentication(services);
+            
+            services.Configure<JwtSettings>(Configuration.GetSection(nameof(JwtSettings)));
 
             RegisterCustomServices(services);
 
@@ -76,7 +82,10 @@ namespace Saitynas_API
             services.AddDbContext<ApiContext>(opt => opt.UseMySQL(builder.ConnectionString));
         }
 
-        private string GetEnvVar(string key) => Configuration[key] ?? Environment.GetEnvironmentVariable(key);
+        private string GetEnvVar(string key)
+        {
+            return Configuration[key] ?? Environment.GetEnvironmentVariable(key);
+        }
 
         private static void SetupSwagger(IServiceCollection services)
         {
@@ -94,7 +103,7 @@ namespace Saitynas_API
                         });
                 });
         }
-        
+
         private void SetupAuthentication(IServiceCollection services)
         {
             services.AddIdentityCore<User>();
@@ -114,8 +123,11 @@ namespace Saitynas_API
         {
             services.AddScoped<IHeadersValidator, HeadersValidator>();
             services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IApiUserStore, ApiUserStore>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEntityValidator, EntityValidator>();
-                
+
+            services.AddScoped<ISignupDTOValidator, SignupDTOValidator>();
             services.AddScoped<IWorkplaceDTOValidator, WorkplaceDTOValidator>();
             services.AddScoped<ISpecialistDTOValidator, SpecialistDTOValidator>();
             services.AddScoped<IEvaluationDTOValidator, EvaluationDTOValidator>();
@@ -129,7 +141,12 @@ namespace Saitynas_API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApiContext context, UserManager<User> userManager)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            ApiContext context,
+            UserManager<User> userManager
+        )
         {
             if (env.IsDevelopment())
             {
@@ -138,16 +155,11 @@ namespace Saitynas_API
                 app.UseSwaggerUI(SwaggerUIOptions);
             }
 
-            if (env.IsProduction())
-            {
-                context.Database.Migrate();
-            }
+            if (env.IsProduction()) context.Database.Migrate();
 
             _ = SeedDatabase(context, userManager);
 
-            app.UseRequestMiddleware();
-            
-            app.UseMiddleware<ErrorHandlerMiddleware>();
+            RegisterCustomMiddlewares(app);
 
             app.UseRouting();
 
@@ -165,11 +177,18 @@ namespace Saitynas_API
                 });
         }
 
+        private static void RegisterCustomMiddlewares(IApplicationBuilder app)
+        {
+            app.UseRequestMiddleware();
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseMiddleware<JwtMiddleware>();
+        }
+
         private static async Task SeedDatabase(ApiContext context, UserManager<User> userManager)
         {
             var seeders = new ISeed[]
             {
-                new MessageSeed(context), 
+                new MessageSeed(context),
                 new UserSeed(context, userManager),
                 new WorkplaceSeed(context),
                 new SpecialitySeed(context),

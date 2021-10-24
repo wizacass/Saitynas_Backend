@@ -28,7 +28,7 @@ namespace Saitynas_API.Controllers
             IEvaluationsRepository repository,
             IEvaluationDTOValidator validator,
             UserManager<User> userManager
-        ) : base(context, userManager)
+        ) : base(context)
         {
             _repository = repository;
             _validator = validator;
@@ -63,7 +63,7 @@ namespace Saitynas_API.Controllers
         {
             _validator.ValidateCreateEvaluationDTO(dto);
 
-            var user = await GetCurrentUser();
+            var user = GetCurrentUser();
             var evaluation = new Evaluation(user, dto);
 
             await _repository.InsertAsync(evaluation);

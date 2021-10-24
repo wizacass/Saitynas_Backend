@@ -12,5 +12,6 @@ namespace Saitynas_API.Models.Common
         public const string InvalidRole = "role_not_valid";
         public const string InvalidNumber = "number_not_valid";
         public const string InvalidId = "id_not_valid";
+        public const string InvalidRefreshToken = "refresh_token_not_valid";
     }
 }

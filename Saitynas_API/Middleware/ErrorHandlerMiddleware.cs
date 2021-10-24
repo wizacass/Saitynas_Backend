@@ -43,6 +43,7 @@ namespace Saitynas_API.Middleware
             {
                 DTOValidationException ex => new ErrorDTO(400, ex.Message, ex.Parameter),
                 KeyNotFoundException => new ErrorDTO(404, ApiErrorSlug.ResourceNotFound),
+                AuthenticationException ex => new ErrorDTO(400, ApiErrorSlug.AuthenticationError, ex.Message),
                 _ => new ErrorDTO(500, ApiErrorSlug.InternalServerError, exception.Message)
             };
         }

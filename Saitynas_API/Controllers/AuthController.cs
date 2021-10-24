@@ -1,14 +1,10 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
-using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.Authentication.DTO;
-using Saitynas_API.Models.Common;
-using Saitynas_API.Models.UserEntity;
-using Saitynas_API.Services.JwtService;
+using Saitynas_API.Models.Authentication.DTO.Validator;
+using Saitynas_API.Services.AuthenticationService;
 
 namespace Saitynas_API.Controllers
 {
@@ -19,59 +15,46 @@ namespace Saitynas_API.Controllers
     {
         protected override string ModelName => "user";
 
-        private readonly UserManager<User> _userManager;
-        private readonly IJwtService _jwt;
+        private readonly ISignupDTOValidator _validator;
+        private readonly IAuthenticationService _authService;
 
-        public AuthController(ApiContext context, UserManager<User> userManager, IJwtService jwt) : base(context)
+        public AuthController(
+            ApiContext context,
+            ISignupDTOValidator validator,
+            IAuthenticationService authService
+        ) : base(context)
         {
-            _userManager = userManager;
-            _jwt = jwt;
+            _validator = validator;
+            _authService = authService;
         }
 
         [HttpPost("signup")]
         [AllowAnonymous]
-        public async Task<ActionResult<object>> Signup([FromBody] SignupDTO dto)
+        public async Task<ActionResult<AuthenticationDTO>> Signup([FromBody] SignupDTO requestDto)
         {
-            var user = new User(dto);
-            var result = await _userManager.CreateAsync(user, dto.Password);
+            _validator.ValidateSignupDTO(requestDto);
 
-            if (!result.Succeeded)
-            {
-                return ApiBadRequest(
-                    ApiErrorSlug.AuthenticationError,
-                    result.Errors.First().Description
-                );
-            }
+            var responseDto = await _authService.Signup(requestDto);
 
-            string token = GenerateToken(user);
-            return ApiCreated(new
-            {
-                jwt = token
-            });
+            return ApiCreated(responseDto);
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<object>> Login([FromBody] LoginDTO dto)
+        public async Task<ActionResult<AuthenticationDTO>> Login([FromBody] LoginDTO requestDto)
         {
-            var user = await _userManager.FindByEmailAsync(dto.Email);
+            var responseDto = await _authService.Login(requestDto);
 
-            if (user == null) return ApiBadRequest(ApiErrorSlug.InvalidCredentials);
-            if (!await _userManager.CheckPasswordAsync(user, dto.Password))
-            {
-                return ApiBadRequest(ApiErrorSlug.InvalidCredentials);
-            }
-
-            string token = GenerateToken(user);
-            return Ok(new
-            {
-                jwt = token
-            });
+            return ApiCreated(responseDto);
         }
 
-        private string GenerateToken(User user)
+        [HttpPost("refresh-token")]
+        [AllowAnonymous]
+        public async Task<ActionResult<AuthenticationDTO>> RefreshToken([FromBody] RefreshTokenDTO requestDto)
         {
-            return _jwt.GenerateSecurityToken(new JwtUser(user.Email, user.RoleId));
+            var responseDto = await _authService.RefreshToken(requestDto.Token);
+
+            return Ok(responseDto);
         }
     }
 }

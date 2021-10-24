@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.Authentication.DTO;
 using Saitynas_API.Models.EvaluationEntity;
 using Saitynas_API.Models.RoleEntity;
@@ -30,19 +32,27 @@ namespace Saitynas_API.Models.UserEntity
 
         [Required]
         public DateTime RegistrationDate { get; set; }
+        
+        public List<RefreshToken> RefreshTokens { get; set; }
 
         public ICollection<Evaluation> Evaluations { get; set; }
 
         public User()
         {
-            RegistrationDate = DateTime.Now;
+            RegistrationDate = DateTime.UtcNow;
             Evaluations = new List<Evaluation>();
+            RefreshTokens = new List<RefreshToken>();
         }
 
-        public User(SignupDTO dto)
+        public User(SignupDTO dto) : this()
         {
             Email = dto.Email;
             RoleId = (RoleId)dto.Role;
+        }
+
+        public void RemoveOldTokens()
+        {
+            RefreshTokens?.RemoveAll(t => !t.IsActive && t.IsExpired);
         }
     }
 }
