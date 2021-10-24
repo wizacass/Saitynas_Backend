@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
 using Saitynas_API.Middleware;
 using Saitynas_API.Models;
+using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.Authentication.DTO.Validator;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
@@ -59,6 +60,8 @@ namespace Saitynas_API
             SetupCors(services);
 
             SetupAuthentication(services);
+            
+            services.Configure<JwtSettings>(Configuration.GetSection(nameof(JwtSettings)));
 
             RegisterCustomServices(services);
 

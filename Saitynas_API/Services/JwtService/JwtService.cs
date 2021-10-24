@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.UserEntity;
@@ -16,16 +17,13 @@ namespace Saitynas_API.Services.JwtService
         private SymmetricSecurityKey SecurityKey => new(Encoding.ASCII.GetBytes(_secret));
 
         private readonly string _secret;
-        //TODO: Fix expiration date for tokens
-        private readonly int _expirationDays;
         private readonly TokenValidationParameters _tokenValidationParameters;
+        private readonly JwtSettings _settings;
 
-        public JwtService(IConfiguration config)
+        public JwtService(IConfiguration config, IOptions<JwtSettings> settings)
         {
-            var configSection = config.GetSection("Jwt");
-
             _secret = config["JwtSecret"] ?? Environment.GetEnvironmentVariable("JwtSecret");
-            _expirationDays = int.Parse(configSection.GetSection("ExpirationDays").Value);
+            _settings = settings.Value;
 
             _tokenValidationParameters = new TokenValidationParameters
             {
@@ -50,7 +48,7 @@ namespace Saitynas_API.Services.JwtService
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claims,
-                Expires = DateTime.UtcNow.AddMinutes(30),
+                Expires = DateTime.UtcNow.AddMinutes(_settings.AccessTokenTTL),
                 SigningCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -78,17 +76,17 @@ namespace Saitynas_API.Services.JwtService
                 return null;
             }
         }
-        
+
         public RefreshToken GenerateRefreshToken(User user)
         {
             using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
             byte[] randomBytes = new byte[64];
             rngCryptoServiceProvider.GetBytes(randomBytes);
-            
+
             var refreshToken = new RefreshToken
             {
                 Token = Convert.ToBase64String(randomBytes),
-                ExpiresAt = DateTime.UtcNow.AddDays(7),
+                ExpiresAt = DateTime.UtcNow.AddDays(_settings.RefreshTokenTTL),
                 UserId = user.Id
             };
 
