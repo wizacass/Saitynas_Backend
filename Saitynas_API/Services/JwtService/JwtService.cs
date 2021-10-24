@@ -30,6 +30,7 @@ namespace Saitynas_API.Services.JwtService
             {
                 Subject = new ClaimsIdentity(new[]
                 {
+                    new Claim("token_id", Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Email, jwtUser.Email),
                     new Claim(ClaimTypes.Role, jwtUser.RoleId.ToString())
                 }),
