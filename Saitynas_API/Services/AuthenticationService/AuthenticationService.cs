@@ -28,12 +28,7 @@ namespace Saitynas_API.Services.AuthenticationService
         {
             var user = new User(dto);
             var result = await _userManager.CreateAsync(user, dto.Password);
-
-            if (!result.Succeeded)
-            {
-                string error = result.Errors.First().Description;
-                throw new AuthenticationException(error);
-            }
+            CheckSuccess(result);
 
             return await GenerateTokens(user);
         }
@@ -77,6 +72,15 @@ namespace Saitynas_API.Services.AuthenticationService
             return new AuthenticationDTO(GenerateAccessToken(user), newToken.Token);
         }
 
+        public async Task ChangePassword(ChangePasswordDTO dto, User user)
+        {
+            var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
+            CheckSuccess(result);
+
+            user.RevokeAllTokens();
+            await _userManager.UpdateAsync(user);
+        }
+
         private static void RevokeDescendantRefreshTokens(RefreshToken token, User user)
         {
             if (string.IsNullOrEmpty(token.ReplacedByToken)) return;
@@ -115,6 +119,14 @@ namespace Saitynas_API.Services.AuthenticationService
         private string GenerateAccessToken(User user)
         {
             return _jwt.GenerateSecurityToken(new JwtUser(user.Email, user.RoleId));
+        }
+
+        private static void CheckSuccess(IdentityResult result)
+        {
+            if (result.Succeeded) return;
+            
+            string error = result.Errors.First().Description;
+            throw new AuthenticationException(error);
         }
     }
 }

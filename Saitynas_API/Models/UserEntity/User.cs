@@ -54,5 +54,13 @@ namespace Saitynas_API.Models.UserEntity
         {
             RefreshTokens?.RemoveAll(t => !t.IsActive && t.IsExpired);
         }
+
+        public void RevokeAllTokens()
+        {
+            foreach (var token in RefreshTokens.Where(token => token.IsActive))
+            {
+                token.Revoke();
+            }
+        }
     }
 }

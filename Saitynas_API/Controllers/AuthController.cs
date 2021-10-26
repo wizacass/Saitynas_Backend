@@ -56,5 +56,16 @@ namespace Saitynas_API.Controllers
 
             return Ok(responseDto);
         }
+
+        [HttpPut("users/passwords")]
+        [Authorize(Roles = AllRoles)]
+        public async Task<NoContentResult> ChangePassword([FromBody] ChangePasswordDTO dto)
+        {
+            var user = GetCurrentUser();
+            
+            await _authService.ChangePassword(dto, user);
+
+            return NoContent();
+        }
     }
 }
