@@ -7,9 +7,9 @@ using static NUnit.Framework.Assert;
 namespace Saitynas_API_Tests.DTOValidatorTests
 {
     [TestFixture]
-    public class SignupDTOValidatorTests
+    public class AuthenticationDTOValidatorTests
     {
-        private ISignupDTOValidator _validator;
+        private IAuthenticationDTOValidator _validator;
         
         private static SignupDTO ValidCreateDTO =>  new()
         {
@@ -21,7 +21,7 @@ namespace Saitynas_API_Tests.DTOValidatorTests
         [SetUp]
         public void SetUp()
         {
-            _validator = new SignupDTOValidator();
+            _validator = new AuthenticationDTOValidator();
         }
         
         [Test]

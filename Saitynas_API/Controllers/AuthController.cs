@@ -15,12 +15,12 @@ namespace Saitynas_API.Controllers
     {
         protected override string ModelName => "user";
 
-        private readonly ISignupDTOValidator _validator;
+        private readonly IAuthenticationDTOValidator _validator;
         private readonly IAuthenticationService _authService;
 
         public AuthController(
             ApiContext context,
-            ISignupDTOValidator validator,
+            IAuthenticationDTOValidator validator,
             IAuthenticationService authService
         ) : base(context)
         {
@@ -43,6 +43,8 @@ namespace Saitynas_API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<AuthenticationDTO>> Login([FromBody] LoginDTO requestDto)
         {
+            _validator.ValidateLoginDTO(requestDto);
+            
             var responseDto = await _authService.Login(requestDto);
 
             return ApiCreated(responseDto);
@@ -52,6 +54,8 @@ namespace Saitynas_API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<AuthenticationDTO>> RefreshToken([FromBody] RefreshTokenDTO requestDto)
         {
+            _validator.ValidateRefreshTokenDTO(requestDto);
+            
             var responseDto = await _authService.RefreshToken(requestDto.Token);
 
             return Ok(responseDto);
@@ -61,6 +65,8 @@ namespace Saitynas_API.Controllers
         [Authorize(Roles = AllRoles)]
         public async Task<NoContentResult> ChangePassword([FromBody] ChangePasswordDTO dto)
         {
+            _validator.ValidateChangePasswordDTO(dto);
+            
             var user = GetCurrentUser();
             
             await _authService.ChangePassword(dto, user);
