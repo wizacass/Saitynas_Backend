@@ -127,7 +127,7 @@ namespace Saitynas_API
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEntityValidator, EntityValidator>();
 
-            services.AddScoped<ISignupDTOValidator, SignupDTOValidator>();
+            services.AddScoped<IAuthenticationDTOValidator, AuthenticationDTOValidator>();
             services.AddScoped<IWorkplaceDTOValidator, WorkplaceDTOValidator>();
             services.AddScoped<ISpecialistDTOValidator, SpecialistDTOValidator>();
             services.AddScoped<IEvaluationDTOValidator, EvaluationDTOValidator>();
