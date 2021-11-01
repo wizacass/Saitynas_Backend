@@ -181,7 +181,7 @@ namespace Saitynas_API
         {
             app.UseRequestMiddleware();
             app.UseMiddleware<ErrorHandlerMiddleware>();
-            app.UseMiddleware<JwtMiddleware>();
+            // app.UseMiddleware<JwtMiddleware>();
         }
 
         private static async Task SeedDatabase(ApiContext context, UserManager<User> userManager)
