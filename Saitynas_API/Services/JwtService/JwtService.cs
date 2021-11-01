@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Saitynas_API.Models;
 using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.UserEntity;
 
@@ -37,14 +38,15 @@ namespace Saitynas_API.Services.JwtService
             };
         }
 
-        public string GenerateSecurityToken(JwtUser jwtUser)
+        public string GenerateSecurityToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var claims = new ClaimsIdentity(new[]
             {
-                new Claim("token_id", Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Email, jwtUser.Email),
-                new Claim(ClaimTypes.Role, jwtUser.RoleId.ToString())
+                new Claim(CustomClaims.TokenID, Guid.NewGuid().ToString()),
+                new Claim(CustomClaims.UserID, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.RoleId.ToString())
             });
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -84,9 +86,7 @@ namespace Saitynas_API.Services.JwtService
             using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
             byte[] randomBytes = new byte[64];
             rngCryptoServiceProvider.GetBytes(randomBytes);
-
-            // var ttl = TimeSpan.Parse(_settings.AccessTokenTTL);
-
+            
             var refreshToken = new RefreshToken
             {
                 Token = Convert.ToBase64String(randomBytes),
