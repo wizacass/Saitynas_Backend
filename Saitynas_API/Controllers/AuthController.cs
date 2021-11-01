@@ -1,9 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Authentication.DTO;
 using Saitynas_API.Models.Authentication.DTO.Validator;
+using Saitynas_API.Models.UserEntity;
 using Saitynas_API.Services.AuthenticationService;
 
 namespace Saitynas_API.Controllers
@@ -21,8 +23,9 @@ namespace Saitynas_API.Controllers
         public AuthController(
             ApiContext context,
             IAuthenticationDTOValidator validator,
-            IAuthenticationService authService
-        ) : base(context)
+            IAuthenticationService authService,
+            UserManager<User> userManager
+        ) : base(context, userManager)
         {
             _validator = validator;
             _authService = authService;
@@ -67,7 +70,7 @@ namespace Saitynas_API.Controllers
         {
             _validator.ValidateChangePasswordDTO(dto);
             
-            var user = GetCurrentUser();
+            var user = await GetCurrentUser();
             
             await _authService.ChangePassword(dto, user);
 

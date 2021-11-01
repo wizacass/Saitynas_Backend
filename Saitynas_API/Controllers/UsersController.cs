@@ -17,18 +17,15 @@ namespace Saitynas_API.Controllers
     {
         protected override string ModelName => "user";
 
-        public UsersController(ApiContext context, UserManager<User> userManager) : base(context) { }
+        public UsersController(ApiContext context, UserManager<User> userManager) : base(context, userManager) { }
 
         [HttpGet("me")]
         [Authorize(Roles = AllRoles)]
-        public ActionResult<GetObjectDTO<UserDTO>> GetUser()
+        public async Task<ActionResult<GetObjectDTO<UserDTO>>> GetUser()
         {
-            var user = GetCurrentUser();
-            
-            if (user == null)
-            {
-                return ApiNotFound(ApiErrorSlug.ResourceNotFound, ModelName);
-            }
+            var user = await GetCurrentUser();
+
+            if (user == null) return ApiNotFound(ApiErrorSlug.ResourceNotFound, ModelName);
 
             var dto = new UserDTO(user);
             return Ok(new GetObjectDTO<UserDTO>(dto));
