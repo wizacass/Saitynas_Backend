@@ -7,8 +7,6 @@ namespace Saitynas_API.Services.JwtService
     {
         public string GenerateSecurityToken(User user);
 
-        public string ValidateToken(string token);
-
         public RefreshToken GenerateRefreshToken(User user);
     }
 }
