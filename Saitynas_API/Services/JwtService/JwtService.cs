@@ -20,9 +20,11 @@ namespace Saitynas_API.Services.JwtService
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly JwtSettings _settings;
 
+        private const string JwtSecretKey = "JwtSecret";
+
         public JwtService(IConfiguration config, IOptions<JwtSettings> settings)
         {
-            _secret = config["JwtSecret"] ?? Environment.GetEnvironmentVariable("JwtSecret");
+            _secret = config[JwtSecretKey] ?? Environment.GetEnvironmentVariable(JwtSecretKey);
             _settings = settings.Value;
 
             _tokenValidationParameters = new TokenValidationParameters
@@ -48,7 +50,7 @@ namespace Saitynas_API.Services.JwtService
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claims,
-                Expires = DateTime.UtcNow.AddMinutes(_settings.AccessTokenTTL),
+                Expires = DateTime.UtcNow.Add(_settings.AccessTokenTTL),
                 SigningCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -83,10 +85,12 @@ namespace Saitynas_API.Services.JwtService
             byte[] randomBytes = new byte[64];
             rngCryptoServiceProvider.GetBytes(randomBytes);
 
+            // var ttl = TimeSpan.Parse(_settings.AccessTokenTTL);
+
             var refreshToken = new RefreshToken
             {
                 Token = Convert.ToBase64String(randomBytes),
-                ExpiresAt = DateTime.UtcNow.AddDays(_settings.RefreshTokenTTL),
+                ExpiresAt = DateTime.UtcNow.Add(_settings.RefreshTokenTTL),
                 UserId = user.Id
             };
 
