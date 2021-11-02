@@ -9,8 +9,13 @@ using Saitynas_API.Models;
 using Saitynas_API.Models.RoleEntity;
 using Saitynas_API.Models.UserEntity;
 
-namespace Saitynas_API.Services.UserStore
+namespace Saitynas_API.Services
 {
+    public interface IApiUserStore
+    {
+        public Task<User> GetUserByRefreshToken(string token);
+    }
+
     public class ApiUserStore : IUserPasswordStore<User>, IUserEmailStore<User>,
         IUserRoleStore<User>, IApiUserStore
     {
@@ -91,7 +96,7 @@ namespace Saitynas_API.Services.UserStore
         public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             var user = GetUserByEmail(normalizedUserName);
-            
+
             return Task.FromResult(user);
         }
 
@@ -135,7 +140,7 @@ namespace Saitynas_API.Services.UserStore
         public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
             var user = GetUserByEmail(normalizedEmail);
-            
+
             return Task.FromResult(user);
         }
 

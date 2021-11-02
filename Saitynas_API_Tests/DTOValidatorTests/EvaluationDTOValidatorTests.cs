@@ -4,7 +4,7 @@ using Saitynas_API.Exceptions;
 using Saitynas_API.Models.EvaluationEntity;
 using Saitynas_API.Models.EvaluationEntity.DTO;
 using Saitynas_API.Models.EvaluationEntity.DTO.Validator;
-using Saitynas_API.Services.EntityValidator;
+using Saitynas_API.Services;
 using static NUnit.Framework.Assert;
 
 namespace Saitynas_API_Tests.DTOValidatorTests

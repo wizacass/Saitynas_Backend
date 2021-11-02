@@ -1,6 +1,6 @@
 using Saitynas_API.Exceptions;
 using Saitynas_API.Models.Common;
-using Saitynas_API.Services.EntityValidator;
+using Saitynas_API.Services;
 
 namespace Saitynas_API.Models.EvaluationEntity.DTO.Validator
 {

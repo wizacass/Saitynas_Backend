@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using Saitynas_API_Tests.Mocks;
-using Saitynas_API.Services.EntityValidator;
+using Saitynas_API.Services;
 
 namespace Saitynas_API_Tests
 {

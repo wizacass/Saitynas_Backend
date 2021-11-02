@@ -1,5 +1,5 @@
 using Saitynas_API.Models.Common;
-using Saitynas_API.Services.EntityValidator;
+using Saitynas_API.Services;
 
 namespace Saitynas_API.Models.SpecialistEntity.DTO.Validator
 {

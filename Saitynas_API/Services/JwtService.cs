@@ -10,8 +10,15 @@ using Saitynas_API.Models;
 using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.UserEntity;
 
-namespace Saitynas_API.Services.JwtService
+namespace Saitynas_API.Services
 {
+    public interface IJwtService
+    {
+        public string GenerateSecurityToken(User user);
+
+        public RefreshToken GenerateRefreshToken(User user);
+    }
+
     public class JwtService : IJwtService
     {
         private SymmetricSecurityKey SecurityKey => new(Encoding.ASCII.GetBytes(_secret));

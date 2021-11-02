@@ -1,8 +1,23 @@
 using System.Linq;
 using Saitynas_API.Models;
 
-namespace Saitynas_API.Services.EntityValidator
+namespace Saitynas_API.Services
 {
+    public interface IEntityValidator
+    {
+        public bool IsWorkplaceIdValid(int? id);
+
+        public bool IsWorkplaceIdValid(int id);
+
+        public bool IsSpecialityIdValid(int? id);
+
+        public bool IsSpecialityIdValid(int id);
+
+        public bool IsSpecialistIdValid(int? id);
+
+        public bool IsSpecialistIdValid(int id);
+    }
+
     public class EntityValidator : IEntityValidator
     {
         private readonly ApiContext _context;
