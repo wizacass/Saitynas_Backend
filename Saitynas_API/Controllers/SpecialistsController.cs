@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Saitynas_API.Models;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.SpecialistEntity;
 using Saitynas_API.Models.SpecialistEntity.DTO;
@@ -24,11 +23,7 @@ namespace Saitynas_API.Controllers
         private readonly ISpecialistsRepository _repository;
         private readonly ISpecialistDTOValidator _validator;
 
-        public SpecialistsController(
-            ApiContext context,
-            ISpecialistsRepository repository,
-            ISpecialistDTOValidator validator
-        ) : base(context)
+        public SpecialistsController(ISpecialistsRepository repository, ISpecialistDTOValidator validator)
         {
             _repository = repository;
             _validator = validator;

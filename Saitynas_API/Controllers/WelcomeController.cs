@@ -14,13 +14,18 @@ namespace Saitynas_API.Controllers
     {
         protected override string ModelName => "message";
 
-        public WelcomeController(ApiContext context) : base(context) { }
+        private readonly ApiContext _context;
+
+        public WelcomeController(ApiContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<MessageDTO>> GetMessage()
         {
-            var message = await Context.Messages.FirstOrDefaultAsync(m => m.Id == 1);
+            var message = await _context.Messages.FirstOrDefaultAsync(m => m.Id == 1);
             var dto = new MessageDTO(message.Text);
 
             return Ok(dto);

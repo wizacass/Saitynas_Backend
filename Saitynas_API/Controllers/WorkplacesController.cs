@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Saitynas_API.Models;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.SpecialistEntity.DTO;
 using Saitynas_API.Models.WorkplaceEntity;
@@ -24,11 +22,7 @@ namespace Saitynas_API.Controllers
         private readonly IWorkplacesRepository _repository;
         private readonly IWorkplaceDTOValidator _validator;
 
-        public WorkplacesController(
-            ApiContext context,
-            IWorkplacesRepository repository,
-            IWorkplaceDTOValidator validator
-        ) : base(context)
+        public WorkplacesController(IWorkplacesRepository repository, IWorkplaceDTOValidator validator)
         {
             _repository = repository;
             _validator = validator;
@@ -62,15 +56,17 @@ namespace Saitynas_API.Controllers
         [Obsolete]
         public async Task<ActionResult<GetListDTO<GetSpecialistDTO>>> GetWorkplaceSpecialists(int id)
         {
-            var specialists = await Context.Specialists
-                .Where(s => s.WorkplaceId == id)
-                .Include(s => s.Speciality)
-                .Include(s => s.Workplace)
-                .Select(s => new GetSpecialistDTO(s))
-                .ToListAsync();
+            // var specialists = await Context.Specialists
+            //     .Where(s => s.WorkplaceId == id)
+            //     .Include(s => s.Speciality)
+            //     .Include(s => s.Workplace)
+            //     .Select(s => new GetSpecialistDTO(s))
+            //     .ToListAsync();
+            //
+            // var dto = new GetListDTO<GetSpecialistDTO>(specialists);
+            // return Ok(dto);
 
-            var dto = new GetListDTO<GetSpecialistDTO>(specialists);
-            return Ok(dto);
+            return StatusCode(500);
         }
 
         [HttpPost]

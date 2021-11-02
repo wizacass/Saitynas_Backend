@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Saitynas_API.Models;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.EvaluationEntity;
 using Saitynas_API.Models.EvaluationEntity.DTO;
@@ -24,11 +23,10 @@ namespace Saitynas_API.Controllers
         private readonly IEvaluationDTOValidator _validator;
 
         public EvaluationsController(
-            ApiContext context,
             IEvaluationsRepository repository,
             IEvaluationDTOValidator validator,
             UserManager<User> userManager
-        ) : base(context, userManager)
+        ) : base(userManager)
         {
             _repository = repository;
             _validator = validator;
