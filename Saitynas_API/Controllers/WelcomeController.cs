@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
-using Saitynas_API.Models.MessageEntity.DTO;
+using Saitynas_API.Models.Entities.Message.DTO;
 
 namespace Saitynas_API.Controllers
 {

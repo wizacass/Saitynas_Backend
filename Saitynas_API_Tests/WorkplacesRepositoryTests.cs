@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Saitynas_API_Tests.Mocks;
 using Saitynas_API.Models;
-using Saitynas_API.Models.WorkplaceEntity;
+using Saitynas_API.Models.Entities.Workplace;
 using Saitynas_API.Repositories;
 using static NUnit.Framework.Assert;
 

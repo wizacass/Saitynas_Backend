@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
-using Saitynas_API.Models.RoleEntity;
-using Saitynas_API.Models.UserEntity;
+using Saitynas_API.Models.Entities.Role;
+using Saitynas_API.Models.Entities.User;
 
 namespace Saitynas_API.Services
 {

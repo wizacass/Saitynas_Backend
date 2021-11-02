@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.DTO;
-using Saitynas_API.Models.SpecialistEntity.DTO;
-using Saitynas_API.Models.SpecialityEntity;
+using Saitynas_API.Models.Entities.Specialist.DTO;
+using Saitynas_API.Models.Entities.Speciality;
 
 namespace Saitynas_API.Controllers
 {

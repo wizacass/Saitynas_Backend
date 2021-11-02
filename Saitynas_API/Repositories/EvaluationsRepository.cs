@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
-using Saitynas_API.Models.EvaluationEntity;
+using Saitynas_API.Models.Entities.Evaluation;
 
 namespace Saitynas_API.Repositories
 {

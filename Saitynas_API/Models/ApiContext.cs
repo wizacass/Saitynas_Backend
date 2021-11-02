@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models.Authentication;
-using Saitynas_API.Models.EvaluationEntity;
-using Saitynas_API.Models.MessageEntity;
-using Saitynas_API.Models.RoleEntity;
-using Saitynas_API.Models.SpecialistEntity;
-using Saitynas_API.Models.SpecialityEntity;
-using Saitynas_API.Models.UserEntity;
-using Saitynas_API.Models.WorkplaceEntity;
+using Saitynas_API.Models.Entities.Evaluation;
+using Saitynas_API.Models.Entities.Message;
+using Saitynas_API.Models.Entities.Role;
+using Saitynas_API.Models.Entities.Specialist;
+using Saitynas_API.Models.Entities.Speciality;
+using Saitynas_API.Models.Entities.User;
+using Saitynas_API.Models.Entities.Workplace;
 
 namespace Saitynas_API.Models
 {

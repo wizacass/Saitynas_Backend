@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.DTO;
-using Saitynas_API.Models.SpecialistEntity;
-using Saitynas_API.Models.SpecialistEntity.DTO;
-using Saitynas_API.Models.VisitEntity.DTO;
+using Saitynas_API.Models.Entities.Specialist;
+using Saitynas_API.Models.Entities.Specialist.DTO;
+using Saitynas_API.Models.Entities.Visit.DTO;
 using Saitynas_API.Repositories;
 using Saitynas_API.Services.Validators;
 
