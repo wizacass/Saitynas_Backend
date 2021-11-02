@@ -64,7 +64,7 @@ namespace Saitynas_API
             {
                 Server = GetEnvVar("Server"),
                 Database = GetEnvVar("Database"),
-                UserID = GetEnvVar("Username"),
+                UserID = GetEnvVar("DbUsername"),
                 Password = GetEnvVar("DbPassword"),
                 SslMode = MySqlSslMode.None
             };
