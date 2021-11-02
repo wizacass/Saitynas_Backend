@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Common;
-using Saitynas_API.Models.DTO.Common;
+using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.UserEntity;
 
 namespace Saitynas_API.Controllers

@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Saitynas_API.Models.Common;
-using Saitynas_API.Models.DTO.Common;
+using Saitynas_API.Models.DTO;
 using Saitynas_API.Services;
 
 namespace Saitynas_API.Middleware

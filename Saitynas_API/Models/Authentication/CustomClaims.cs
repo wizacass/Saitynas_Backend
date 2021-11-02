@@ -1,4 +1,4 @@
-namespace Saitynas_API.Models
+namespace Saitynas_API.Models.Authentication
 {
     public static class CustomClaims
     {

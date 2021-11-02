@@ -1,4 +1,4 @@
-namespace Saitynas_API.Models.Common
+namespace Saitynas_API.Models.DTO
 {
     public class Meta
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Saitynas_API.Models.SpecialistEntity.DTO;
 
-namespace Saitynas_API.Models.DTO
+namespace Saitynas_API.Models.SpecialityEntity.DTO
 {
     public class GetSpecialityDTO
     {

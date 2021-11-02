@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Saitynas_API.Models.DTO.Common
+namespace Saitynas_API.Models.DTO
 {
     public class EnumDTO
     {

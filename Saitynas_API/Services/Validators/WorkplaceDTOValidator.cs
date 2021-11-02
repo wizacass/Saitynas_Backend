@@ -1,8 +1,15 @@
-using Saitynas_API.Exceptions;
 using Saitynas_API.Models.Common;
+using Saitynas_API.Models.WorkplaceEntity.DTO;
 
-namespace Saitynas_API.Models.WorkplaceEntity.DTO.Validator
+namespace Saitynas_API.Services.Validators
 {
+    public interface IWorkplaceDTOValidator
+    {
+        public void ValidateCreateWorkplaceDTO(CreateWorkplaceDTO dto);
+
+        public void ValidateEditWorkplaceDTO(EditWorkplaceDTO dto);
+    }
+
     public class WorkplaceDTOValidator : DTOValidator, IWorkplaceDTOValidator
     {
         public void ValidateCreateWorkplaceDTO(CreateWorkplaceDTO dto)

@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Authentication.DTO;
-using Saitynas_API.Models.Authentication.DTO.Validator;
 using Saitynas_API.Models.UserEntity;
 using Saitynas_API.Services;
+using Saitynas_API.Services.Validators;
 
 namespace Saitynas_API.Controllers
 {

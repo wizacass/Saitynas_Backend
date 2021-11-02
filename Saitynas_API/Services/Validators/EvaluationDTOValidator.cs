@@ -1,9 +1,16 @@
 using Saitynas_API.Exceptions;
 using Saitynas_API.Models.Common;
-using Saitynas_API.Services;
+using Saitynas_API.Models.EvaluationEntity.DTO;
 
-namespace Saitynas_API.Models.EvaluationEntity.DTO.Validator
+namespace Saitynas_API.Services.Validators
 {
+    public interface IEvaluationDTOValidator
+    {
+        public void ValidateCreateEvaluationDTO(EvaluationDTO dto);
+
+        public void ValidateEditEvaluationDTO(EditEvaluationDTO dto);
+    }
+    
     public class EvaluationDTOValidator : DTOValidator, IEvaluationDTOValidator
     {
         private readonly IEntityValidator _entityValidator;

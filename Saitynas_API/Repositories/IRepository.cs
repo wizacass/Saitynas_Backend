@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Saitynas_API.Models.Common.Interfaces
+namespace Saitynas_API.Repositories
 {
     public interface IRepository<T>
     {

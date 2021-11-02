@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
-using Saitynas_API.Models.DTO.Common;
+using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.SpecialistEntity.DTO;
 using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO;
-using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
-using Saitynas_API.Models.WorkplaceEntity.Repository;
+using Saitynas_API.Repositories;
+using Saitynas_API.Services.Validators;
 
 namespace Saitynas_API.Controllers
 {

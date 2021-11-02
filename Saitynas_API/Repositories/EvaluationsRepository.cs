@@ -1,9 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Saitynas_API.Models;
+using Saitynas_API.Models.EvaluationEntity;
 
-namespace Saitynas_API.Models.EvaluationEntity.Repository
+namespace Saitynas_API.Repositories
 {
+    public interface IEvaluationsRepository : IRepository<Evaluation> { }
+
     public class EvaluationsRepository : IEvaluationsRepository
     {
         private readonly ApiContext _context;
@@ -23,10 +27,10 @@ namespace Saitynas_API.Models.EvaluationEntity.Repository
 
         public async Task<Evaluation> GetAsync(int id)
         {
-            var evaluation =  await _context.Evaluations.FirstOrDefaultAsync(e => e.Id == id);
+            var evaluation = await _context.Evaluations.FirstOrDefaultAsync(e => e.Id == id);
 
             if (evaluation == null) throw new KeyNotFoundException();
-            
+
             return evaluation;
         }
 
@@ -40,7 +44,7 @@ namespace Saitynas_API.Models.EvaluationEntity.Repository
         {
             var evaluation = await GetAsync(id);
             evaluation.Update(data);
-            
+
             await _context.SaveChangesAsync();
         }
 

@@ -2,9 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Saitynas_API.Models;
+using Saitynas_API.Models.SpecialistEntity;
 
-namespace Saitynas_API.Models.SpecialistEntity.Repository
+namespace Saitynas_API.Repositories
 {
+    public interface ISpecialistsRepository : IRepository<Specialist> { }
+    
     public class SpecialistsRepository : ISpecialistsRepository
     {
         private readonly ApiContext _context;

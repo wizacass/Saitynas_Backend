@@ -2,18 +2,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Saitynas_API.Models;
+using Saitynas_API.Models.WorkplaceEntity;
 
-namespace Saitynas_API.Models.WorkplaceEntity.Repository
+namespace Saitynas_API.Repositories
 {
+    public interface IWorkplacesRepository : IRepository<Workplace> { }
+
     public class WorkplacesRepository : IWorkplacesRepository
     {
         private readonly ApiContext _context;
-        
+
         public WorkplacesRepository(ApiContext context)
         {
             _context = context;
         }
-        
+
         public async Task<IEnumerable<Workplace>> GetAllAsync()
         {
             var workplaces = await _context.Workplaces.ToListAsync();
@@ -38,15 +42,15 @@ namespace Saitynas_API.Models.WorkplaceEntity.Repository
         {
             var workplace = await GetAsync(id);
             workplace.Update(data);
-            
+
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
             var w = _context.Workplaces.FirstOrDefault(w => w.Id == id);
-            
-            if(w == null) return;
+
+            if (w == null) return;
 
             _context.Workplaces.Remove(w);
             await _context.SaveChangesAsync();

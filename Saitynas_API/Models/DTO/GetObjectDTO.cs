@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
-using Saitynas_API.Models.Common;
 
-namespace Saitynas_API.Models.DTO.Common
+namespace Saitynas_API.Models.DTO
 {
     public class GetObjectDTO<T>
     {

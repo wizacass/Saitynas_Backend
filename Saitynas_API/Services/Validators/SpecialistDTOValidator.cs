@@ -1,8 +1,15 @@
 using Saitynas_API.Models.Common;
-using Saitynas_API.Services;
+using Saitynas_API.Models.SpecialistEntity.DTO;
 
-namespace Saitynas_API.Models.SpecialistEntity.DTO.Validator
+namespace Saitynas_API.Services.Validators
 {
+    public interface ISpecialistDTOValidator
+    {
+        public void ValidateCreateSpecialistDTO(CreateSpecialistDTO dto);
+
+        public void ValidateEditSpecialistDTO(EditSpecialistDTO dto);
+    }
+
     public class SpecialistDTOValidator : DTOValidator, ISpecialistDTOValidator
     {
         private readonly IEntityValidator _entityValidator;
@@ -11,7 +18,7 @@ namespace Saitynas_API.Models.SpecialistEntity.DTO.Validator
         {
             _entityValidator = entityValidator;
         }
-        
+
         public void ValidateCreateSpecialistDTO(CreateSpecialistDTO dto)
         {
             ValidateString(dto.FirstName, "firstName");
