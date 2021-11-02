@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
-using Saitynas_API.Models.WorkplaceEntity;
+using Saitynas_API.Models.Entities.Workplace;
 
 namespace Saitynas_API_Tests.Mocks
 {

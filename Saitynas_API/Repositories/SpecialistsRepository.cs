@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
-using Saitynas_API.Models.SpecialistEntity;
+using Saitynas_API.Models.Entities.Specialist;
 
 namespace Saitynas_API.Repositories
 {

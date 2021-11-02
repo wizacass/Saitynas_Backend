@@ -1,8 +1,8 @@
 using Moq;
 using NUnit.Framework;
 using Saitynas_API.Exceptions;
-using Saitynas_API.Models.SpecialistEntity;
-using Saitynas_API.Models.SpecialistEntity.DTO;
+using Saitynas_API.Models.Entities.Specialist;
+using Saitynas_API.Models.Entities.Specialist.DTO;
 using Saitynas_API.Services;
 using Saitynas_API.Services.Validators;
 using static NUnit.Framework.Assert;

@@ -5,7 +5,7 @@ using Saitynas_API.Exceptions;
 using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.Authentication.DTO;
 using Saitynas_API.Models.Common;
-using Saitynas_API.Models.UserEntity;
+using Saitynas_API.Models.Entities.User;
 
 namespace Saitynas_API.Services
 {

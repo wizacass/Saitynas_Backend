@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.Authentication.DTO;
-using Saitynas_API.Models.UserEntity;
+using Saitynas_API.Models.Entities.User;
 using Saitynas_API.Services;
 using Saitynas_API.Services.Validators;
 

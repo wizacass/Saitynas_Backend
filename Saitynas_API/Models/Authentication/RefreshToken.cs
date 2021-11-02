@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Saitynas_API.Models.UserEntity;
+using Saitynas_API.Models.Entities.User;
 
 namespace Saitynas_API.Models.Authentication
 {

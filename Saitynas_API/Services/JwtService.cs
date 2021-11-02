@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Authentication;
-using Saitynas_API.Models.UserEntity;
+using Saitynas_API.Models.Entities.User;
 
 namespace Saitynas_API.Services
 {

@@ -2,7 +2,7 @@ using System;
 using Saitynas_API.Exceptions;
 using Saitynas_API.Models.Authentication.DTO;
 using Saitynas_API.Models.Common;
-using Saitynas_API.Models.RoleEntity;
+using Saitynas_API.Models.Entities.Role;
 
 namespace Saitynas_API.Services.Validators
 {
