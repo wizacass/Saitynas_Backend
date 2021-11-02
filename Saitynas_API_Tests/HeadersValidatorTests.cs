@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Saitynas_API.Services.HeadersValidator;
+using Saitynas_API.Services;
 using static NUnit.Framework.Assert;
 
 namespace Saitynas_API_Tests

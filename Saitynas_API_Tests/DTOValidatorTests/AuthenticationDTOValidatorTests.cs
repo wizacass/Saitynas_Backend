@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Saitynas_API.Exceptions;
 using Saitynas_API.Models.Authentication.DTO;
-using Saitynas_API.Models.Authentication.DTO.Validator;
+using Saitynas_API.Services.Validators;
 using static NUnit.Framework.Assert;
 
 namespace Saitynas_API_Tests.DTOValidatorTests

@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using Saitynas_API.Models.Common;
+using Saitynas_API.Models.DTO;
 
 namespace Saitynas_API.Models.MessageEntity.DTO
 {

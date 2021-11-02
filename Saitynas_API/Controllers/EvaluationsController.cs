@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models;
-using Saitynas_API.Models.DTO.Common;
+using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.EvaluationEntity;
 using Saitynas_API.Models.EvaluationEntity.DTO;
-using Saitynas_API.Models.EvaluationEntity.DTO.Validator;
-using Saitynas_API.Models.EvaluationEntity.Repository;
 using Saitynas_API.Models.UserEntity;
+using Saitynas_API.Repositories;
+using Saitynas_API.Services.Validators;
 
 namespace Saitynas_API.Controllers
 {

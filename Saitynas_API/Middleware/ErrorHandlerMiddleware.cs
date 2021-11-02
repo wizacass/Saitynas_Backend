@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Saitynas_API.Exceptions;
 using Saitynas_API.Models.Common;
-using Saitynas_API.Models.DTO.Common;
+using Saitynas_API.Models.DTO;
 
 namespace Saitynas_API.Middleware
 {

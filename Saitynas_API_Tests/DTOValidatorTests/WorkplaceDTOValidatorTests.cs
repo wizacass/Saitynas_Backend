@@ -2,7 +2,7 @@ using NUnit.Framework;
 using Saitynas_API.Exceptions;
 using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO;
-using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
+using Saitynas_API.Services.Validators;
 using static NUnit.Framework.Assert;
 
 namespace Saitynas_API_Tests.DTOValidatorTests
