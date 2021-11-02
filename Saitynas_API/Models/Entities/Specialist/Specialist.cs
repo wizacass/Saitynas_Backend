@@ -32,6 +32,8 @@ namespace Saitynas_API.Models.Entities.Specialist
         public Workplace.Workplace Workplace { get; set; }
         
         public ICollection<Evaluation.Evaluation> Evaluations { get; set; }
+        
+        public User.User User { get; set; }
 
         public Specialist() { }
         

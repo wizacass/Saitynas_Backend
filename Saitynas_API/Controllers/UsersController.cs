@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,6 +58,31 @@ namespace Saitynas_API.Controllers
 
             var dto = new UserDTO(user);
             return Ok(new GetObjectDTO<UserDTO>(dto));
+        }
+        
+        [HttpGet("me/evaluations")]
+        [Authorize(Roles = "Specialist,Patient")]
+        public async Task<ActionResult<GetListDTO<GetUserEvaluationDTO>>> GetUserEvaluations()
+        {
+            var user = await GetCurrentUser();
+
+            if (user == null) return ApiNotFound(ApiErrorSlug.ResourceNotFound, ModelName);
+
+            var evaluations = (await RetrieveEvaluations(user))
+                .Select(e => new GetUserEvaluationDTO(e));
+            
+            var dto = new GetListDTO<GetUserEvaluationDTO>(evaluations);
+            return Ok(dto);
+        }
+
+        private async Task<IEnumerable<Evaluation>> RetrieveEvaluations(User u)
+        {
+            return u.RoleId switch
+            {
+                RoleId.Patient => await _evaluationsRepository.GetByUserId(u.Id),
+                RoleId.Specialist => await _evaluationsRepository.GetBySpecialistId(u.Id),
+                _ => null
+            };
         }
     }
 }

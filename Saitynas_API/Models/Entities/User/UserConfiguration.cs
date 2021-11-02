@@ -13,6 +13,11 @@ namespace Saitynas_API.Models.Entities.User
                 .HasMany(u => u.Evaluations)
                 .WithOne(e => e.User)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder
+                .HasOne(u => u.Specialist)
+                .WithOne(s => s.User)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
