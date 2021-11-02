@@ -178,10 +178,10 @@ namespace Saitynas_API
             var seeders = new ISeed[]
             {
                 new MessageSeed(context),
+                new SpecialistSeed(context),
                 new UserSeed(context, userManager),
                 new WorkplaceSeed(context),
                 new SpecialitySeed(context),
-                new SpecialistSeed(context),
                 new EvaluationsSeed(context)
             };
 

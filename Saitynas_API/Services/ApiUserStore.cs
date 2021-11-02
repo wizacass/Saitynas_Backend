@@ -14,6 +14,8 @@ namespace Saitynas_API.Services
     public interface IApiUserStore
     {
         public Task<User> GetUserByRefreshToken(string token);
+
+        public Task<IEnumerable<User>> GetAllUsers();
     }
 
     public class ApiUserStore : IUserPasswordStore<User>, IUserEmailStore<User>,
@@ -215,6 +217,13 @@ namespace Saitynas_API.Services
                 .FirstOrDefaultAsync();
 
             return user;
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsers()
+        {
+            var users = await _context.Users.ToListAsync();
+
+            return users;
         }
     }
 }

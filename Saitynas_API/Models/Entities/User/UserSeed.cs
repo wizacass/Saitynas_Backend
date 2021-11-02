@@ -39,7 +39,8 @@ namespace Saitynas_API.Models.Entities.User
                     Id = 2,
                     Email = "specialist@saitynai.lt",
                     RegistrationDate = new DateTime(2021, 10, 10),
-                    RoleId = RoleId.Specialist
+                    RoleId = RoleId.Specialist,
+                    SpecialistId = 2
                 },
                 new User
                 {

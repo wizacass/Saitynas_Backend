@@ -35,6 +35,10 @@ namespace Saitynas_API.Models.Entities.User
         public List<RefreshToken> RefreshTokens { get; set; }
 
         public ICollection<Evaluation.Evaluation> Evaluations { get; set; }
+        
+        public int? SpecialistId { get; set; }
+        
+        public Specialist.Specialist Specialist { get; set; }
 
         public User()
         {

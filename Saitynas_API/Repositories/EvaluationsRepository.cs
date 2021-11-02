@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
@@ -6,7 +7,12 @@ using Saitynas_API.Models.Entities.Evaluation;
 
 namespace Saitynas_API.Repositories
 {
-    public interface IEvaluationsRepository : IRepository<Evaluation> { }
+    public interface IEvaluationsRepository : IRepository<Evaluation>
+    {
+        public Task<IEnumerable<Evaluation>> GetBySpecialistId(int id);
+        
+        public Task<IEnumerable<Evaluation>> GetByUserId(int id);
+    }
 
     public class EvaluationsRepository : IEvaluationsRepository
     {
@@ -54,6 +60,28 @@ namespace Saitynas_API.Repositories
 
             _context.Evaluations.Remove(data);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Evaluation>> GetBySpecialistId(int id)
+        {
+            var evaluations = await _context.Evaluations
+                .Where(e => e.SpecialistId == id)
+                .Include(e => e.Specialist)
+                .Include(e => e.User)
+                .ToListAsync();;
+
+            return evaluations;
+        }
+
+        public async Task<IEnumerable<Evaluation>> GetByUserId(int id)
+        {
+            var evaluations = await _context.Evaluations
+                .Where(e => e.UserId == id)
+                .Include(e => e.Specialist)
+                .Include(e => e.User)
+                .ToListAsync();;
+
+            return evaluations;
         }
     }
 }

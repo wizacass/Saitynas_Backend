@@ -928,6 +928,37 @@
         "deprecated": true
       }
     },
+    "/api/v1/Users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTOGetListDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/Users/me": {
       "get": {
         "tags": [
@@ -952,6 +983,37 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UserDTOGetObjectDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Users/me/evaluations": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserEvaluationDTOGetListDTO"
                 }
               }
             }
@@ -1779,6 +1841,36 @@
         },
         "additionalProperties": false
       },
+      "GetUserEvaluationDTO": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetUserEvaluationDTOGetListDTO": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetUserEvaluationDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "GetVisitDTO": {
         "type": "object",
         "properties": {
@@ -1956,6 +2048,22 @@
           },
           "registrationDate": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserDTOGetListDTO": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDTO"
+            },
             "nullable": true
           }
         },
