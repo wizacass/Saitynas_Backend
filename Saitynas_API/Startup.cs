@@ -26,7 +26,6 @@ using Saitynas_API.Models.UserEntity;
 using Saitynas_API.Models.WorkplaceEntity;
 using Saitynas_API.Models.WorkplaceEntity.DTO.Validator;
 using Saitynas_API.Models.WorkplaceEntity.Repository;
-using Saitynas_API.Services;
 using Saitynas_API.Services.AuthenticationService;
 using Saitynas_API.Services.EntityValidator;
 using Saitynas_API.Services.HeadersValidator;
@@ -181,7 +180,6 @@ namespace Saitynas_API
         {
             app.UseRequestMiddleware();
             app.UseMiddleware<ErrorHandlerMiddleware>();
-            app.UseMiddleware<JwtMiddleware>();
         }
 
         private static async Task SeedDatabase(ApiContext context, UserManager<User> userManager)

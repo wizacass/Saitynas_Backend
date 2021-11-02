@@ -41,11 +41,18 @@ namespace Saitynas_API.Configuration
         {
             options.SaveToken = true;
             options.RequireHttpsMetadata = false;
-            options.TokenValidationParameters = new TokenValidationParameters
+            options.TokenValidationParameters = CreateTokenValidationParameters(jwtSecret);
+        }
+
+        private static TokenValidationParameters CreateTokenValidationParameters(string secret)
+        {
+            return new TokenValidationParameters
             {
+                ValidateIssuerSigningKey = true,
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
+                ClockSkew = TimeSpan.Zero
             };
         }
     }

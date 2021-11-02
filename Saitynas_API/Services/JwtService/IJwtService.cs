@@ -5,9 +5,7 @@ namespace Saitynas_API.Services.JwtService
 {
     public interface IJwtService
     {
-        public string GenerateSecurityToken(JwtUser jwtUser);
-
-        public string ValidateToken(string token);
+        public string GenerateSecurityToken(User user);
 
         public RefreshToken GenerateRefreshToken(User user);
     }

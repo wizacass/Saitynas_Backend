@@ -62,14 +62,15 @@ namespace Saitynas_API.Services.AuthenticationService
                 throw new AuthenticationException(ApiErrorSlug.InvalidRefreshToken);
             }
 
-            var newToken = RotateRefreshToken(refreshToken, user);
+            var newRefreshToken = RotateRefreshToken(refreshToken, user);
 
-            user.RefreshTokens.Add(newToken);
+            user.RefreshTokens.Add(newRefreshToken);
             user.RemoveOldTokens();
 
             await _userManager.UpdateAsync(user);
-
-            return new AuthenticationDTO(GenerateAccessToken(user), newToken.Token);
+            string newAccessToken = _jwt.GenerateSecurityToken(user);
+            
+            return new AuthenticationDTO(newAccessToken, newRefreshToken.Token);
         }
 
         public async Task ChangePassword(ChangePasswordDTO dto, User user)
@@ -107,18 +108,13 @@ namespace Saitynas_API.Services.AuthenticationService
 
         private async Task<AuthenticationDTO> GenerateTokens(User user)
         {
-            string accessToken = GenerateAccessToken(user);
+            string accessToken = _jwt.GenerateSecurityToken(user);
             var refreshToken = _jwt.GenerateRefreshToken(user);
 
             user.RefreshTokens.Add(refreshToken);
             await _userManager.UpdateAsync(user);
 
             return new AuthenticationDTO(accessToken, refreshToken.Token);
-        }
-
-        private string GenerateAccessToken(User user)
-        {
-            return _jwt.GenerateSecurityToken(new JwtUser(user.Email, user.RoleId));
         }
 
         private static void CheckSuccess(IdentityResult result)
