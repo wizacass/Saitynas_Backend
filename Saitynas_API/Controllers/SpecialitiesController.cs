@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Saitynas_API.Models;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.SpecialistEntity.DTO;
 using Saitynas_API.Models.SpecialityEntity;
@@ -17,8 +16,6 @@ namespace Saitynas_API.Controllers
     {
         protected override string ModelName => "speciality";
 
-        public SpecialitiesController(ApiContext context) : base(context) { }
-        
         [HttpGet]
         public ActionResult<GetListDTO<GetEnumDTO>> GetSpecialities()
         {
