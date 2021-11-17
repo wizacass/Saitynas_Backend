@@ -50,7 +50,7 @@ namespace Saitynas_API.Controllers
             if (specialist == null) return ApiNotFound();
 
             var dto = new GetSpecialistDTO(specialist);
-            return Ok(dto);
+            return Ok(new GetObjectDTO<GetSpecialistDTO>(dto));
         }
         
         [Obsolete("This is a mock implementation")]
