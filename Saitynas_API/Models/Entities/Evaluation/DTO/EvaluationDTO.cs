@@ -6,10 +6,10 @@ namespace Saitynas_API.Models.Entities.Evaluation.DTO
     {
         [JsonProperty("value")]
         public int Value { get; set; }
-        
+
         [JsonProperty("comment")]
         public string Comment { get; set; }
-        
+
         [JsonProperty("specialistId")]
         public int SpecialistId { get; set; }
 

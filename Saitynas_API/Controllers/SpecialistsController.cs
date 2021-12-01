@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.DTO;
+using Saitynas_API.Models.Entities.Evaluation.DTO;
 using Saitynas_API.Models.Entities.Specialist;
 using Saitynas_API.Models.Entities.Specialist.DTO;
 using Saitynas_API.Models.Entities.Visit.DTO;
@@ -20,12 +21,18 @@ namespace Saitynas_API.Controllers
     {
         protected override string ModelName => "specialist";
 
-        private readonly ISpecialistsRepository _repository;
+        private readonly ISpecialistsRepository _specialistsRepository;
+        private readonly IEvaluationsRepository _evaluationsRepository;
         private readonly ISpecialistDTOValidator _validator;
 
-        public SpecialistsController(ISpecialistsRepository repository, ISpecialistDTOValidator validator)
+        public SpecialistsController(
+            ISpecialistsRepository specialistsRepository,
+            IEvaluationsRepository evaluationsRepository,
+            ISpecialistDTOValidator validator
+        )
         {
-            _repository = repository;
+            _specialistsRepository = specialistsRepository;
+            _evaluationsRepository = evaluationsRepository;
             _validator = validator;
         }
 
@@ -33,7 +40,7 @@ namespace Saitynas_API.Controllers
         [Authorize(Roles = "Admin,Patient")]
         public async Task<ActionResult<GetListDTO<GetSpecialistDTO>>> GetSpecialists()
         {
-            var specialists = (await _repository.GetAllAsync())
+            var specialists = (await _specialistsRepository.GetAllAsync())
                 .Select(w => new GetSpecialistDTO(w));
 
             var dto = new GetListDTO<GetSpecialistDTO>(specialists);
@@ -45,14 +52,24 @@ namespace Saitynas_API.Controllers
         [Authorize(Roles = "Admin,Patient")]
         public async Task<ActionResult<GetObjectDTO<GetSpecialistDTO>>> GetSpecialist(int id)
         {
-            var specialist = await _repository.GetAsync(id);
+            var specialist = await _specialistsRepository.GetAsync(id);
 
             if (specialist == null) return ApiNotFound();
 
             var dto = new GetSpecialistDTO(specialist);
             return Ok(new GetObjectDTO<GetSpecialistDTO>(dto));
         }
-        
+
+        [HttpGet("{id:int}/evaluations")]
+        [Authorize(Roles = "Admin,Patient")]
+        public async Task<ActionResult<GetListDTO<GetEvaluationDTO>>> GetSpecialistEvaluations(int id)
+        {
+            var evaluations = (await _evaluationsRepository.GetBySpecialistId(id))
+                .Select(e => new GetEvaluationDTO(e));
+
+            return Ok(new GetListDTO<GetEvaluationDTO>(evaluations));
+        }
+
         [Obsolete("This is a mock implementation")]
         [HttpGet("{id:int}/visits")]
         public ActionResult<GetListDTO<GetVisitDTO>> GetSpecialistVisits(int id)
@@ -88,7 +105,7 @@ namespace Saitynas_API.Controllers
         {
             _validator.ValidateCreateSpecialistDTO(dto);
             var specialist = new Specialist(dto);
-            await _repository.InsertAsync(specialist);
+            await _specialistsRepository.InsertAsync(specialist);
 
             return NoContent();
         }
@@ -101,7 +118,7 @@ namespace Saitynas_API.Controllers
         )
         {
             _validator.ValidateEditSpecialistDTO(dto);
-            await _repository.UpdateAsync(id, new Specialist(id, dto));
+            await _specialistsRepository.UpdateAsync(id, new Specialist(id, dto));
 
             return NoContent();
         }
@@ -110,7 +127,7 @@ namespace Saitynas_API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSpecialist(int id)
         {
-            await _repository.DeleteAsync(id);
+            await _specialistsRepository.DeleteAsync(id);
 
             return NoContent();
         }

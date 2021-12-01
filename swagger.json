@@ -665,6 +665,46 @@
         }
       }
     },
+    "/api/v1/Specialists/{id}/evaluations": {
+      "get": {
+        "tags": [
+          "Specialists"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEvaluationDTOGetListDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/Specialists/{id}/visits": {
       "get": {
         "tags": [
@@ -1782,6 +1822,10 @@
             "nullable": true
           },
           "author": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
             "type": "string",
             "nullable": true
           },
