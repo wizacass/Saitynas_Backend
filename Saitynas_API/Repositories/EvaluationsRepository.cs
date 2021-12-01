@@ -10,7 +10,7 @@ namespace Saitynas_API.Repositories
     public interface IEvaluationsRepository : IRepository<Evaluation>
     {
         public Task<IEnumerable<Evaluation>> GetBySpecialistId(int id);
-        
+
         public Task<IEnumerable<Evaluation>> GetByUserId(int id);
     }
 
@@ -38,6 +38,14 @@ namespace Saitynas_API.Repositories
             if (evaluation == null) throw new KeyNotFoundException();
 
             return evaluation;
+        }
+
+        public async Task<IEnumerable<Evaluation>> GetBySpecialistAsync(int specialistId)
+        {
+            return await _context.Evaluations
+                .Where(e => e.SpecialistId == specialistId)
+                .Include(e => e.User)
+                .ToListAsync();
         }
 
         public async Task InsertAsync(Evaluation data)
@@ -68,7 +76,7 @@ namespace Saitynas_API.Repositories
                 .Where(e => e.SpecialistId == id)
                 .Include(e => e.Specialist)
                 .Include(e => e.User)
-                .ToListAsync();;
+                .ToListAsync();
 
             return evaluations;
         }
@@ -79,7 +87,7 @@ namespace Saitynas_API.Repositories
                 .Where(e => e.UserId == id)
                 .Include(e => e.Specialist)
                 .Include(e => e.User)
-                .ToListAsync();;
+                .ToListAsync();
 
             return evaluations;
         }

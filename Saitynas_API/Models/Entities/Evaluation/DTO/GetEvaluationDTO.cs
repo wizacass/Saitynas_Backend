@@ -12,7 +12,10 @@ namespace Saitynas_API.Models.Entities.Evaluation.DTO
 
         [JsonProperty("author")]
         public string Author { get; set; }
-        
+
+        [JsonProperty("createdAt")]
+        public string CreatedAt { get; set; }
+
         public GetEvaluationDTO() { }
 
         public GetEvaluationDTO(Evaluation e) : base(e)
@@ -20,6 +23,7 @@ namespace Saitynas_API.Models.Entities.Evaluation.DTO
             Id = e.Id;
             Specialist = $"{e.Specialist?.FirstName} {e.Specialist?.LastName}";
             Author = e.User?.Email;
+            CreatedAt = e.CreatedAt.ToString("O");
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using Saitynas_API.Models.Entities.Evaluation.DTO;
 
@@ -15,6 +16,8 @@ namespace Saitynas_API.Models.Entities.Evaluation
         [StringLength(255)]
         public string Comment { get; set; }
 
+        public DateTime CreatedAt { get; set; }
+
         [Required]
         public int SpecialistId { get; set; }
 
@@ -27,9 +30,12 @@ namespace Saitynas_API.Models.Entities.Evaluation
         [Required]
         public User.User User { get; set; }
 
-        public Evaluation() { }
+        public Evaluation()
+        {
+            CreatedAt = DateTime.UtcNow;
+        }
 
-        public Evaluation(EvaluationDTO dto)
+        public Evaluation(EvaluationDTO dto) : this()
         {
             Value = dto.Value;
             Comment = dto.Comment;
