@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.Entities.Evaluation;
 using Saitynas_API.Models.Entities.Evaluation.DTO;
+using Saitynas_API.Models.Entities.Role;
 using Saitynas_API.Models.Entities.User;
 using Saitynas_API.Repositories;
 using Saitynas_API.Services.Validators;
@@ -82,12 +83,27 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<NoContentResult> DeleteEvaluation(int id)
+        [Authorize(Roles = "Patient,Admin")]
+        public async Task<IActionResult> DeleteEvaluation(int id)
         {
+            var user = await GetCurrentUser();
+            var evaluation = await _repository.GetAsync(id);
+
+            if (!CanDelete(user, evaluation))
+            {
+                return NotFound();
+            }
+
             await _repository.DeleteAsync(id);
 
             return NoContent();
+        }
+
+        private static bool CanDelete(User user, Evaluation evaluation)
+        {
+            if (user.RoleId == RoleId.Admin) return true;
+
+            return user.RoleId == RoleId.Patient && user.Id == evaluation.UserId;
         }
     }
 }
