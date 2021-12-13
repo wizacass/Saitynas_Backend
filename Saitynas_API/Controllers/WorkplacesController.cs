@@ -19,12 +19,17 @@ namespace Saitynas_API.Controllers
     {
         protected override string ModelName => "workplace";
 
-        private readonly IWorkplacesRepository _repository;
+        private readonly IWorkplacesRepository _workplacesRepository;
+        private readonly ISpecialistsRepository _specialistsRepository;
         private readonly IWorkplaceDTOValidator _validator;
 
-        public WorkplacesController(IWorkplacesRepository repository, IWorkplaceDTOValidator validator)
+        public WorkplacesController(
+            IWorkplacesRepository workplacesRepository,
+            ISpecialistsRepository specialistsRepository,
+            IWorkplaceDTOValidator validator)
         {
-            _repository = repository;
+            _workplacesRepository = workplacesRepository;
+            _specialistsRepository = specialistsRepository;
             _validator = validator;
         }
 
@@ -32,7 +37,7 @@ namespace Saitynas_API.Controllers
         [Authorize(Roles = AllRoles)]
         public async Task<ActionResult<GetListDTO<GetWorkplaceDTO>>> GetWorkplaces()
         {
-            var workplaces = (await _repository.GetAllAsync())
+            var workplaces = (await _workplacesRepository.GetAllAsync())
                 .Select(w => new GetWorkplaceDTO(w));
 
             var dto = new GetListDTO<GetWorkplaceDTO>(workplaces);
@@ -43,7 +48,7 @@ namespace Saitynas_API.Controllers
         [Authorize(Roles = AllRoles)]
         public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> GetWorkplace(int id)
         {
-            var workplace = await _repository.GetAsync(id);
+            var workplace = await _workplacesRepository.GetAsync(id);
 
             if (workplace == null) return ApiNotFound();
 
@@ -53,20 +58,14 @@ namespace Saitynas_API.Controllers
 
         [HttpGet("{id:int}/specialists")]
         [Authorize(Roles = AllRoles)]
-        [Obsolete]
         public async Task<ActionResult<GetListDTO<GetSpecialistDTO>>> GetWorkplaceSpecialists(int id)
         {
-            // var specialists = await Context.Specialists
-            //     .Where(s => s.WorkplaceId == id)
-            //     .Include(s => s.Speciality)
-            //     .Include(s => s.Workplace)
-            //     .Select(s => new GetSpecialistDTO(s))
-            //     .ToListAsync();
-            //
-            // var dto = new GetListDTO<GetSpecialistDTO>(specialists);
-            // return Ok(dto);
+            var specialists = (await _specialistsRepository.GetByWorkplace(id))
+                .Select(s => new GetSpecialistDTO(s));
 
-            return StatusCode(500);
+            var dto = new GetListDTO<GetSpecialistDTO>(specialists);
+
+            return Ok(dto);
         }
 
         [HttpPost]
@@ -76,7 +75,7 @@ namespace Saitynas_API.Controllers
         )
         {
             _validator.ValidateCreateWorkplaceDTO(dto);
-            await _repository.InsertAsync(new Workplace(dto));
+            await _workplacesRepository.InsertAsync(new Workplace(dto));
 
             return NoContent();
         }
@@ -89,7 +88,7 @@ namespace Saitynas_API.Controllers
         )
         {
             _validator.ValidateEditWorkplaceDTO(dto);
-            await _repository.UpdateAsync(id, new Workplace(id, dto));
+            await _workplacesRepository.UpdateAsync(id, new Workplace(id, dto));
 
             return NoContent();
         }
@@ -98,7 +97,7 @@ namespace Saitynas_API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteWorkplace(int id)
         {
-            await _repository.DeleteAsync(id);
+            await _workplacesRepository.DeleteAsync(id);
 
             return NoContent();
         }

@@ -7,17 +7,20 @@ using Saitynas_API.Models.Entities.Specialist;
 
 namespace Saitynas_API.Repositories
 {
-    public interface ISpecialistsRepository : IRepository<Specialist> { }
-    
+    public interface ISpecialistsRepository : IRepository<Specialist>
+    {
+        public Task<IEnumerable<Specialist>> GetByWorkplace(int workplaceId);
+    }
+
     public class SpecialistsRepository : ISpecialistsRepository
     {
         private readonly ApiContext _context;
-        
+
         public SpecialistsRepository(ApiContext context)
         {
             _context = context;
         }
-        
+
         public async Task<IEnumerable<Specialist>> GetAllAsync()
         {
             var specialists = await _context.Specialists
@@ -30,8 +33,7 @@ namespace Saitynas_API.Repositories
 
         public async Task<Specialist> GetAsync(int id)
         {
-            var specialist = await _context.Specialists.
-                Where(s => s.Id == id)
+            var specialist = await _context.Specialists.Where(s => s.Id == id)
                 .Include(s => s.Speciality)
                 .Include(s => s.Workplace)
                 .FirstOrDefaultAsync();
@@ -49,18 +51,29 @@ namespace Saitynas_API.Repositories
         {
             var specialist = await GetAsync(id);
             specialist.Update(data);
-            
+
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
             var s = _context.Specialists.FirstOrDefault(s => s.Id == id);
-            
-            if(s == null) return;
+
+            if (s == null) return;
 
             _context.Specialists.Remove(s);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Specialist>> GetByWorkplace(int workplaceId)
+        {
+            var specialists = await _context.Specialists
+                .Where(s => s.WorkplaceId == workplaceId)
+                .Include(s => s.Speciality)
+                .Include(s => s.Workplace)
+                .ToListAsync();
+
+            return specialists;
         }
     }
 }
