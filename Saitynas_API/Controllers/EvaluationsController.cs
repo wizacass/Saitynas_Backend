@@ -71,9 +71,17 @@ namespace Saitynas_API.Controllers
         }
 
         [HttpPut("{id:int}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<NoContentResult> EditEvaluation(int id, [FromBody] EditEvaluationDTO dto)
+        [Authorize(Roles = "Patient, Admin")]
+        public async Task<IActionResult> EditEvaluation(int id, [FromBody] EditEvaluationDTO dto)
         {
+            var user = await GetCurrentUser();
+            var evaluation = await _repository.GetAsync(id);
+
+            if (!CanDelete(user, evaluation))
+            {
+                return NotFound();
+            }
+
             _validator.ValidateEditEvaluationDTO(dto);
             var data = new Evaluation(dto);
 
