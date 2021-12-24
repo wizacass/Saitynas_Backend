@@ -59,10 +59,11 @@ namespace Saitynas_API.Services
 
         public RefreshToken GenerateRefreshToken(User user)
         {
-            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            var rng = RandomNumberGenerator.Create();
             byte[] randomBytes = new byte[64];
-            rngCryptoServiceProvider.GetBytes(randomBytes);
-
+            
+            rng.GetBytes(randomBytes);
+            
             var refreshToken = new RefreshToken
             {
                 Token = Convert.ToBase64String(randomBytes),

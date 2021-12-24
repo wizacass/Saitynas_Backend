@@ -15,10 +15,10 @@ namespace Saitynas_API
         {
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
-                    {
-                        webBuilder.UseSentry(ConfigureOptions);
-                        webBuilder.UseStartup<Startup>();
-                    });
+                {
+                    webBuilder.UseSentry(ConfigureOptions);
+                    webBuilder.UseStartup<Startup>();
+                });
         }
 
         private static void ConfigureOptions(SentryAspNetCoreOptions o)
