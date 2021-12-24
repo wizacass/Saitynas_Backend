@@ -1,32 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
       <UserSecretsId>9632f3c4-499c-4514-9512-99993cf327d4</UserSecretsId>
   </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.10" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.10" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.10">
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.10" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.10" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="MySql.Data" Version="8.0.26" />
-        <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.5" />
+        <PackageReference Include="MySql.Data" Version="8.0.27" />
+        <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.8" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="Sentry.AspNetCore" Version="3.11.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.2.1" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.13.1" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.0" />
+        <PackageReference Include="Sentry.AspNetCore" Version="3.12.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.2.3" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -34,9 +35,9 @@
       <Folder Include="Models\Entities" />
     </ItemGroup>
 
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Exec Command="dotnet tool restore" />
-        <Exec Command="dotnet swagger tofile --output ../swagger.json $(OutputPath)\$(AssemblyName).dll v1 " />
-    </Target>
+<!--    <Target Name="PostBuild" AfterTargets="PostBuildEvent">-->
+<!--        <Exec Command="dotnet tool restore" />-->
+<!--        <Exec Command="dotnet swagger tofile &#45;&#45;output ../swagger.json $(OutputPath)\$(AssemblyName).dll v1 " />-->
+<!--    </Target>-->
 
 </Project>

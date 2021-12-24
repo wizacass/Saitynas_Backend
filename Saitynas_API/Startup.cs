@@ -50,7 +50,7 @@ namespace Saitynas_API
             SetupCors(services);
 
             SetupAuthentication(services);
-            
+
             services.Configure<JwtSettings>(Configuration.GetSection(nameof(JwtSettings)));
 
             RegisterCustomServices(services);
@@ -60,16 +60,21 @@ namespace Saitynas_API
 
         private void SetupDatabase(IServiceCollection services)
         {
-            var builder = new MySqlConnectionStringBuilder(Configuration.GetConnectionString("DefaultConnection"))
-            {
-                Server = GetEnvVar("Server"),
-                Database = GetEnvVar("Database"),
-                UserID = GetEnvVar("DbUsername"),
-                Password = GetEnvVar("DbPassword"),
-                SslMode = MySqlSslMode.None
-            };
+            string connectionString =
+                new MySqlConnectionStringBuilder(Configuration.GetConnectionString("DefaultConnection"))
+                {
+                    Server = GetEnvVar("Server"),
+                    Database = GetEnvVar("Database"),
+                    UserID = GetEnvVar("DbUsername"),
+                    Password = GetEnvVar("DbPassword"),
+                    SslMode = MySqlSslMode.None
+                }.ConnectionString;
 
-            services.AddDbContext<ApiContext>(opt => opt.UseMySQL(builder.ConnectionString));
+            var version = ServerVersion.AutoDetect(connectionString);
+
+            services.AddDbContext<ApiContext>(
+                opt => opt.UseMySql(connectionString, version)
+            );
         }
 
         private string GetEnvVar(string key)
@@ -86,12 +91,12 @@ namespace Saitynas_API
         private static void SetupCors(IServiceCollection services)
         {
             services.AddCors(opt =>
+            {
+                opt.AddPolicy(CorsPolicyName, p =>
                 {
-                    opt.AddPolicy(CorsPolicyName, p =>
-                        {
-                            p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-                        });
+                    p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
+            });
         }
 
         private void SetupAuthentication(IServiceCollection services)
@@ -161,10 +166,7 @@ namespace Saitynas_API
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
         private static void RegisterCustomMiddlewares(IApplicationBuilder app)

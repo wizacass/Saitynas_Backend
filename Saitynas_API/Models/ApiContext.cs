@@ -16,7 +16,6 @@ namespace Saitynas_API.Models
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-
         public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<Workplace> Workplaces { get; set; }
         public DbSet<Speciality> Specialities { get; set; }

@@ -30,8 +30,6 @@ namespace Saitynas_API_Tests.DTOValidatorTests
             var dto = ValidCreateDTO;
 
             _validator.ValidateSignupDTO(dto);
-
-            Pass();
         }
 
         [Test]

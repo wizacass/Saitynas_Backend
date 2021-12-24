@@ -52,7 +52,8 @@ namespace Saitynas_API_Tests
         {
             await _repository.InsertAsync(new Workplace
             {
-                City = "Test City"
+                City = "Test City",
+                Address = "Test Address"
             });
 
             await TestGetAll();
@@ -95,8 +96,6 @@ namespace Saitynas_API_Tests
             const int targetId = 0;
 
             await _repository.DeleteAsync(targetId);
-
-            Pass();
         }
     }
 }
