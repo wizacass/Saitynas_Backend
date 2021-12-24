@@ -67,8 +67,6 @@ namespace Saitynas_API_Tests.DTOValidatorTests
             var dto = ValidEditDTO;
 
             _validator.ValidateEditWorkplaceDTO(dto);
-
-            Pass();
         }
 
         [Test]
