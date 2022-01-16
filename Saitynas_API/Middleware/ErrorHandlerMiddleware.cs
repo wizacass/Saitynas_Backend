@@ -7,45 +7,44 @@ using Saitynas_API.Exceptions;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.DTO;
 
-namespace Saitynas_API.Middleware
+namespace Saitynas_API.Middleware;
+
+public class ErrorHandlerMiddleware
 {
-    public class ErrorHandlerMiddleware
+    private readonly RequestDelegate _next;
+
+    public ErrorHandlerMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+    }
 
-        public ErrorHandlerMiddleware(RequestDelegate next)
+    public async Task Invoke(HttpContext context)
+    {
+        try
         {
-            _next = next;
+            await _next(context);
         }
-
-        public async Task Invoke(HttpContext context)
+        catch (Exception error)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception error)
-            {
-                var response = context.Response;
-                response.ContentType = "application/json";
+            var response = context.Response;
+            response.ContentType = "application/json";
 
-                var dto = CreateErrorDto(error);
-                response.StatusCode = (int)dto.Type;
+            var dto = CreateErrorDto(error);
+            response.StatusCode = (int) dto.Type;
 
-                string result = JsonConvert.SerializeObject(dto);
-                await response.WriteAsync(result);
-            }
+            string result = JsonConvert.SerializeObject(dto);
+            await response.WriteAsync(result);
         }
+    }
 
-        private static ErrorDTO CreateErrorDto(Exception exception)
+    private static ErrorDTO CreateErrorDto(Exception exception)
+    {
+        return exception switch
         {
-            return exception switch
-            {
-                DTOValidationException ex => new ErrorDTO(400, ex.Message, ex.Parameter),
-                KeyNotFoundException => new ErrorDTO(404, ApiErrorSlug.ResourceNotFound),
-                AuthenticationException ex => new ErrorDTO(400, ApiErrorSlug.AuthenticationError, ex.Message),
-                _ => new ErrorDTO(500, ApiErrorSlug.InternalServerError, exception.Message)
-            };
-        }
+            DTOValidationException ex => new ErrorDTO(400, ex.Message, ex.Parameter),
+            KeyNotFoundException => new ErrorDTO(404, ApiErrorSlug.ResourceNotFound),
+            AuthenticationException ex => new ErrorDTO(400, ApiErrorSlug.AuthenticationError, ex.Message),
+            _ => new ErrorDTO(500, ApiErrorSlug.InternalServerError, exception.Message)
+        };
     }
 }

@@ -5,55 +5,54 @@ using Saitynas_API.Models.Common;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Services;
 
-namespace Saitynas_API.Middleware
+namespace Saitynas_API.Middleware;
+
+public class RequestMiddleware
 {
-    public class RequestMiddleware
+    private readonly RequestDelegate _next;
+
+    public RequestMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+    }
 
-        private static string SerializedError
+    private static string SerializedError
+    {
+        get
         {
-            get
+            var error = new ErrorDTO
             {
-                var error = new ErrorDTO
-                {
-                    Type = 400,
-                    Title = ApiErrorSlug.InvalidHeaders,
-                    Details = null
-                };
+                Type = 400,
+                Title = ApiErrorSlug.InvalidHeaders,
+                Details = null
+            };
 
-                return JsonConvert.SerializeObject(error, Formatting.Indented);
-            }
+            return JsonConvert.SerializeObject(error, Formatting.Indented);
         }
+    }
 
-        public RequestMiddleware(RequestDelegate next)
+    public async Task Invoke(HttpContext httpContext, IHeadersValidator headersValidator)
+    {
+        if (IsApiRequestInvalid(httpContext, headersValidator))
         {
-            _next = next;
+            httpContext.Response.StatusCode = 400;
+            httpContext.Response.ContentType = "application/json";
+
+            await httpContext.Response.WriteAsync(SerializedError);
+            return;
         }
 
-        public async Task Invoke(HttpContext httpContext, IHeadersValidator headersValidator)
-        {
-            if (IsApiRequestInvalid(httpContext, headersValidator))
-            {
-                httpContext.Response.StatusCode = 400;
-                httpContext.Response.ContentType = "application/json";
+        await _next(httpContext);
+    }
 
-                await httpContext.Response.WriteAsync(SerializedError);
-                return;
-            }
+    private static bool IsApiRequestInvalid(HttpContext httpContext, IHeadersValidator headersValidator)
+    {
+        return IsApiRequest(httpContext) &&
+               !headersValidator.IsRequestHeaderValid(httpContext.Request.Headers);
+    }
 
-            await _next(httpContext);
-        }
-
-        private static bool IsApiRequestInvalid(HttpContext httpContext, IHeadersValidator headersValidator)
-        {
-            return IsApiRequest(httpContext) &&
-                   !headersValidator.IsRequestHeaderValid(httpContext.Request.Headers);
-        }
-
-        private static bool IsApiRequest(HttpContext httpContext)
-        {
-            return httpContext.Request.Path.StartsWithSegments("/api");
-        }
+    private static bool IsApiRequest(HttpContext httpContext)
+    {
+        return httpContext.Request.Path.StartsWithSegments("/api");
     }
 }
