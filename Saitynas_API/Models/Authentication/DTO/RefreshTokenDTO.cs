@@ -1,10 +1,9 @@
 using Newtonsoft.Json;
 
-namespace Saitynas_API.Models.Authentication.DTO
+namespace Saitynas_API.Models.Authentication.DTO;
+
+public class RefreshTokenDTO
 {
-    public class RefreshTokenDTO
-    {
-        [JsonProperty("refreshToken")]
-        public string Token { get; set; }
-    }
+    [JsonProperty("refreshToken")]
+    public string Token { get; set; }
 }

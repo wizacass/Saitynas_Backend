@@ -1,10 +1,9 @@
 using Newtonsoft.Json;
 
-namespace Saitynas_API.Models.DTO
+namespace Saitynas_API.Models.DTO;
+
+public class GetEnumDTO : EnumDTO
 {
-    public class GetEnumDTO : EnumDTO
-    {
-        [JsonProperty("id")]
-        public int Id { get; set; }
-    }
+    [JsonProperty("id")]
+    public int Id { get; set; }
 }

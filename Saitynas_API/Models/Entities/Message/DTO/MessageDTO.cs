@@ -1,29 +1,28 @@
 using Newtonsoft.Json;
 using Saitynas_API.Models.DTO;
 
-namespace Saitynas_API.Models.Entities.Message.DTO
+namespace Saitynas_API.Models.Entities.Message.DTO;
+
+public class MessageDTO
 {
-    public class MessageDTO
-    {
-        [JsonProperty("meta")]
-        public Meta Meta { get; set; }
+    [JsonProperty("meta")]
+    public Meta Meta { get; set; }
 
-        [JsonProperty("data")]
-        public MessageData Data { get; set; }
-        
-        public MessageDTO(string message)
+    [JsonProperty("data")]
+    public MessageData Data { get; set; }
+
+    public MessageDTO(string message)
+    {
+        Meta = Meta.Empty;
+        Data = new MessageData
         {
-            Meta = Meta.Empty;
-            Data = new MessageData
-            {
-                Message = message
-            };
-        }
+            Message = message
+        };
     }
+}
 
-    public class MessageData
-    {
-        [JsonProperty("message")]
-        public string Message { get; set; }
-    }
+public class MessageData
+{
+    [JsonProperty("message")]
+    public string Message { get; set; }
 }

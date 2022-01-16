@@ -3,41 +3,40 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models.Common.Interfaces;
 
-namespace Saitynas_API.Models.Entities.Workplace
+namespace Saitynas_API.Models.Entities.Workplace;
+
+public class WorkplaceSeed : ISeed
 {
-    public class WorkplaceSeed : ISeed
+    private readonly ApiContext _context;
+
+    public WorkplaceSeed(ApiContext context)
     {
-        private readonly ApiContext _context;
+        _context = context;
+    }
 
-        public WorkplaceSeed(ApiContext context)
+    public async Task EnsureCreated()
+    {
+        if (!ShouldSeed()) return;
+
+        for (int i = 1; i <= 3; i++)
         {
-            _context = context; 
-        }
-
-        public async Task EnsureCreated()
-        {
-            if (!ShouldSeed()) return;
-
-            for (int i = 1; i <= 3; i++)
+            var workplace = new Workplace
             {
-                var workplace = new Workplace
-                {
-                    Id = i,
-                    Address = $"Test Str. {i * 10}",
-                    City = "Kaunas"
-                };
+                Id = i,
+                Address = $"Test Str. {i * 10}",
+                City = "Kaunas"
+            };
 
-                await _context.Workplaces.AddAsync(workplace);
-            }
-            
-            await _context.SaveChangesAsync();
+            await _context.Workplaces.AddAsync(workplace);
         }
 
-        private bool ShouldSeed()
-        {
-            var testObject = _context.Workplaces.IgnoreQueryFilters().FirstOrDefault(o => o.Id == 1);
+        await _context.SaveChangesAsync();
+    }
 
-            return testObject == null;
-        }
+    private bool ShouldSeed()
+    {
+        var testObject = _context.Workplaces.IgnoreQueryFilters().FirstOrDefault(o => o.Id == 1);
+
+        return testObject == null;
     }
 }
