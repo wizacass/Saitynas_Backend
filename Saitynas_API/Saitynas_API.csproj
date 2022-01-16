@@ -24,7 +24,7 @@
         <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.8" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.0" />
-        <PackageReference Include="Sentry.AspNetCore" Version="3.12.3" />
+        <PackageReference Include="Sentry.AspNetCore" Version="3.13.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
         <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.2.3" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />

@@ -1,96 +1,95 @@
-using NUnit.Framework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using NUnit.Framework;
 using Saitynas_API.Services;
 using static NUnit.Framework.Assert;
 
-namespace Saitynas_API_Tests
+namespace Saitynas_API_Tests;
+
+[TestFixture]
+public class HeadersValidatorTests
 {
-    [TestFixture]
-    public class HeadersValidatorTests
+    [SetUp]
+    public void SetUp()
     {
-        private IHeadersValidator _headersValidator;
+        _headersValidator = new HeadersValidator();
+    }
 
-        [SetUp]
-        public void SetUp()
+    private IHeadersValidator _headersValidator;
+
+    [Test]
+    public void TestEmptyHeader()
+    {
+        var headers = new HeaderDictionary();
+
+        IsFalse(IsValid(headers));
+    }
+
+    [Test]
+    public void TestValidHeader()
+    {
+        var headers = new HeaderDictionary
         {
-            _headersValidator = new HeadersValidator();
-        }
+            new("X-Api-Request", "true")
+        };
 
-        [Test]
-        public void TestEmptyHeader()
+        IsTrue(IsValid(headers));
+    }
+
+    [Test]
+    public void TestInvalidHeaderValue()
+    {
+        var headers = new HeaderDictionary
         {
-            var headers = new HeaderDictionary();
+            new("X-Api-Request", "not_true")
+        };
 
-            IsFalse(IsValid(headers));
-        }
+        IsFalse(IsValid(headers));
+    }
 
-        [Test]
-        public void TestValidHeader()
-        {
-            var headers = new HeaderDictionary
+    [Test]
+    public void TestMultipleHeaderValues()
+    {
+        var values = new StringValues(
+            new[]
             {
-                new("X-Api-Request", "true")
-            };
+                "true", "false"
+            }
+        );
 
-            IsTrue(IsValid(headers));
-        }
-
-        [Test]
-        public void TestInvalidHeaderValue()
+        var headers = new HeaderDictionary
         {
-            var headers = new HeaderDictionary
-            {
-                new("X-Api-Request", "not_true")
-            };
+            new("X-Api-Request", values)
+        };
 
-            IsFalse(IsValid(headers));
-        }
+        IsFalse(IsValid(headers));
+    }
 
-        [Test]
-        public void TestMultipleHeaderValues()
+    [Test]
+    public void TestInvalidHeaderKey()
+    {
+        var headers = new HeaderDictionary
         {
-            var values = new StringValues(
-                new[]
-                {
-                    "true", "false"
-                }
-            );
+            new("Y-Api-Request", "true")
+        };
 
-            var headers = new HeaderDictionary
-            {
-                new("X-Api-Request", values)
-            };
+        IsFalse(IsValid(headers));
+    }
 
-            IsFalse(IsValid(headers));
-        }
-
-        [Test]
-        public void TestInvalidHeaderKey()
+    [Test]
+    public void TestMultipleHeaders()
+    {
+        var headers = new HeaderDictionary
         {
-            var headers = new HeaderDictionary
-            {
-                new("Y-Api-Request", "true")
-            };
+            new("Y-Api-Request", "true"),
+            new("X-Api-Request", "true")
+        };
 
-            IsFalse(IsValid(headers));
-        }
+        IsTrue(IsValid(headers));
+    }
 
-        [Test]
-        public void TestMultipleHeaders()
-        {
-            var headers = new HeaderDictionary
-            {
-                new("Y-Api-Request", "true"),
-                new("X-Api-Request", "true")
-            };
-
-            IsTrue(IsValid(headers));
-        }
-
-        private bool IsValid(IHeaderDictionary headers)
-        {
-            return _headersValidator.IsRequestHeaderValid(headers);
-        }
+    private bool IsValid(IHeaderDictionary headers)
+    {
+        return _headersValidator.IsRequestHeaderValid(headers);
     }
 }

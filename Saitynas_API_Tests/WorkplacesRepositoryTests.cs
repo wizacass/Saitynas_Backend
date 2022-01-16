@@ -7,95 +7,94 @@ using Saitynas_API.Models.Entities.Workplace;
 using Saitynas_API.Repositories;
 using static NUnit.Framework.Assert;
 
-namespace Saitynas_API_Tests
+namespace Saitynas_API_Tests;
+
+[TestFixture]
+public class WorkplacesRepositoryTests
 {
-    [TestFixture]
-    public class WorkplacesRepositoryTests
+    [SetUp]
+    public void SetUp()
     {
-        private ApiContext _context;
-        private IWorkplacesRepository _repository;
+        _context = new ApiContextMock();
+        _repository = new WorkplacesRepository(_context);
+    }
 
-        [SetUp]
-        public void SetUp()
+    private ApiContext _context;
+    private IWorkplacesRepository _repository;
+
+    [Test]
+    public async Task TestGetAll()
+    {
+        var workplaces = await _repository.GetAllAsync();
+
+        AreEqual(_context.Workplaces.Count(), workplaces.Count());
+    }
+
+    [Test]
+    public async Task TestGetExistingElement()
+    {
+        const int targetId = 1;
+        var workplace = await _repository.GetAsync(targetId);
+
+        AreEqual(targetId, workplace.Id);
+    }
+
+    [Test]
+    public async Task TestGetNonExistingElement()
+    {
+        var workplace = await _repository.GetAsync(0);
+
+        IsNull(workplace);
+    }
+
+    [Test]
+    public async Task TestInsert()
+    {
+        await _repository.InsertAsync(new Workplace
         {
-            _context = new ApiContextMock();
-            _repository = new WorkplacesRepository(_context);
-        }
+            City = "Test City",
+            Address = "Test Address"
+        });
 
-        [Test]
-        public async Task TestGetAll()
+        await TestGetAll();
+    }
+
+    [Test]
+    public async Task TestUpdate()
+    {
+        const string city = "Test updated";
+        const int targetId = 1;
+
+        var workplace = new Workplace
         {
-            var workplaces = await _repository.GetAllAsync();
+            Id = targetId,
+            City = city
+        };
 
-            AreEqual(_context.Workplaces.Count(), workplaces.Count());
-        }
+        await _repository.UpdateAsync(targetId, workplace);
 
-        [Test]
-        public async Task TestGetExistingElement()
-        {
-            const int targetId = 1;
-            var workplace = await _repository.GetAsync(targetId);
+        var updatedWorkplace = await _repository.GetAsync(targetId);
 
-            AreEqual(targetId, workplace.Id);
-        }
+        AreEqual(city, updatedWorkplace.City);
+    }
 
-        [Test]
-        public async Task TestGetNonExistingElement()
-        {
-            var workplace = await _repository.GetAsync(0);
+    [Test]
+    public async Task TestExistingDelete()
+    {
+        const int targetId = 1;
 
-            IsNull(workplace);
-        }
+        await _repository.DeleteAsync(targetId);
 
-        [Test]
-        public async Task TestInsert()
-        {
-            await _repository.InsertAsync(new Workplace
-            {
-                City = "Test City",
-                Address = "Test Address"
-            });
+        var deletedWorkplace = await _repository.GetAsync(targetId);
 
-            await TestGetAll();
-        }
+        IsNull(deletedWorkplace);
+    }
 
-        [Test]
-        public async Task TestUpdate()
-        {
-            const string city = "Test updated";
-            const int targetId = 1;
+    [Test]
+    public async Task TestNonExistingDelete()
+    {
+        const int targetId = 0;
 
-            var workplace = new Workplace
-            {
-                Id = targetId,
-                City = city
-            };
-
-            await _repository.UpdateAsync(targetId, workplace);
-
-            var updatedWorkplace = await _repository.GetAsync(targetId);
-
-            AreEqual(city, updatedWorkplace.City);
-        }
-
-        [Test]
-        public async Task TestExistingDelete()
-        {
-            const int targetId = 1;
-
-            await _repository.DeleteAsync(targetId);
-
-            var deletedWorkplace = await _repository.GetAsync(targetId);
-
-            IsNull(deletedWorkplace);
-        }
-        
-        [Test]
-        public async Task TestNonExistingDelete()
-        {
-            const int targetId = 0;
-
-            await _repository.DeleteAsync(targetId);
-        }
+        await _repository.DeleteAsync(targetId);
     }
 }
