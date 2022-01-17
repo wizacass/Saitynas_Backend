@@ -7,7 +7,7 @@ using Saitynas_API.Models.Entities.Role;
 
 namespace Saitynas_API.Controllers;
 
-[Route(RoutePrefix + "/[Controller]")]
+[Route($"{RoutePrefix}/[Controller]")]
 [ApiController]
 public class RolesController : ApiControllerBase
 {

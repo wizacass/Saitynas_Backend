@@ -6,7 +6,7 @@ using Saitynas_API.Models.Entities.Visit.DTO;
 
 namespace Saitynas_API.Controllers;
 
-[Route(RoutePrefix + "/[Controller]")]
+[Route($"{RoutePrefix}/[Controller]")]
 [ApiController]
 [Produces(ApiContentType)]
 [Obsolete]

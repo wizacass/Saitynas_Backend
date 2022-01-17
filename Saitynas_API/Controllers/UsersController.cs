@@ -16,7 +16,7 @@ using Saitynas_API.Services;
 
 namespace Saitynas_API.Controllers;
 
-[Route(RoutePrefix + "/[Controller]")]
+[Route($"{RoutePrefix}/[Controller]")]
 [ApiController]
 [Produces(ApiContentType)]
 public class UsersController : ApiControllerBase

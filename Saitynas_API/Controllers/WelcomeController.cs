@@ -25,7 +25,7 @@ public class WelcomeController : ApiControllerBase
     public async Task<ActionResult<MessageDTO>> GetMessage()
     {
         var message = await _context.Messages.FirstOrDefaultAsync(m => m.Id == 1);
-        var dto = new MessageDTO(message.Text);
+        var dto = new MessageDTO(message?.Text);
 
         return Ok(dto);
     }
