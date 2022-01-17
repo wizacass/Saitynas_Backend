@@ -6,72 +6,71 @@ using Saitynas_API.Models.Common;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.Entities.User;
 
-namespace Saitynas_API.Controllers
+namespace Saitynas_API.Controllers;
+
+public abstract class ApiControllerBase : ControllerBase
 {
-    public abstract class ApiControllerBase : ControllerBase
+    protected const string ApiContentType = "application/json";
+    protected const string RoutePrefix = "api/v1";
+    protected const string AllRoles = "Admin,Patient,Specialist";
+
+    private readonly UserManager<User> _userManager;
+
+    protected abstract string ModelName { get; }
+
+    protected ApiControllerBase() { }
+
+    protected ApiControllerBase(UserManager<User> userManager)
     {
-        protected const string ApiContentType = "application/json";
-        protected const string RoutePrefix = "api/v1";
-        protected const string AllRoles = "Admin,Patient,Specialist";
+        _userManager = userManager;
+    }
 
-        protected abstract string ModelName { get; }
+    protected async Task<User> GetCurrentUser()
+    {
+        string email = User.FindFirst(ClaimTypes.Email)?.Value;
+        var user = await _userManager.FindByEmailAsync(email);
 
-        private readonly UserManager<User> _userManager;
+        return user;
+    }
 
-        protected ApiControllerBase() { }
+    protected ActionResult ApiCreated(object data)
+    {
+        return StatusCode(201, data);
+    }
 
-        protected ApiControllerBase(UserManager<User> userManager)
+    protected BadRequestObjectResult ApiBadRequest(string message, string details = null)
+    {
+        var error = new ErrorDTO
         {
-            _userManager = userManager;
-        }
+            Type = 400,
+            Title = message,
+            Details = details
+        };
 
-        protected async Task<User> GetCurrentUser()
+        return BadRequest(error);
+    }
+
+    protected NotFoundObjectResult ApiNotFound()
+    {
+        var error = new ErrorDTO
         {
-            string email = User.FindFirst(ClaimTypes.Email)?.Value;
-            var user = await _userManager.FindByEmailAsync(email);
+            Type = 404,
+            Title = ApiErrorSlug.ResourceNotFound,
+            Details = ModelName
+        };
 
-            return user;
-        }
+        return NotFound(error);
+    }
 
-        protected ActionResult ApiCreated(object data)
+    protected NotFoundObjectResult ApiNotFound(string title, string details = null)
+    {
+        var error = new ErrorDTO
         {
-            return StatusCode(201, data);
-        }
+            Type = 404,
+            Title = title,
+            Details = details
+        };
 
-        protected BadRequestObjectResult ApiBadRequest(string message, string details = null)
-        {
-            var error = new ErrorDTO
-            {
-                Type = 400,
-                Title = message,
-                Details = details
-            };
-
-            return BadRequest(error);
-        }
-
-        protected NotFoundObjectResult ApiNotFound()
-        {
-            var error = new ErrorDTO
-            {
-                Type = 404,
-                Title = ApiErrorSlug.ResourceNotFound,
-                Details = ModelName
-            };
-
-            return NotFound(error);
-        }
-
-        protected NotFoundObjectResult ApiNotFound(string title, string details = null)
-        {
-            var error = new ErrorDTO
-            {
-                Type = 404,
-                Title = title,
-                Details = details
-            };
-
-            return NotFound(error);
-        }
+        return NotFound(error);
     }
 }

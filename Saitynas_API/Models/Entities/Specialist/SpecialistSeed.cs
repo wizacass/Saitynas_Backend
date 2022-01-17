@@ -3,54 +3,50 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models.Common.Interfaces;
 
-namespace Saitynas_API.Models.Entities.Specialist
+namespace Saitynas_API.Models.Entities.Specialist;
+
+public class SpecialistSeed : ISeed
 {
-    public class SpecialistSeed : ISeed
+    private readonly ApiContext _context;
+
+    public SpecialistSeed(ApiContext context)
     {
-        private readonly ApiContext _context;
+        _context = context;
+    }
 
-        public SpecialistSeed(ApiContext context)
+    public async Task EnsureCreated()
+    {
+        if (!ShouldSeed()) return;
+
+        var specialists = new[]
         {
-            _context = context;
-        }
-        
-        public async Task EnsureCreated()
-        {
-            if (!ShouldSeed()) return;
-
-            var specialists = new[]
+            new Specialist
             {
-                new Specialist
-                {
-                    Id = 1,
-                    FirstName = "Good",
-                    LastName = "Doctor",
-                    SpecialityId = 7,
-                    WorkplaceId = 1
-                },
-                new Specialist
-                {
-                    Id = 2,
-                    FirstName = "Private",
-                    LastName = "Doctor",
-                    SpecialityId = 1,
-                    Address = "Private address 7"
-                }
-            };
-
-            foreach (var specialist in specialists)
+                Id = 1,
+                FirstName = "Good",
+                LastName = "Doctor",
+                SpecialityId = 7,
+                WorkplaceId = 1
+            },
+            new Specialist
             {
-                await _context.Specialists.AddAsync(specialist);
+                Id = 2,
+                FirstName = "Private",
+                LastName = "Doctor",
+                SpecialityId = 1,
+                Address = "Private address 7"
             }
+        };
 
-            await _context.SaveChangesAsync();
-        }
-        
-        private bool ShouldSeed()
-        {
-            var testObject = _context.Specialists.IgnoreQueryFilters().FirstOrDefault(o => o.Id == 1);
+        foreach (var specialist in specialists) await _context.Specialists.AddAsync(specialist);
 
-            return testObject == null;
-        }
+        await _context.SaveChangesAsync();
+    }
+
+    private bool ShouldSeed()
+    {
+        var testObject = _context.Specialists.IgnoreQueryFilters().FirstOrDefault(o => o.Id == 1);
+
+        return testObject == null;
     }
 }

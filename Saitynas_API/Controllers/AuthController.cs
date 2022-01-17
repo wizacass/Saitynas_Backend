@@ -7,72 +7,71 @@ using Saitynas_API.Models.Entities.User;
 using Saitynas_API.Services;
 using Saitynas_API.Services.Validators;
 
-namespace Saitynas_API.Controllers
+namespace Saitynas_API.Controllers;
+
+[Route(RoutePrefix)]
+[ApiController]
+[Produces(ApiContentType)]
+public class AuthController : ApiControllerBase
 {
-    [Route(RoutePrefix)]
-    [ApiController]
-    [Produces(ApiContentType)]
-    public class AuthController : ApiControllerBase
+    private readonly IAuthenticationService _authService;
+
+    private readonly IAuthenticationDTOValidator _validator;
+    protected override string ModelName => "user";
+
+    public AuthController(
+        IAuthenticationDTOValidator validator,
+        IAuthenticationService authService,
+        UserManager<User> userManager
+    ) : base(userManager)
     {
-        protected override string ModelName => "user";
+        _validator = validator;
+        _authService = authService;
+    }
 
-        private readonly IAuthenticationDTOValidator _validator;
-        private readonly IAuthenticationService _authService;
+    [HttpPost("signup")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthenticationDTO>> Signup([FromBody] SignupDTO requestDto)
+    {
+        _validator.ValidateSignupDTO(requestDto);
 
-        public AuthController(
-            IAuthenticationDTOValidator validator,
-            IAuthenticationService authService,
-            UserManager<User> userManager
-        ) : base(userManager)
-        {
-            _validator = validator;
-            _authService = authService;
-        }
+        var responseDto = await _authService.Signup(requestDto);
 
-        [HttpPost("signup")]
-        [AllowAnonymous]
-        public async Task<ActionResult<AuthenticationDTO>> Signup([FromBody] SignupDTO requestDto)
-        {
-            _validator.ValidateSignupDTO(requestDto);
+        return ApiCreated(responseDto);
+    }
 
-            var responseDto = await _authService.Signup(requestDto);
+    [HttpPost("login")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthenticationDTO>> Login([FromBody] LoginDTO requestDto)
+    {
+        _validator.ValidateLoginDTO(requestDto);
 
-            return ApiCreated(responseDto);
-        }
+        var responseDto = await _authService.Login(requestDto);
 
-        [HttpPost("login")]
-        [AllowAnonymous]
-        public async Task<ActionResult<AuthenticationDTO>> Login([FromBody] LoginDTO requestDto)
-        {
-            _validator.ValidateLoginDTO(requestDto);
+        return ApiCreated(responseDto);
+    }
 
-            var responseDto = await _authService.Login(requestDto);
+    [HttpPost("refresh-token")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthenticationDTO>> RefreshToken([FromBody] RefreshTokenDTO requestDto)
+    {
+        _validator.ValidateRefreshTokenDTO(requestDto);
 
-            return ApiCreated(responseDto);
-        }
+        var responseDto = await _authService.RefreshToken(requestDto.Token);
 
-        [HttpPost("refresh-token")]
-        [AllowAnonymous]
-        public async Task<ActionResult<AuthenticationDTO>> RefreshToken([FromBody] RefreshTokenDTO requestDto)
-        {
-            _validator.ValidateRefreshTokenDTO(requestDto);
+        return Ok(responseDto);
+    }
 
-            var responseDto = await _authService.RefreshToken(requestDto.Token);
+    [HttpPut("users/passwords")]
+    [Authorize(Roles = AllRoles)]
+    public async Task<NoContentResult> ChangePassword([FromBody] ChangePasswordDTO dto)
+    {
+        _validator.ValidateChangePasswordDTO(dto);
 
-            return Ok(responseDto);
-        }
+        var user = await GetCurrentUser();
 
-        [HttpPut("users/passwords")]
-        [Authorize(Roles = AllRoles)]
-        public async Task<NoContentResult> ChangePassword([FromBody] ChangePasswordDTO dto)
-        {
-            _validator.ValidateChangePasswordDTO(dto);
+        await _authService.ChangePassword(dto, user);
 
-            var user = await GetCurrentUser();
-
-            await _authService.ChangePassword(dto, user);
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

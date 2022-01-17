@@ -11,107 +11,99 @@ using Saitynas_API.Models.Entities.User;
 using Saitynas_API.Repositories;
 using Saitynas_API.Services.Validators;
 
-namespace Saitynas_API.Controllers
+namespace Saitynas_API.Controllers;
+
+[Route($"{RoutePrefix}/[Controller]")]
+[ApiController]
+[Produces(ApiContentType)]
+public class EvaluationsController : ApiControllerBase
 {
-    [Route(RoutePrefix + "/[Controller]")]
-    [ApiController]
-    [Produces(ApiContentType)]
-    public class EvaluationsController : ApiControllerBase
+    private readonly IEvaluationsRepository _repository;
+    private readonly IEvaluationDTOValidator _validator;
+    protected override string ModelName => "evaluation";
+
+    public EvaluationsController(
+        IEvaluationsRepository repository,
+        IEvaluationDTOValidator validator,
+        UserManager<User> userManager
+    ) : base(userManager)
     {
-        protected override string ModelName => "evaluation";
+        _repository = repository;
+        _validator = validator;
+    }
 
-        private readonly IEvaluationsRepository _repository;
-        private readonly IEvaluationDTOValidator _validator;
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<GetListDTO<GetEvaluationDTO>>> GetEvaluations()
+    {
+        var evaluations = (await _repository.GetAllAsync())
+            .Select(e => new GetEvaluationDTO(e));
 
-        public EvaluationsController(
-            IEvaluationsRepository repository,
-            IEvaluationDTOValidator validator,
-            UserManager<User> userManager
-        ) : base(userManager)
-        {
-            _repository = repository;
-            _validator = validator;
-        }
+        return Ok(new GetListDTO<GetEvaluationDTO>(evaluations));
+    }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<GetListDTO<GetEvaluationDTO>>> GetEvaluations()
-        {
-            var evaluations = (await _repository.GetAllAsync())
-                .Select(e => new GetEvaluationDTO(e));
+    [HttpGet("{id:int}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> GetEvaluation(int id)
+    {
+        var evaluation = await _repository.GetAsync(id);
 
-            return Ok(new GetListDTO<GetEvaluationDTO>(evaluations));
-        }
+        if (evaluation == null) return ApiNotFound();
 
-        [HttpGet("{id:int}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> GetEvaluation(int id)
-        {
-            var evaluation = await _repository.GetAsync(id);
+        var dto = new GetObjectDTO<GetEvaluationDTO>(new GetEvaluationDTO(evaluation));
 
-            if (evaluation == null) return ApiNotFound();
+        return Ok(dto);
+    }
 
-            var dto = new GetObjectDTO<GetEvaluationDTO>(new GetEvaluationDTO(evaluation));
+    [HttpPost]
+    [Authorize(Roles = "Patient")]
+    public async Task<NoContentResult> CreateEvaluation([FromBody] EvaluationDTO dto)
+    {
+        _validator.ValidateCreateEvaluationDTO(dto);
 
-            return Ok(dto);
-        }
+        var user = await GetCurrentUser();
+        var evaluation = new Evaluation(user, dto);
 
-        [HttpPost]
-        [Authorize(Roles = "Patient")]
-        public async Task<NoContentResult> CreateEvaluation([FromBody] EvaluationDTO dto)
-        {
-            _validator.ValidateCreateEvaluationDTO(dto);
+        await _repository.InsertAsync(evaluation);
 
-            var user = await GetCurrentUser();
-            var evaluation = new Evaluation(user, dto);
+        return NoContent();
+    }
 
-            await _repository.InsertAsync(evaluation);
+    [HttpPut("{id:int}")]
+    [Authorize(Roles = "Patient, Admin")]
+    public async Task<IActionResult> EditEvaluation(int id, [FromBody] EditEvaluationDTO dto)
+    {
+        var user = await GetCurrentUser();
+        var evaluation = await _repository.GetAsync(id);
 
-            return NoContent();
-        }
+        if (!CanDelete(user, evaluation)) return NotFound();
 
-        [HttpPut("{id:int}")]
-        [Authorize(Roles = "Patient, Admin")]
-        public async Task<IActionResult> EditEvaluation(int id, [FromBody] EditEvaluationDTO dto)
-        {
-            var user = await GetCurrentUser();
-            var evaluation = await _repository.GetAsync(id);
+        _validator.ValidateEditEvaluationDTO(dto);
+        var data = new Evaluation(dto);
 
-            if (!CanDelete(user, evaluation))
-            {
-                return NotFound();
-            }
+        await _repository.UpdateAsync(id, data);
 
-            _validator.ValidateEditEvaluationDTO(dto);
-            var data = new Evaluation(dto);
+        return NoContent();
+    }
 
-            await _repository.UpdateAsync(id, data);
+    [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Patient,Admin")]
+    public async Task<IActionResult> DeleteEvaluation(int id)
+    {
+        var user = await GetCurrentUser();
+        var evaluation = await _repository.GetAsync(id);
 
-            return NoContent();
-        }
+        if (!CanDelete(user, evaluation)) return NotFound();
 
-        [HttpDelete("{id:int}")]
-        [Authorize(Roles = "Patient,Admin")]
-        public async Task<IActionResult> DeleteEvaluation(int id)
-        {
-            var user = await GetCurrentUser();
-            var evaluation = await _repository.GetAsync(id);
+        await _repository.DeleteAsync(id);
 
-            if (!CanDelete(user, evaluation))
-            {
-                return NotFound();
-            }
+        return NoContent();
+    }
 
-            await _repository.DeleteAsync(id);
+    private static bool CanDelete(User user, Evaluation evaluation)
+    {
+        if (user.RoleId == RoleId.Admin) return true;
 
-            return NoContent();
-        }
-
-        private static bool CanDelete(User user, Evaluation evaluation)
-        {
-            if (user.RoleId == RoleId.Admin) return true;
-
-            return user.RoleId == RoleId.Patient && user.Id == evaluation.UserId;
-        }
+        return user.RoleId == RoleId.Patient && user.Id == evaluation.UserId;
     }
 }

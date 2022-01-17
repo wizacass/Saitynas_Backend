@@ -1,7 +1,6 @@
-namespace Saitynas_API.Models.DTO
+namespace Saitynas_API.Models.DTO;
+
+public class Meta
 {
-    public class Meta
-    {
-        public static Meta Empty => new();
-    }
+    public static Meta Empty => new();
 }

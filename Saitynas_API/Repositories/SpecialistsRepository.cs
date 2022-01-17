@@ -5,75 +5,74 @@ using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Entities.Specialist;
 
-namespace Saitynas_API.Repositories
+namespace Saitynas_API.Repositories;
+
+public interface ISpecialistsRepository : IRepository<Specialist>
 {
-    public interface ISpecialistsRepository : IRepository<Specialist>
+    public Task<IEnumerable<Specialist>> GetByWorkplace(int workplaceId);
+}
+
+public class SpecialistsRepository : ISpecialistsRepository
+{
+    private readonly ApiContext _context;
+
+    public SpecialistsRepository(ApiContext context)
     {
-        public Task<IEnumerable<Specialist>> GetByWorkplace(int workplaceId);
+        _context = context;
     }
 
-    public class SpecialistsRepository : ISpecialistsRepository
+    public async Task<IEnumerable<Specialist>> GetAllAsync()
     {
-        private readonly ApiContext _context;
+        var specialists = await _context.Specialists
+            .Include(s => s.Speciality)
+            .Include(s => s.Workplace)
+            .ToListAsync();
 
-        public SpecialistsRepository(ApiContext context)
-        {
-            _context = context;
-        }
+        return specialists;
+    }
 
-        public async Task<IEnumerable<Specialist>> GetAllAsync()
-        {
-            var specialists = await _context.Specialists
-                .Include(s => s.Speciality)
-                .Include(s => s.Workplace)
-                .ToListAsync();
+    public async Task<Specialist> GetAsync(int id)
+    {
+        var specialist = await _context.Specialists.Where(s => s.Id == id)
+            .Include(s => s.Speciality)
+            .Include(s => s.Workplace)
+            .FirstOrDefaultAsync();
 
-            return specialists;
-        }
+        return specialist;
+    }
 
-        public async Task<Specialist> GetAsync(int id)
-        {
-            var specialist = await _context.Specialists.Where(s => s.Id == id)
-                .Include(s => s.Speciality)
-                .Include(s => s.Workplace)
-                .FirstOrDefaultAsync();
+    public async Task InsertAsync(Specialist data)
+    {
+        await _context.Specialists.AddAsync(data);
+        await _context.SaveChangesAsync();
+    }
 
-            return specialist;
-        }
+    public async Task UpdateAsync(int id, Specialist data)
+    {
+        var specialist = await GetAsync(id);
+        specialist.Update(data);
 
-        public async Task InsertAsync(Specialist data)
-        {
-            await _context.Specialists.AddAsync(data);
-            await _context.SaveChangesAsync();
-        }
+        await _context.SaveChangesAsync();
+    }
 
-        public async Task UpdateAsync(int id, Specialist data)
-        {
-            var specialist = await GetAsync(id);
-            specialist.Update(data);
+    public async Task DeleteAsync(int id)
+    {
+        var s = _context.Specialists.FirstOrDefault(s => s.Id == id);
 
-            await _context.SaveChangesAsync();
-        }
+        if (s == null) return;
 
-        public async Task DeleteAsync(int id)
-        {
-            var s = _context.Specialists.FirstOrDefault(s => s.Id == id);
+        _context.Specialists.Remove(s);
+        await _context.SaveChangesAsync();
+    }
 
-            if (s == null) return;
+    public async Task<IEnumerable<Specialist>> GetByWorkplace(int workplaceId)
+    {
+        var specialists = await _context.Specialists
+            .Where(s => s.WorkplaceId == workplaceId)
+            .Include(s => s.Speciality)
+            .Include(s => s.Workplace)
+            .ToListAsync();
 
-            _context.Specialists.Remove(s);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<IEnumerable<Specialist>> GetByWorkplace(int workplaceId)
-        {
-            var specialists = await _context.Specialists
-                .Where(s => s.WorkplaceId == workplaceId)
-                .Include(s => s.Speciality)
-                .Include(s => s.Workplace)
-                .ToListAsync();
-
-            return specialists;
-        }
+        return specialists;
     }
 }

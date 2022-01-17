@@ -7,123 +7,122 @@ using Saitynas_API.Models.Authentication.DTO;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Entities.User;
 
-namespace Saitynas_API.Services
+namespace Saitynas_API.Services;
+
+public interface IAuthenticationService
 {
-    public interface IAuthenticationService
+    Task<AuthenticationDTO> Signup(SignupDTO dto);
+
+    Task<AuthenticationDTO> Login(LoginDTO dto);
+
+    Task<AuthenticationDTO> RefreshToken(string token);
+
+    Task ChangePassword(ChangePasswordDTO dto, User user);
+}
+
+public class AuthenticationService : IAuthenticationService
+{
+    private readonly IJwtService _jwt;
+    private readonly UserManager<User> _userManager;
+    private readonly IApiUserStore _userStore;
+
+    public AuthenticationService(UserManager<User> userManager, IApiUserStore userStore, IJwtService jwt)
     {
-        Task<AuthenticationDTO> Signup(SignupDTO dto);
-
-        Task<AuthenticationDTO> Login(LoginDTO dto);
-
-        Task<AuthenticationDTO> RefreshToken(string token);
-
-        Task ChangePassword(ChangePasswordDTO dto, User user);
+        _userManager = userManager;
+        _userStore = userStore;
+        _jwt = jwt;
     }
 
-    public class AuthenticationService : IAuthenticationService
+    public async Task<AuthenticationDTO> Signup(SignupDTO dto)
     {
-        private readonly UserManager<User> _userManager;
-        private readonly IApiUserStore _userStore;
-        private readonly IJwtService _jwt;
+        var user = new User(dto);
+        var result = await _userManager.CreateAsync(user, dto.Password);
+        CheckSuccess(result);
 
-        public AuthenticationService(UserManager<User> userManager, IApiUserStore userStore, IJwtService jwt)
-        {
-            _userManager = userManager;
-            _userStore = userStore;
-            _jwt = jwt;
-        }
+        return await GenerateTokens(user);
+    }
 
-        public async Task<AuthenticationDTO> Signup(SignupDTO dto)
-        {
-            var user = new User(dto);
-            var result = await _userManager.CreateAsync(user, dto.Password);
-            CheckSuccess(result);
+    public async Task<AuthenticationDTO> Login(LoginDTO dto)
+    {
+        var user = await _userManager.FindByEmailAsync(dto.Email);
 
-            return await GenerateTokens(user);
-        }
+        if (user == null) throw new AuthenticationException(ApiErrorSlug.InvalidCredentials);
 
-        public async Task<AuthenticationDTO> Login(LoginDTO dto)
-        {
-            var user = await _userManager.FindByEmailAsync(dto.Email);
+        if (!await _userManager.CheckPasswordAsync(user, dto.Password))
+            throw new AuthenticationException(ApiErrorSlug.InvalidCredentials);
 
-            if (user == null) throw new AuthenticationException(ApiErrorSlug.InvalidCredentials);
+        return await GenerateTokens(user);
+    }
 
-            if (!await _userManager.CheckPasswordAsync(user, dto.Password))
-                throw new AuthenticationException(ApiErrorSlug.InvalidCredentials);
+    public async Task<AuthenticationDTO> RefreshToken(string token)
+    {
+        var user = await _userStore.GetUserByRefreshToken(token);
 
-            return await GenerateTokens(user);
-        }
+        if (user == null) throw new AuthenticationException(ApiErrorSlug.InvalidRefreshToken);
 
-        public async Task<AuthenticationDTO> RefreshToken(string token)
-        {
-            var user = await _userStore.GetUserByRefreshToken(token);
+        var refreshToken = user.RefreshTokens.FirstOrDefault(t => t.Token == token);
 
-            if (user == null) throw new AuthenticationException(ApiErrorSlug.InvalidRefreshToken);
+        if (refreshToken is {IsRevoked: true}) RevokeDescendantRefreshTokens(refreshToken, user);
 
-            var refreshToken = user.RefreshTokens.FirstOrDefault(t => t.Token == token);
+        if (refreshToken is not {IsActive: true})
+            throw new AuthenticationException(ApiErrorSlug.InvalidRefreshToken);
 
-            if (refreshToken is { IsRevoked: true }) RevokeDescendantRefreshTokens(refreshToken, user);
+        var newRefreshToken = RotateRefreshToken(refreshToken, user);
 
-            if (refreshToken is not { IsActive: true })
-                throw new AuthenticationException(ApiErrorSlug.InvalidRefreshToken);
+        user.RefreshTokens.Add(newRefreshToken);
+        user.RemoveOldTokens();
 
-            var newRefreshToken = RotateRefreshToken(refreshToken, user);
+        await _userManager.UpdateAsync(user);
+        string newAccessToken = _jwt.GenerateSecurityToken(user);
 
-            user.RefreshTokens.Add(newRefreshToken);
-            user.RemoveOldTokens();
+        return new AuthenticationDTO(newAccessToken, newRefreshToken.Token);
+    }
 
-            await _userManager.UpdateAsync(user);
-            string newAccessToken = _jwt.GenerateSecurityToken(user);
+    public async Task ChangePassword(ChangePasswordDTO dto, User user)
+    {
+        var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
+        CheckSuccess(result);
 
-            return new AuthenticationDTO(newAccessToken, newRefreshToken.Token);
-        }
+        user.RevokeAllTokens();
+        await _userManager.UpdateAsync(user);
+    }
 
-        public async Task ChangePassword(ChangePasswordDTO dto, User user)
-        {
-            var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
-            CheckSuccess(result);
+    private static void RevokeDescendantRefreshTokens(RefreshToken token, User user)
+    {
+        if (string.IsNullOrEmpty(token.ReplacedByToken)) return;
 
-            user.RevokeAllTokens();
-            await _userManager.UpdateAsync(user);
-        }
+        var childToken = user.RefreshTokens.FirstOrDefault(t => t.Token == token.ReplacedByToken);
 
-        private static void RevokeDescendantRefreshTokens(RefreshToken token, User user)
-        {
-            if (string.IsNullOrEmpty(token.ReplacedByToken)) return;
+        if (childToken?.IsActive ?? false)
+            childToken.Revoke();
+        else
+            RevokeDescendantRefreshTokens(childToken, user);
+    }
 
-            var childToken = user.RefreshTokens.FirstOrDefault(t => t.Token == token.ReplacedByToken);
+    private RefreshToken RotateRefreshToken(RefreshToken oldToken, User user)
+    {
+        var newToken = _jwt.GenerateRefreshToken(user);
+        oldToken.Revoke(newToken.Token);
 
-            if (childToken?.IsActive ?? false)
-                childToken.Revoke();
-            else
-                RevokeDescendantRefreshTokens(childToken, user);
-        }
+        return newToken;
+    }
 
-        private RefreshToken RotateRefreshToken(RefreshToken oldToken, User user)
-        {
-            var newToken = _jwt.GenerateRefreshToken(user);
-            oldToken.Revoke(newToken.Token);
+    private async Task<AuthenticationDTO> GenerateTokens(User user)
+    {
+        string accessToken = _jwt.GenerateSecurityToken(user);
+        var refreshToken = _jwt.GenerateRefreshToken(user);
 
-            return newToken;
-        }
+        user.RefreshTokens.Add(refreshToken);
+        await _userManager.UpdateAsync(user);
 
-        private async Task<AuthenticationDTO> GenerateTokens(User user)
-        {
-            string accessToken = _jwt.GenerateSecurityToken(user);
-            var refreshToken = _jwt.GenerateRefreshToken(user);
+        return new AuthenticationDTO(accessToken, refreshToken.Token);
+    }
 
-            user.RefreshTokens.Add(refreshToken);
-            await _userManager.UpdateAsync(user);
+    private static void CheckSuccess(IdentityResult result)
+    {
+        if (result.Succeeded) return;
 
-            return new AuthenticationDTO(accessToken, refreshToken.Token);
-        }
-
-        private static void CheckSuccess(IdentityResult result)
-        {
-            if (result.Succeeded) return;
-
-            string error = result.Errors.First().Description;
-            throw new AuthenticationException(error);
-        }
+        string error = result.Errors.First().Description;
+        throw new AuthenticationException(error);
     }
 }
