@@ -11,11 +11,6 @@ public class RequestMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public RequestMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
-
     private static string SerializedError
     {
         get
@@ -29,6 +24,11 @@ public class RequestMiddleware
 
             return JsonConvert.SerializeObject(error, Formatting.Indented);
         }
+    }
+
+    public RequestMiddleware(RequestDelegate next)
+    {
+        _next = next;
     }
 
     public async Task Invoke(HttpContext httpContext, IHeadersValidator headersValidator)

@@ -25,13 +25,13 @@ public class JwtService : IJwtService
     private readonly string _secret;
     private readonly JwtSettings _settings;
 
+    private SymmetricSecurityKey SecurityKey => new(Encoding.ASCII.GetBytes(_secret));
+
     public JwtService(IConfiguration config, IOptions<JwtSettings> settings)
     {
         _secret = config[JwtSecretKey] ?? Environment.GetEnvironmentVariable(JwtSecretKey);
         _settings = settings.Value;
     }
-
-    private SymmetricSecurityKey SecurityKey => new(Encoding.ASCII.GetBytes(_secret));
 
     public string GenerateSecurityToken(User user)
     {
