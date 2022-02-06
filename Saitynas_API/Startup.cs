@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +14,7 @@ using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.Entities.Evaluation;
 using Saitynas_API.Models.Entities.Message;
+using Saitynas_API.Models.Entities.Patient;
 using Saitynas_API.Models.Entities.Specialist;
 using Saitynas_API.Models.Entities.Speciality;
 using Saitynas_API.Models.Entities.User;
@@ -92,10 +92,7 @@ public class Startup
     {
         services.AddCors(opt =>
         {
-            opt.AddPolicy(CorsPolicyName, p =>
-            {
-                p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-            });
+            opt.AddPolicy(CorsPolicyName, p => { p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
         });
     }
 
@@ -140,7 +137,8 @@ public class Startup
         IApplicationBuilder app,
         IWebHostEnvironment env,
         ApiContext context,
-        UserManager<User> userManager
+        UserManager<User> userManager,
+        IConfiguration configuration
     )
     {
         if (env.IsDevelopment())
@@ -152,7 +150,7 @@ public class Startup
 
         if (env.IsProduction()) context.Database.Migrate();
 
-        _ = SeedDatabase(context, userManager);
+        SeedDatabase(context, userManager, configuration);
 
         RegisterCustomMiddlewares(app);
 
@@ -175,18 +173,19 @@ public class Startup
         app.UseMiddleware<ErrorHandlerMiddleware>();
     }
 
-    private static async Task SeedDatabase(ApiContext context, UserManager<User> userManager)
+    private static void SeedDatabase(ApiContext context, UserManager<User> userManager, IConfiguration configuration)
     {
         var seeders = new ISeed[]
         {
             new MessageSeed(context),
-            new SpecialistSeed(context),
-            new UserSeed(context, userManager),
-            new WorkplaceSeed(context),
             new SpecialitySeed(context),
+            new SpecialistSeed(context),
+            new PatientSeed(context),
+            new UserSeed(context, userManager, configuration),
+            new WorkplaceSeed(context),
             new EvaluationsSeed(context)
         };
 
-        await new Seeder(context, seeders).Seed();
+        new Seeder(context, seeders).Seed();
     }
 }

@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models.Common.Interfaces;
 
@@ -41,7 +40,7 @@ public class SpecialitySeed : ISeed
         _context = context;
     }
 
-    public async Task EnsureCreated()
+    public void EnsureCreated()
     {
         if (!ShouldSeed()) return;
 
@@ -49,7 +48,7 @@ public class SpecialitySeed : ISeed
 
         foreach (string speciality in _specialities) _context.Add(new Speciality(++i, speciality));
 
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
     }
 
     private bool ShouldSeed()

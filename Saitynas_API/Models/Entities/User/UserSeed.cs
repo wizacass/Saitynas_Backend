@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Saitynas_API.Models.Common.Interfaces;
 using Saitynas_API.Models.Entities.Role;
 
@@ -10,17 +10,20 @@ namespace Saitynas_API.Models.Entities.User;
 
 public class UserSeed : ISeed
 {
-    private const string DefaultPassword = "Password123";
+    private const string DefaultPasswordKey = "DefaultPassword";
+    private readonly string _defaultPassword;
+
     private readonly ApiContext _context;
     private readonly UserManager<User> _userManager;
 
-    public UserSeed(ApiContext apiContext, UserManager<User> userManager)
+    public UserSeed(ApiContext apiContext, UserManager<User> userManager, IConfiguration configuration)
     {
         _context = apiContext;
         _userManager = userManager;
+        _defaultPassword = configuration[DefaultPasswordKey] ?? Environment.GetEnvironmentVariable(DefaultPasswordKey);
     }
 
-    public async Task EnsureCreated()
+    public void EnsureCreated()
     {
         if (!ShouldSeed()) return;
 
@@ -29,30 +32,34 @@ public class UserSeed : ISeed
             new User
             {
                 Id = 1,
-                Email = "admin@saitynai.lt",
-                RegistrationDate = new DateTime(2021, 10, 10),
+                Email = "admin@example.com",
+                RegistrationDate = DateTime.UtcNow,
                 RoleId = RoleId.Admin
             },
             new User
             {
                 Id = 2,
-                Email = "specialist@saitynai.lt",
-                RegistrationDate = new DateTime(2021, 10, 10),
+                Email = "specialist@example.com",
+                RegistrationDate = DateTime.UtcNow,
                 RoleId = RoleId.Specialist,
-                SpecialistId = 2
+                SpecialistId = 1
             },
             new User
             {
                 Id = 3,
-                Email = "patient@saitynai.lt",
-                RegistrationDate = new DateTime(2021, 10, 10),
-                RoleId = RoleId.Patient
+                Email = "patient@example.com",
+                RegistrationDate = DateTime.UtcNow,
+                RoleId = RoleId.Patient,
+                PatientId = 1
             }
         };
 
-        foreach (var user in users) await _userManager.CreateAsync(user, DefaultPassword);
+        foreach (var user in users)
+        {
+            _ = _userManager.CreateAsync(user, _defaultPassword).Result;
+        }
 
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
     }
 
     private bool ShouldSeed()
