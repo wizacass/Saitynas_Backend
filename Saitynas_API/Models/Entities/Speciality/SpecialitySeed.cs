@@ -17,7 +17,7 @@ public class SpecialitySeed : ISeed
         "Dermatologist",
         "Endocrinologist",
         "Gastroenterologist",
-        "GeneralPractician",
+        "General Practician",
         "Surgeon",
         "Hematologist",
         "Immunologist",
@@ -45,9 +45,9 @@ public class SpecialitySeed : ISeed
     {
         if (!ShouldSeed()) return;
 
-        int i = 1;
+        int i = 0;
 
-        foreach (string speciality in _specialities) _context.Add(new Speciality(i++, speciality));
+        foreach (string speciality in _specialities) _context.Add(new Speciality(++i, speciality));
 
         await _context.SaveChangesAsync();
     }
