@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models.Common.Interfaces;
 
@@ -14,33 +13,22 @@ public class SpecialistSeed : ISeed
         _context = context;
     }
 
-    public async Task EnsureCreated()
+    public void EnsureCreated()
     {
         if (!ShouldSeed()) return;
 
-        var specialists = new[]
+        var specialist = new Specialist
         {
-            new Specialist
-            {
-                Id = 1,
-                FirstName = "Good",
-                LastName = "Doctor",
-                SpecialityId = 7,
-                WorkplaceId = 1
-            },
-            new Specialist
-            {
-                Id = 2,
-                FirstName = "Private",
-                LastName = "Doctor",
-                SpecialityId = 1,
-                Address = "Private address 7"
-            }
+            Id = 1,
+            FirstName = "John",
+            LastName = "Smith",
+            City = "Kaunas",
+            SpecialityId = 7,
+            UserId = 2
         };
 
-        foreach (var specialist in specialists) await _context.Specialists.AddAsync(specialist);
-
-        await _context.SaveChangesAsync();
+        _context.Specialists.Add(specialist);
+        _context.SaveChanges();
     }
 
     private bool ShouldSeed()

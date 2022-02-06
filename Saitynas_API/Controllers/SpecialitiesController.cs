@@ -1,108 +1,55 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Saitynas_API.Models;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.Entities.Specialist.DTO;
 using Saitynas_API.Models.Entities.Speciality;
+using Saitynas_API.Models.Entities.Speciality.DTO;
 
 namespace Saitynas_API.Controllers;
 
 [Route($"{RoutePrefix}/[Controller]")]
 [ApiController]
 [Produces(ApiContentType)]
-[Obsolete]
 public class SpecialitiesController : ApiControllerBase
 {
     protected override string ModelName => "speciality";
-
+    
+    private readonly ApiContext _context;
+    
+    public SpecialitiesController(ApiContext context)
+    {
+        _context = context;
+    }
+    
     [HttpGet]
-    public ActionResult<GetListDTO<GetEnumDTO>> GetSpecialities()
+    public async Task<ActionResult<GetListDTO<GetSpecialityDTO>>> GetSpecialities()
     {
-        var specialities = Enum.GetValues(typeof(SpecialityId))
-            .Cast<SpecialityId>()
-            .Select(s => new GetEnumDTO
-            {
-                Id = (int) s,
-                Name = s.ToString()
-            })
-            .ToList();
-
-        var dto = new GetListDTO<GetEnumDTO>(specialities);
-
+        var specialitiesTask = _context.Specialities.Select(s => new GetSpecialityDTO(s)).ToListAsync();
+        
+        var dto = new GetListDTO<GetSpecialityDTO>(await specialitiesTask);
+        
         return Ok(dto);
     }
 
-    [HttpGet("{id:int}")]
-    public ActionResult<GetObjectDTO<EnumDTO>> GetSpeciality(int id)
-    {
-        if (id != 1) return ApiNotFound();
-
-        var dto = new EnumDTO
-        {
-            Name = SpecialityId.Allergologist.ToString()
-        };
-
-        return Ok(dto);
-    }
-
+   
     [HttpGet("{id:int}/specialists")]
+    [Obsolete]
     public ActionResult<GetListDTO<GetSpecialistDTO>> GetSpecialitySpecialists(int id)
     {
-        if (id != 1) return ApiNotFound();
-
-        var specialists = new List<GetSpecialistDTO>
-        {
-            new()
-            {
-                Id = 3,
-                FirstName = "Test",
-                LastName = "Doctor",
-                Address = "Test str. 22",
-                Speciality = SpecialityId.Other.ToString()
-            },
-            new()
-            {
-                Id = 2,
-                FirstName = "Good",
-                LastName = "Doktor",
-                Address = "Test str. 22",
-                Speciality = SpecialityId.Other.ToString()
-            }
-        };
-
-        var dto = new GetListDTO<GetSpecialistDTO>(specialists);
-
-        return Ok(dto);
+        // TODO: Implement logic to retrieve specialists based on Speciality
+        return ApiNotImplemented();
     }
 
     [HttpPost]
+    [Obsolete]
     public ActionResult<GetObjectDTO<GetEnumDTO>> CreateSpeciality([FromBody] EnumDTO dto)
     {
-        var speciality = new GetEnumDTO
-        {
-            Id = 100,
-            Name = dto.Name
-        };
-
-        return ApiCreated(new GetObjectDTO<GetEnumDTO>(speciality));
-    }
-
-    [HttpPut("{id:int}")]
-    public ActionResult<GetObjectDTO<GetEnumDTO>> EditEvaluation(int id, [FromBody] EnumDTO dto)
-    {
-        var speciality = new GetEnumDTO
-        {
-            Id = id,
-            Name = dto.Name ?? "Other"
-        };
-
-        return Ok(new GetObjectDTO<GetEnumDTO>(speciality));
-    }
-
-    [HttpDelete("{id:int}")]
-    public IActionResult DeleteSpeciality(int id)
-    {
-        return NoContent();
+        // TODO: Implement logic to allow for specialists to create new specialities
+        return ApiNotImplemented();
     }
 }

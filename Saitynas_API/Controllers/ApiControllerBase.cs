@@ -73,4 +73,9 @@ public abstract class ApiControllerBase : ControllerBase
 
         return NotFound(error);
     }
+
+    protected ActionResult ApiNotImplemented()
+    {
+        return StatusCode(501);
+    }
 }

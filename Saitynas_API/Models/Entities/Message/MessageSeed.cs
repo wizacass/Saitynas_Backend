@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Saitynas_API.Models.Common.Interfaces;
 
 namespace Saitynas_API.Models.Entities.Message;
@@ -13,14 +12,18 @@ public class MessageSeed : ISeed
         _context = context;
     }
 
-    public async Task EnsureCreated()
+    public void EnsureCreated()
     {
         if (!ShouldSeed()) return;
 
-        var message = new Message("Hello, World!");
+        var message = new Message
+        {
+            Id = 1,
+            Text = "Welcome to Virtual Clinic!"
+        };
 
-        await _context.Messages.AddAsync(message);
-        await _context.SaveChangesAsync();
+        _context.Messages.Add(message);
+        _context.SaveChanges();
     }
 
     private bool ShouldSeed()

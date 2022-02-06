@@ -17,6 +17,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder
             .HasOne(u => u.Specialist)
             .WithOne(s => s.User)
+            .HasForeignKey<Specialist.Specialist>(s => s.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder
+            .HasOne(u => u.Patient)
+            .WithOne(p => p.User)
+            .HasForeignKey<Patient.Patient>(p => p.UserId)
             .OnDelete(DeleteBehavior.SetNull);
     }
 }

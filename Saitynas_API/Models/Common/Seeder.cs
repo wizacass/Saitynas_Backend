@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Saitynas_API.Models.Common.Interfaces;
 
 namespace Saitynas_API.Models.Common;
@@ -14,10 +13,12 @@ public class Seeder
         _seeders = seeders;
     }
 
-    public async Task Seed()
+    public void Seed()
     {
-        await _context.Database.EnsureCreatedAsync();
+        _context.Database.EnsureCreated();
 
-        foreach (var seeder in _seeders) await seeder.EnsureCreated();
+        foreach (var seeder in _seeders) seeder.EnsureCreated();
+
+        _context.SaveChanges();
     }
 }

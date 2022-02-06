@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models.Common.Interfaces;
 
@@ -14,23 +13,20 @@ public class WorkplaceSeed : ISeed
         _context = context;
     }
 
-    public async Task EnsureCreated()
+    public void EnsureCreated()
     {
         if (!ShouldSeed()) return;
 
-        for (int i = 1; i <= 3; i++)
+
+        var workplace = new Workplace
         {
-            var workplace = new Workplace
-            {
-                Id = i,
-                Address = $"Test Str. {i * 10}",
-                City = "Kaunas"
-            };
+            Id = 1,
+            Address = "Test Str. 10",
+            City = "Kaunas"
+        };
 
-            await _context.Workplaces.AddAsync(workplace);
-        }
-
-        await _context.SaveChangesAsync();
+        _context.Workplaces.Add(workplace);
+        _context.SaveChanges();
     }
 
     private bool ShouldSeed()

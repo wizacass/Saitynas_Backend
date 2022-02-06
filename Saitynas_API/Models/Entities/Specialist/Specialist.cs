@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Saitynas_API.Models.Entities.Specialist.DTO;
@@ -20,6 +21,9 @@ public class Specialist
 
     [StringLength(255)]
     public string Address { get; set; }
+    
+    [StringLength(255)]
+    public string City { get; set; }
 
     [Required]
     public int? SpecialityId { get; set; }
@@ -33,6 +37,8 @@ public class Specialist
 
     public ICollection<Evaluation.Evaluation> Evaluations { get; set; }
 
+    public int UserId { get; set; }
+    
     public User.User User { get; set; }
 
     public Specialist() { }

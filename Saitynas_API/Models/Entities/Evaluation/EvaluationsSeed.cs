@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models.Common.Interfaces;
 
@@ -14,7 +13,7 @@ public class EvaluationsSeed : ISeed
         _context = context;
     }
 
-    public async Task EnsureCreated()
+    public void EnsureCreated()
     {
         if (!ShouldSeed()) return;
 
@@ -27,8 +26,8 @@ public class EvaluationsSeed : ISeed
             UserId = 1
         };
 
-        await _context.Evaluations.AddAsync(evaluation);
-        await _context.SaveChangesAsync();
+        _context.Evaluations.Add(evaluation);
+        _context.SaveChanges();
     }
 
     private bool ShouldSeed()

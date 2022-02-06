@@ -16,6 +16,9 @@ public class User
     public int Id { get; set; }
 
     [Required]
+    public Guid PublicId { get; set; }
+
+    [Required]
     [StringLength(255)]
     public string Email { get; set; }
 
@@ -36,15 +39,22 @@ public class User
 
     public ICollection<Evaluation.Evaluation> Evaluations { get; set; }
 
+    public bool HasProfile => SpecialistId != null || PatientId != null;
+
     public int? SpecialistId { get; set; }
 
     public Specialist.Specialist Specialist { get; set; }
+    
+    public int? PatientId { get; set; }
+    
+    public Patient.Patient Patient { get; set; }
 
     public User()
     {
         RegistrationDate = DateTime.UtcNow;
         Evaluations = new List<Evaluation.Evaluation>();
         RefreshTokens = new List<RefreshToken>();
+        PublicId = Guid.NewGuid();
     }
 
     public User(SignupDTO dto) : this()
