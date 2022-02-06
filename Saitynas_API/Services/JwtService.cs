@@ -39,7 +39,7 @@ public class JwtService : IJwtService
         var claims = new ClaimsIdentity(new[]
         {
             new Claim(CustomClaims.TokenID, Guid.NewGuid().ToString()),
-            new Claim(CustomClaims.UserID, user.Id.ToString()),
+            new Claim(CustomClaims.UserID, user.PublicId.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Role, user.RoleId.ToString())
         });
