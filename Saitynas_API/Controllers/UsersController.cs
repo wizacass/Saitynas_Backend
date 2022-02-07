@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.Common;
@@ -50,6 +51,8 @@ public class UsersController : ApiControllerBase
 
     [HttpGet("me")]
     [Authorize(Roles = AllRoles)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<GetObjectDTO<UserDTO>>> GetUser()
     {
         var user = await GetCurrentUser();
