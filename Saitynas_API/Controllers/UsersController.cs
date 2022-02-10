@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,22 +24,29 @@ namespace Saitynas_API.Controllers;
 public class UsersController : ApiControllerBase
 {
     private readonly IEvaluationsRepository _evaluationsRepository;
+    private readonly ISpecialistsRepository _specialistsRepository;
+    private readonly IPatientsRepository _patientsRepository;
 
     private readonly IApiUserStore _userStore;
     protected override string ModelName => "user";
 
     public UsersController(
         IApiUserStore userStore,
+        UserManager<User> userManager,
         IEvaluationsRepository evaluationsRepository,
-        UserManager<User> userManager
+        ISpecialistsRepository specialistsRepository,
+        IPatientsRepository patientsRepository
     ) : base(userManager)
     {
         _userStore = userStore;
         _evaluationsRepository = evaluationsRepository;
+        _specialistsRepository = specialistsRepository;
+        _patientsRepository = patientsRepository;
     }
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
+    [Obsolete]
     public async Task<ActionResult<GetListDTO<UserDTO>>> GetUsers()
     {
         var users = (await _userStore.GetAllUsers())
@@ -61,6 +69,36 @@ public class UsersController : ApiControllerBase
 
         var dto = new UserDTO(user);
         return Ok(new GetObjectDTO<UserDTO>(dto));
+    }
+
+    [HttpGet("me/profile")]
+    [Authorize(Roles = AllRoles)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<GetObjectDTO<ProfileDTO>>> GetProfile()
+    {
+        var user = await GetCurrentUser();
+
+        if (user == null) return ApiNotFound(ApiErrorSlug.ResourceNotFound, ModelName);
+
+        var dto = await GetProfileDto(user);
+
+        return dto == null
+            ? ApiNotFound(ApiErrorSlug.ResourceNotFound, "profile")
+            : Ok(new GetObjectDTO<ProfileDTO>(dto));
+    }
+
+    private async Task<ProfileDTO> GetProfileDto(User user)
+    {
+        if (!user.HasProfile) return null;
+        
+        return user.RoleId switch
+        {
+            RoleId.Patient => new ProfileDTO(await _patientsRepository.GetByUserId(user.Id)),
+            RoleId.Specialist => new ProfileDTO(await _specialistsRepository.GetByUserId(user.Id)),
+            _ => null
+        };
     }
 
     [HttpGet("me/evaluations")]

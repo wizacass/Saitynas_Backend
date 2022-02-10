@@ -10,6 +10,7 @@ namespace Saitynas_API.Repositories;
 public interface ISpecialistsRepository : IRepository<Specialist>
 {
     public Task<IEnumerable<Specialist>> GetByWorkplace(int workplaceId);
+    public Task<Specialist> GetByUserId(int userId);
 }
 
 public class SpecialistsRepository : ISpecialistsRepository
@@ -67,12 +68,20 @@ public class SpecialistsRepository : ISpecialistsRepository
 
     public async Task<IEnumerable<Specialist>> GetByWorkplace(int workplaceId)
     {
-        var specialists = await _context.Specialists
+        var specialistsTask = _context.Specialists
             .Where(s => s.WorkplaceId == workplaceId)
             .Include(s => s.Speciality)
             .Include(s => s.Workplace)
             .ToListAsync();
 
-        return specialists;
+        return await specialistsTask;
+    }
+
+    public async Task<Specialist> GetByUserId(int userId)
+    {
+        var specialistTask = _context.Specialists
+            .FirstOrDefaultAsync(s => s.UserId == userId);
+
+        return await specialistTask;
     }
 }

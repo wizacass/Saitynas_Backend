@@ -22,7 +22,7 @@ public class SpecialistDTO
     {
         FirstName = s.FirstName;
         LastName = s.LastName;
-        Address = s.Workplace?.Address ?? s.Address;
+        Address = s.Address ?? "remote";
         Speciality = s.Speciality.Name;
     }
 }
