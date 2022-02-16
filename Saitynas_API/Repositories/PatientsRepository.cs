@@ -30,9 +30,12 @@ public class PatientsRepository : IPatientsRepository
         throw new System.NotImplementedException();
     }
 
-    public Task InsertAsync(Patient data)
+    public async Task InsertAsync(Patient data)
     {
-        throw new System.NotImplementedException();
+        data.User.Patient = data;
+        
+        await _context.Patients.AddAsync(data);
+        await _context.SaveChangesAsync();
     }
 
     public Task UpdateAsync(int id, Patient data)
