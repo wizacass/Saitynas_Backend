@@ -123,6 +123,7 @@ public class Startup
         services.AddScoped<IWorkplaceDTOValidator, WorkplaceDTOValidator>();
         services.AddScoped<ISpecialistDTOValidator, SpecialistDTOValidator>();
         services.AddScoped<IEvaluationDTOValidator, EvaluationDTOValidator>();
+        services.AddScoped<IPatientDTOValidator, PatientDTOValidator>();
     }
 
     private static void RegisterRepositories(IServiceCollection services)

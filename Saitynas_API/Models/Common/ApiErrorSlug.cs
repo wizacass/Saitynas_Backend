@@ -13,4 +13,6 @@ public static class ApiErrorSlug
     public const string InvalidNumber = "number_not_valid";
     public const string InvalidId = "id_not_valid";
     public const string InvalidRefreshToken = "refresh_token_not_valid";
+    public const string EntityExists = "entity_already_created";
+    public const string InvalidDateFormat = "not_valid_date_format";
 }
