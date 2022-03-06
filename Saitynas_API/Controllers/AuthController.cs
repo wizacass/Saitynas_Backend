@@ -1,8 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.Authentication.DTO;
+using Saitynas_API.Models.DTO;
+using Saitynas_API.Models.Entities.Role;
 using Saitynas_API.Models.Entities.User;
 using Saitynas_API.Services;
 using Saitynas_API.Services.Validators;
@@ -31,6 +34,8 @@ public class AuthController : ApiControllerBase
 
     [HttpPost("signup")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AuthenticationDTO>> Signup([FromBody] SignupDTO requestDto)
     {
         _validator.ValidateSignupDTO(requestDto);
@@ -42,6 +47,8 @@ public class AuthController : ApiControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AuthenticationDTO>> Login([FromBody] LoginDTO requestDto)
     {
         _validator.ValidateLoginDTO(requestDto);
@@ -53,17 +60,21 @@ public class AuthController : ApiControllerBase
 
     [HttpPost("refresh-token")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AuthenticationDTO>> RefreshToken([FromBody] RefreshTokenDTO requestDto)
     {
         _validator.ValidateRefreshTokenDTO(requestDto);
 
         var responseDto = await _authService.RefreshToken(requestDto.Token);
 
-        return Ok(responseDto);
+        return ApiCreated(responseDto);
     }
 
     [HttpPut("users/passwords")]
-    [Authorize(Roles = AllRoles)]
+    [Authorize(Roles = AuthRole.AnyRole)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status400BadRequest)]
     public async Task<NoContentResult> ChangePassword([FromBody] ChangePasswordDTO dto)
     {
         _validator.ValidateChangePasswordDTO(dto);

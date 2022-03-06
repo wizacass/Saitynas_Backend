@@ -12,7 +12,6 @@ public abstract class ApiControllerBase : ControllerBase
 {
     protected const string ApiContentType = "application/json";
     protected const string RoutePrefix = "api/v1";
-    protected const string AllRoles = "Admin,Patient,Specialist";
 
     private readonly UserManager<User> _userManager;
 
