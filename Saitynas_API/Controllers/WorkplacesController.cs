@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.DTO;
+using Saitynas_API.Models.Entities.Role;
 using Saitynas_API.Models.Entities.Specialist.DTO;
 using Saitynas_API.Models.Entities.Workplace;
 using Saitynas_API.Models.Entities.Workplace.DTO;
@@ -33,7 +34,7 @@ public class WorkplacesController : ApiControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = AllRoles)]
+    [Authorize(Roles = AuthRole.AnyRole)]
     public async Task<ActionResult<GetListDTO<GetWorkplaceDTO>>> GetWorkplaces()
     {
         var workplaces = (await _workplacesRepository.GetAllAsync())
@@ -44,7 +45,7 @@ public class WorkplacesController : ApiControllerBase
     }
 
     [HttpGet("{id:int}")]
-    [Authorize(Roles = AllRoles)]
+    [Authorize(Roles = AuthRole.AnyRole)]
     public async Task<ActionResult<GetObjectDTO<GetWorkplaceDTO>>> GetWorkplace(int id)
     {
         var workplace = await _workplacesRepository.GetAsync(id);
@@ -56,7 +57,7 @@ public class WorkplacesController : ApiControllerBase
     }
 
     [HttpGet("{id:int}/specialists")]
-    [Authorize(Roles = AllRoles)]
+    [Authorize(Roles = AuthRole.AnyRole)]
     public async Task<ActionResult<GetListDTO<GetSpecialistDTO>>> GetWorkplaceSpecialists(int id)
     {
         var specialists = (await _specialistsRepository.GetByWorkplace(id))

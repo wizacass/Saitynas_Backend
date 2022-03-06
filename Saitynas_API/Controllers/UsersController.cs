@@ -58,7 +58,7 @@ public class UsersController : ApiControllerBase
     }
 
     [HttpGet("me")]
-    [Authorize(Roles = AllRoles)]
+    [Authorize(Roles = AuthRole.AnyRole)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<GetObjectDTO<UserDTO>>> GetUser()
@@ -72,7 +72,7 @@ public class UsersController : ApiControllerBase
     }
 
     [HttpGet("me/profile")]
-    [Authorize(Roles = AllRoles)]
+    [Authorize(Roles = AuthRole.AnyRole)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
@@ -102,7 +102,7 @@ public class UsersController : ApiControllerBase
     }
 
     [HttpGet("me/evaluations")]
-    [Authorize(Roles = "Specialist,Patient")]
+    [Authorize(Roles = AuthRole.AnyRole)]
     public async Task<ActionResult<GetListDTO<GetUserEvaluationDTO>>> GetUserEvaluations()
     {
         var user = await GetCurrentUser();

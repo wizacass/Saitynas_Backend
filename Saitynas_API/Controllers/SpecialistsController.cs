@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.Entities.Evaluation.DTO;
+using Saitynas_API.Models.Entities.Role;
 using Saitynas_API.Models.Entities.Specialist;
 using Saitynas_API.Models.Entities.Specialist.DTO;
 using Saitynas_API.Models.Entities.Visit.DTO;
@@ -100,7 +101,7 @@ public class SpecialistsController : ApiControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = AuthRole.Specialist)]
     public async Task<IActionResult> CreateSpecialist([FromBody] CreateSpecialistDTO dto)
     {
         _validator.ValidateCreateSpecialistDTO(dto);
