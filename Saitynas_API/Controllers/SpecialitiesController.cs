@@ -34,7 +34,10 @@ public class SpecialitiesController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<GetListDTO<GetSpecialityDTO>>> GetSpecialities()
     {
-        var specialitiesTask = _context.Specialities.Select(s => new GetSpecialityDTO(s)).ToListAsync();
+        var specialitiesTask = _context.Specialities
+            .OrderBy(s=> s.Name)
+            .Select(s => new GetSpecialityDTO(s))
+            .ToListAsync();
         
         var dto = new GetListDTO<GetSpecialityDTO>(await specialitiesTask);
         

@@ -9,13 +9,10 @@ public class CreateSpecialistDTO
 
     [JsonProperty("lastName")]
     public string LastName { get; set; }
+    
+    [JsonProperty("city")]
+    public string City { get; set; }
 
     [JsonProperty("specialityId")]
     public int SpecialityId { get; set; }
-
-    [JsonProperty("address")]
-    public string Address { get; set; }
-
-    [JsonProperty("workplaceId")]
-    public int? WorkplaceId { get; set; }
 }

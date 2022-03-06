@@ -22,9 +22,8 @@ public class SpecialistDTOValidator : DTOValidator, ISpecialistDTOValidator
     {
         ValidateString(dto.FirstName, "firstName");
         ValidateString(dto.LastName, "lastName");
+        ValidateString(dto.City, "city");
         ValidateEntityId(_entityValidator.IsSpecialityIdValid(dto.SpecialityId), "specialityId");
-        ValidateStringLength(dto.Address, "address");
-        ValidateEntityId(_entityValidator.IsWorkplaceIdValid(dto.WorkplaceId), "workplaceId");
     }
 
     public void ValidateEditSpecialistDTO(EditSpecialistDTO dto)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Saitynas_API.Models.Entities.Specialist.DTO;
@@ -43,13 +42,16 @@ public class Specialist
 
     public Specialist() { }
 
-    public Specialist(CreateSpecialistDTO dto)
+    public Specialist(CreateSpecialistDTO dto, User.User user = null)
     {
         FirstName = dto.FirstName;
         LastName = dto.LastName;
-        Address = dto.Address;
+        City = dto.City;
+        Address = "remote";
         SpecialityId = dto.SpecialityId;
-        WorkplaceId = dto.WorkplaceId;
+        UserId = user?.Id ?? 0;
+        User = user;
+        
         Evaluations = new List<Evaluation.Evaluation>();
     }
 
