@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Saitynas_API.Models.Entities.Specialist.DTO;
 
@@ -29,7 +30,11 @@ public class Specialist
 
     [Required]
     public Speciality.Speciality Speciality { get; set; }
-
+    
+    public SpecialistStatusId? SpecialistStatusId { get; set; }
+    
+    public SpecialistStatus Status { get; set; }
+    
     public int? WorkplaceId { get; set; }
 
     public Workplace.Workplace Workplace { get; set; }
@@ -49,6 +54,7 @@ public class Specialist
         City = dto.City;
         Address = "remote";
         SpecialityId = dto.SpecialityId;
+        SpecialistStatusId = Entities.Specialist.SpecialistStatusId.Offline;
         UserId = user?.Id ?? 0;
         User = user;
         
