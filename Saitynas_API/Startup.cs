@@ -1,4 +1,5 @@
 using System;
+using CorePush.Apple;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -52,6 +53,10 @@ public class Startup
         SetupAuthentication(services);
 
         services.Configure<JwtSettings>(Configuration.GetSection(nameof(JwtSettings)));
+
+        services.AddHttpClient<ApnSender>();
+
+        CreateApnSettings(services);
 
         RegisterCustomServices(services);
 
@@ -111,6 +116,20 @@ public class Startup
         services.Configure<IdentityOptions>(IdentityOptions);
     }
 
+    private void CreateApnSettings(IServiceCollection services)
+    {
+        var apnSettings = new ApnSettings
+        {
+            P8PrivateKey = GetEnvVar("P8PrivateKey"),
+            P8PrivateKeyId = GetEnvVar("P8PrivateKeyId"),
+            TeamId = GetEnvVar("TeamId"),
+            AppBundleIdentifier = GetEnvVar("AppBundleIdentifier"),
+            ServerType = ApnServerType.Development
+        };
+
+        services.AddSingleton(apnSettings);
+    }
+
     private static void RegisterCustomServices(IServiceCollection services)
     {
         services.AddScoped<IHeadersValidator, HeadersValidator>();
@@ -124,6 +143,8 @@ public class Startup
         services.AddScoped<ISpecialistDTOValidator, SpecialistDTOValidator>();
         services.AddScoped<IEvaluationDTOValidator, EvaluationDTOValidator>();
         services.AddScoped<IPatientDTOValidator, PatientDTOValidator>();
+
+        services.AddScoped<IApplePushNotificationService, ApplePushNotificationService>();
     }
 
     private static void RegisterRepositories(IServiceCollection services)
