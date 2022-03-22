@@ -221,6 +221,8 @@ public class ApiUserStore : IUserPasswordStore<User>, IUserEmailStore<User>,
         var user = _context.Users
             .Where(u => u.Email == email)
             .Include(u => u.RefreshTokens)
+            .Include(u => u.Patient)
+            .Include(u => u.Specialist)
             .FirstOrDefault();
 
         return user;
