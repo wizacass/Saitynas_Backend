@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.Authentication.DTO;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.Entities.Role;
-using Saitynas_API.Models.Entities.Specialist;
 using Saitynas_API.Models.Entities.User;
-using Saitynas_API.Repositories;
 using Saitynas_API.Services;
 using Saitynas_API.Services.Validators;
 
@@ -21,20 +19,17 @@ public class AuthController : ApiControllerBase
 {
     private readonly IAuthenticationDTOValidator _validator;
     private readonly IAuthenticationService _authService;
-    private readonly ISpecialistsRepository _specialistsRepository;
-    
+
     protected override string ModelName => "user";
 
     public AuthController(
         IAuthenticationDTOValidator validator,
         IAuthenticationService authService,
-        ISpecialistsRepository specialistsRepository,
         UserManager<User> userManager
     ) : base(userManager)
     {
         _validator = validator;
         _authService = authService;
-        _specialistsRepository = specialistsRepository;
     }
 
     [HttpPost("signup")]
@@ -98,13 +93,7 @@ public class AuthController : ApiControllerBase
     {
         var user = await GetCurrentUser();
 
-        if (user.RoleId == RoleId.Specialist)
-        {
-            var specialist = user.Specialist;
-            
-            specialist.SpecialistStatusId = SpecialistStatusId.Offline;
-            await _specialistsRepository.UpdateAsync(specialist.Id, specialist);
-        }
+        await _authService.Logout(user);
         
         return NoContent();
     }
