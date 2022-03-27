@@ -17,5 +17,10 @@ public class SpecialistConfiguration : IEntityTypeConfiguration<Specialist>
             .WithOne(u => u.Specialist)
             .HasForeignKey<User.User>(u => u.SpecialistId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder
+            .HasOne(s => s.Status)
+            .WithMany(ss => ss.Specialists)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

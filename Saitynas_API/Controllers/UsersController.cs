@@ -11,6 +11,7 @@ using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.Entities.Evaluation;
 using Saitynas_API.Models.Entities.Evaluation.DTO;
 using Saitynas_API.Models.Entities.Role;
+using Saitynas_API.Models.Entities.Specialist.DTO;
 using Saitynas_API.Models.Entities.User;
 using Saitynas_API.Models.Entities.User.DTO;
 using Saitynas_API.Repositories;
@@ -92,7 +93,7 @@ public class UsersController : ApiControllerBase
     private async Task<ProfileDTO> GetProfileDto(User user)
     {
         if (!user.HasProfile) return null;
-        
+
         return user.RoleId switch
         {
             RoleId.Patient => new ProfileDTO(await _patientsRepository.GetByUserId(user.Id)),
@@ -124,5 +125,41 @@ public class UsersController : ApiControllerBase
             RoleId.Specialist => await _evaluationsRepository.GetBySpecialistId(u.Id),
             _ => null
         };
+    }
+
+    [HttpGet("me/status")]
+    [Authorize(Roles = AuthRole.Specialist)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<GetObjectDTO<GetEnumDTO>>> RetrieveSpecialistStatus()
+    {
+        var user = await GetCurrentUser();
+
+        var status = user.Specialist.SpecialistStatusId;
+
+        if (status == null) return ApiNotFound("ActivityStatus");
+
+        var dto = new GetObjectDTO<GetEnumDTO>(new GetEnumDTO
+        {
+            Id = (int) status,
+            Name = status.ToString()
+        });
+
+        return Ok(dto);
+    }
+
+    [HttpPut("me/status")]
+    [Authorize(Roles = AuthRole.Specialist)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<NoContentResult> UpdateSpecialistStatus([FromBody] SpecialistStatusDto dto)
+    {
+        var user = await GetCurrentUser();
+
+        var specialist = user.Specialist;
+        specialist.SpecialistStatusId = dto.StatusId;
+
+        await _specialistsRepository.UpdateAsync(specialist.Id, specialist);
+
+        return NoContent();
     }
 }

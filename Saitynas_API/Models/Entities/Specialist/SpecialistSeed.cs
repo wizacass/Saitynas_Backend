@@ -24,7 +24,8 @@ public class SpecialistSeed : ISeed
             LastName = "Smith",
             City = "Kaunas",
             SpecialityId = 7,
-            UserId = 2
+            UserId = 2,
+            SpecialistStatusId = SpecialistStatusId.Offline
         };
 
         _context.Specialists.Add(specialist);

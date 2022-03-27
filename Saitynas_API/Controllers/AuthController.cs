@@ -17,9 +17,9 @@ namespace Saitynas_API.Controllers;
 [Produces(ApiContentType)]
 public class AuthController : ApiControllerBase
 {
+    private readonly IAuthenticationDTOValidator _validator;
     private readonly IAuthenticationService _authService;
 
-    private readonly IAuthenticationDTOValidator _validator;
     protected override string ModelName => "user";
 
     public AuthController(
@@ -83,6 +83,18 @@ public class AuthController : ApiControllerBase
 
         await _authService.ChangePassword(dto, user);
 
+        return NoContent();
+    }
+
+    [HttpPost("logout")]
+    [Authorize(Roles = AuthRole.AnyRole)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<NoContentResult> Logout()
+    {
+        var user = await GetCurrentUser();
+
+        await _authService.Logout(user);
+        
         return NoContent();
     }
 }

@@ -5,7 +5,10 @@ using Saitynas_API.Exceptions;
 using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.Authentication.DTO;
 using Saitynas_API.Models.Common;
+using Saitynas_API.Models.Entities.Role;
+using Saitynas_API.Models.Entities.Specialist;
 using Saitynas_API.Models.Entities.User;
+using Saitynas_API.Repositories;
 
 namespace Saitynas_API.Services;
 
@@ -18,6 +21,8 @@ public interface IAuthenticationService
     Task<AuthenticationDTO> RefreshToken(string token);
 
     Task ChangePassword(ChangePasswordDTO dto, User user);
+
+    Task Logout(User user);
 }
 
 public class AuthenticationService : IAuthenticationService
@@ -25,12 +30,19 @@ public class AuthenticationService : IAuthenticationService
     private readonly IJwtService _jwt;
     private readonly UserManager<User> _userManager;
     private readonly IApiUserStore _userStore;
+    private readonly ISpecialistsRepository _specialistsRepository;
 
-    public AuthenticationService(UserManager<User> userManager, IApiUserStore userStore, IJwtService jwt)
+    public AuthenticationService(
+        UserManager<User> userManager,
+        IApiUserStore userStore, 
+        IJwtService jwt , 
+        ISpecialistsRepository specialistsRepository
+        )
     {
         _userManager = userManager;
         _userStore = userStore;
         _jwt = jwt;
+        _specialistsRepository = specialistsRepository;
     }
 
     public async Task<AuthenticationDTO> Signup(SignupDTO dto)
@@ -50,6 +62,8 @@ public class AuthenticationService : IAuthenticationService
 
         if (!await _userManager.CheckPasswordAsync(user, dto.Password))
             throw new AuthenticationException(ApiErrorSlug.InvalidCredentials);
+
+        await UpdateActivityStatus(user, SpecialistStatusId.Busy);
 
         return await GenerateTokens(user);
     }
@@ -124,5 +138,21 @@ public class AuthenticationService : IAuthenticationService
 
         string error = result.Errors.First().Description;
         throw new AuthenticationException(error);
+    }
+    
+    public async Task Logout(User user)
+    {
+        await UpdateActivityStatus(user, SpecialistStatusId.Offline);
+    }
+
+    private async Task UpdateActivityStatus(User user, SpecialistStatusId activityStatus)
+    {
+        if (user.RoleId == RoleId.Specialist)
+        {
+            var specialist = user.Specialist;
+            
+            specialist.SpecialistStatusId = activityStatus;
+            await _specialistsRepository.UpdateAsync(specialist.Id, specialist);
+        }
     }
 }

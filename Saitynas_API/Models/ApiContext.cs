@@ -34,5 +34,6 @@ public class ApiContext : DbContext
         builder.ApplyConfiguration(new WorkplaceConfiguration());
         builder.ApplyConfiguration(new SpecialistConfiguration());
         builder.ApplyConfiguration(new PatientConfiguration());
+        builder.ApplyConfiguration(new SpecialistStatusConfiguration());
     }
 }
