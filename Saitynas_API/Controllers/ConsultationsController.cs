@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,20 +14,20 @@ public class ConsultationsController : ApiControllerBase
 {
     protected override string ModelName => "Consultation";
 
-    private readonly IApplePushNotificationService _apnService;
+    private readonly IConsultationsService _consultationsService;
 
-    public ConsultationsController(IApplePushNotificationService apnService)
+    public ConsultationsController(IConsultationsService consultationsService)
     {
-        _apnService = apnService;
+        _consultationsService = consultationsService;
     }
 
     [HttpPost]
     [Authorize(Roles = AuthRole.Patient)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> RequestConsultation(RequestConsultationDTO dto)
+    public IActionResult RequestConsultation(RequestConsultationDTO dto)
     {
-        await _apnService.PublishNotification(dto.DeviceToken, "You have a new message!");
-
+        _consultationsService.EnqueuePatient(dto.DeviceToken);    
+        
         return NoContent();
     }
 }
