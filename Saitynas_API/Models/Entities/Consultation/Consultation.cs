@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Saitynas_API.Models.Entities.Consultation;
@@ -23,6 +24,9 @@ public class Consultation
     public DateTime? StartedAt { get; set; }
     
     public DateTime? FinishedAt { get; set; }
+
+    [DefaultValue(false)]
+    public bool IsCancelled { get; set; } = false;
     
     [Required]
     public int PatientId { get; set; }
