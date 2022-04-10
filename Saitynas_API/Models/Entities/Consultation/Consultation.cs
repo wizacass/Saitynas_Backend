@@ -14,7 +14,6 @@ public class Consultation
     [StringLength(255)]
     public string PatientDeviceToken { get; set; }
 
-    [Required]
     [StringLength(255)]
     public string SpecialistDeviceToken { get; set; }
 

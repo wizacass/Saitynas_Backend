@@ -154,6 +154,7 @@ public class Startup
         services.AddScoped<IWorkplacesRepository, WorkplacesRepository>();
         services.AddScoped<ISpecialistsRepository, SpecialistsRepository>();
         services.AddScoped<IPatientsRepository, PatientsRepository>();
+        services.AddScoped<IConsultationsRepository, ConsultationsRepository>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
