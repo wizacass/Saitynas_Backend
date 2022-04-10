@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
 using Saitynas_API.Models.Entities.Consultation;
 
@@ -21,9 +22,11 @@ public class ConsultationsRepository: IConsultationsRepository
         throw new System.NotImplementedException();
     }
 
-    public Task<Consultation> GetAsync(int id)
+    public async Task<Consultation> GetAsync(int id)
     {
-        throw new System.NotImplementedException();
+        var consultation = await _context.Consultations.FirstOrDefaultAsync(c => c.Id == id);
+        
+        return consultation;
     }
 
     public async Task InsertAsync(Consultation data)
@@ -32,9 +35,11 @@ public class ConsultationsRepository: IConsultationsRepository
         await _context.SaveChangesAsync();
     }
 
-    public Task UpdateAsync(int id, Consultation data)
+    public async Task UpdateAsync(int id, Consultation data)
     {
-        throw new System.NotImplementedException();
+        _context.Consultations.Update(data);
+        
+        await _context.SaveChangesAsync();
     }
 
     public Task DeleteAsync(int id)
