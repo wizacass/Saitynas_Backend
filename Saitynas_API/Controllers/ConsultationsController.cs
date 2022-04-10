@@ -65,4 +65,21 @@ public class ConsultationsController : ApiControllerBase
             return Unauthorized(new ErrorDTO(401, ApiErrorSlug.UserUnauthorized));
         }
     }
+    
+    [HttpPost("end")]
+    [Authorize(Roles = AuthRole.Patient)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> EndConsultation(CancelConsultationDTO dto)
+    {
+        try
+        {
+            await _consultationsService.EndConsultation(dto.ConsultationId, dto.DeviceToken);
+            return NoContent();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized(new ErrorDTO(401, ApiErrorSlug.UserUnauthorized));
+        }
+    }
 }

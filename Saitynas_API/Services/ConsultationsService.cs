@@ -14,6 +14,8 @@ public interface IConsultationsService
     public Task<Consultation> RequestConsultation(int patientId, string deviceToken);
 
     public Task CancelConsultation(int consultationId, string deviceToken);
+    
+    public Task EndConsultation(int consultationId, string deviceToken);
 }
 
 public class ConsultationsService : IConsultationsService
@@ -83,6 +85,24 @@ public class ConsultationsService : IConsultationsService
         _patientsQueue = new Queue<string>(_patientsQueue.Where(
             token => !string.Equals(token, deviceToken, StringComparison.Ordinal))
         );
+    }
+    
+    public async Task EndConsultation(int consultationId, string deviceToken)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var repository = scope.ServiceProvider.GetService<IConsultationsRepository>()!;
+
+        var consultation = await repository.GetAsync(consultationId);
+
+        if (consultation.PatientDeviceToken != deviceToken)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        consultation.FinishedAt = DateTime.UtcNow;
+        // TODO: Set specialist back to available again
+        
+        await repository.UpdateAsync(consultationId, consultation);
     }
 
     private async Task SendNotification()
