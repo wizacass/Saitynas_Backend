@@ -144,7 +144,8 @@ public class Startup
         services.AddScoped<IEvaluationDTOValidator, EvaluationDTOValidator>();
         services.AddScoped<IPatientDTOValidator, PatientDTOValidator>();
 
-        services.AddScoped<IApplePushNotificationService, ApplePushNotificationService>();
+        services.AddSingleton<IApplePushNotificationService, ApplePushNotificationService>();
+        services.AddSingleton<IConsultationsService, ConsultationsService>();
     }
 
     private static void RegisterRepositories(IServiceCollection services)
