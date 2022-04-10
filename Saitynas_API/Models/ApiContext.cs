@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models.Authentication;
+using Saitynas_API.Models.Entities.Consultation;
 using Saitynas_API.Models.Entities.Evaluation;
 using Saitynas_API.Models.Entities.Message;
 using Saitynas_API.Models.Entities.Patient;
@@ -22,6 +23,7 @@ public class ApiContext : DbContext
     public DbSet<Speciality> Specialities { get; set; }
     public DbSet<Specialist> Specialists { get; set; }
     public DbSet<Patient> Patients { get; set; }
+    public DbSet<Consultation> Consultations { get; set; }
 
     public ApiContext(DbContextOptions<ApiContext> options) : base(options) { }
 
@@ -35,5 +37,6 @@ public class ApiContext : DbContext
         builder.ApplyConfiguration(new SpecialistConfiguration());
         builder.ApplyConfiguration(new PatientConfiguration());
         builder.ApplyConfiguration(new SpecialistStatusConfiguration());
+        builder.ApplyConfiguration(new ConsultationConfiguration());
     }
 }

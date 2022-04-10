@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Saitynas_API.Models.Entities.Patient.DTO;
 
@@ -28,7 +29,9 @@ public class Patient
     public int UserId { get; set; }
 
     public User.User User { get; set; }
-    
+
+    public ICollection<Consultation.Consultation> Consultations { get; set; }
+
     public Patient() { }
 
     public Patient(PatientDTO dto, User.User user = null)
@@ -39,5 +42,7 @@ public class Patient
         City = dto.City;
         UserId = user?.Id ?? 0;
         User = user;
+        
+        Consultations = new List<Consultation.Consultation>();
     }
 }
