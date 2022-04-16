@@ -11,16 +11,15 @@ namespace Saitynas_API.Services;
 
 public interface IConsultationsService
 {
-    public Task<Consultation> RequestConsultation(int patientId, string deviceToken);
-
+    public Task<Consultation> RequestConsultation(int patientId, string deviceToken, int? specialityId);
     public Task CancelConsultation(int consultationId, string deviceToken);
-    
     public Task EndConsultation(int consultationId, string deviceToken);
+    public Task StartConsultation(int consultationId, string deviceToken);
 }
 
 public class ConsultationsService : IConsultationsService
 {
-    private Queue<string> _patientsQueue;
+    private readonly Dictionary<int, Queue<string>> _patientsQueue;
 
     private readonly IApplePushNotificationService _apnService;
     private readonly IServiceScopeFactory _scopeFactory;
@@ -30,12 +29,13 @@ public class ConsultationsService : IConsultationsService
         IServiceScopeFactory serviceScopeFactory
     )
     {
-        _patientsQueue = new Queue<string>();
+        _patientsQueue = new Dictionary<int, Queue<string>> {{ 0, new Queue<string>() }};
+
         _apnService = apnService;
         _scopeFactory = serviceScopeFactory;
     }
 
-    public async Task<Consultation> RequestConsultation(int patientId, string deviceToken)
+    public async Task<Consultation> RequestConsultation(int patientId, string deviceToken, int? specialityId)
     {
         using var scope = _scopeFactory.CreateScope();
         var repository = scope.ServiceProvider.GetService<IConsultationsRepository>()!;
@@ -43,21 +43,43 @@ public class ConsultationsService : IConsultationsService
         var consultation = new Consultation
         {
             PatientId = patientId,
-            PatientDeviceToken = deviceToken
+            PatientDeviceToken = deviceToken,
+            RequestedSpecialityId = specialityId
         };
 
         await repository.InsertAsync(consultation);
 
-        EnqueuePatient(deviceToken);
+        EnqueuePatient(deviceToken, specialityId ?? 0);
 
         return consultation;
     }
     
-    private void EnqueuePatient(string deviceToken)
+    private void EnqueuePatient(string deviceToken, int specialityId)
     {
-        _patientsQueue.Enqueue(deviceToken);
+        if (!_patientsQueue.ContainsKey(specialityId))
+        {
+            _patientsQueue.Add(specialityId, new Queue<string>());
+        }
 
-        var _ = SendNotification();
+        _patientsQueue[specialityId].Enqueue(deviceToken);
+        
+        var _ = SendNotification(specialityId);
+    }
+    
+    private async Task SendNotification(int specialityId)
+    {
+        const string message = "Consultation is about to start!";
+
+        await Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(5000);
+
+                if (_patientsQueue.Count <= 0) return;
+
+                string token = _patientsQueue[specialityId].Dequeue();
+                _apnService.PublishNotification(token, message);
+            }
+        );
     }
 
     public async Task CancelConsultation(int consultationId, string deviceToken)
@@ -77,14 +99,18 @@ public class ConsultationsService : IConsultationsService
         
         await repository.UpdateAsync(consultationId, consultation);
 
-        DequeuePatient(consultation.PatientDeviceToken);
+        DequeuePatient(consultation.PatientDeviceToken, consultation.RequestedSpecialityId);
     }
 
-    private void DequeuePatient(string deviceToken)
+    private void DequeuePatient(string deviceToken, int? specialityId)
     {
-        _patientsQueue = new Queue<string>(_patientsQueue.Where(
+        int key = specialityId ?? 0;
+        
+        var queue = new Queue<string>(_patientsQueue[key].Where(
             token => !string.Equals(token, deviceToken, StringComparison.Ordinal))
         );
+
+        _patientsQueue[key] = queue;
     }
     
     public async Task EndConsultation(int consultationId, string deviceToken)
@@ -105,19 +131,21 @@ public class ConsultationsService : IConsultationsService
         await repository.UpdateAsync(consultationId, consultation);
     }
 
-    private async Task SendNotification()
+    public async Task StartConsultation(int consultationId, string deviceToken)
     {
-        const string message = "Consultation is about to start!";
+        using var scope = _scopeFactory.CreateScope();
+        var repository = scope.ServiceProvider.GetService<IConsultationsRepository>()!;
 
-        await Task.Factory.StartNew(() =>
-            {
-                Thread.Sleep(5000);
+        var consultation = await repository.GetAsync(consultationId);
 
-                if (_patientsQueue.Count <= 0) return;
+        if (consultation.PatientDeviceToken != deviceToken)
+        {
+            throw new UnauthorizedAccessException();
+        }
 
-                string token = _patientsQueue.Dequeue();
-                _apnService.PublishNotification(token, message);
-            }
-        );
+        consultation.StartedAt = DateTime.UtcNow;
+        // TODO: Set specialist back to busy
+        
+        await repository.UpdateAsync(consultationId, consultation);
     }
 }

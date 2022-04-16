@@ -14,5 +14,9 @@ public class ConsultationConfiguration: IEntityTypeConfiguration<Consultation>
         builder
             .HasOne(c => c.Specialist)
             .WithMany(s => s.Consultations);
+
+        builder
+            .HasOne(c => c.RequestedSpeciality)
+            .WithMany(s => s.Consultations);
     }
 }

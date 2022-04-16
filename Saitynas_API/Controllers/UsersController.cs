@@ -160,6 +160,8 @@ public class UsersController : ApiControllerBase
 
         await _specialistsRepository.UpdateAsync(specialist.Id, specialist);
 
+        // TODO: Ping Queue
+        
         return NoContent();
     }
 }

@@ -27,6 +27,10 @@ public class Consultation
     [DefaultValue(false)]
     public bool IsCancelled { get; set; } = false;
     
+    public int? RequestedSpecialityId { get; set; }
+    
+    public Speciality.Speciality RequestedSpeciality { get; set; }
+    
     [Required]
     public int PatientId { get; set; }
 

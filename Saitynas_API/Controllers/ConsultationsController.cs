@@ -43,7 +43,7 @@ public class ConsultationsController : ApiControllerBase
             return ApiNotFound(ApiErrorSlug.ResourceNotFound, "patient");
         }
             
-        var consultation = await _consultationsService.RequestConsultation((int) user.PatientId, dto.DeviceToken);
+        var consultation = await _consultationsService.RequestConsultation((int) user.PatientId, dto.DeviceToken, dto.SpecialityId);
         var responseDto = new IdDTO { Id = consultation.Id };
         
         return ApiCreated(new GetObjectDTO<IdDTO>(responseDto));
@@ -53,7 +53,7 @@ public class ConsultationsController : ApiControllerBase
     [Authorize(Roles = AuthRole.Patient)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> CancelConsultation(CancelConsultationDTO dto)
+    public async Task<IActionResult> CancelConsultation(ConsultationDTO dto)
     {
         try
         {
@@ -70,11 +70,28 @@ public class ConsultationsController : ApiControllerBase
     [Authorize(Roles = AuthRole.Patient)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> EndConsultation(CancelConsultationDTO dto)
+    public async Task<IActionResult> EndConsultation(ConsultationDTO dto)
     {
         try
         {
             await _consultationsService.EndConsultation(dto.ConsultationId, dto.DeviceToken);
+            return NoContent();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized(new ErrorDTO(401, ApiErrorSlug.UserUnauthorized));
+        }
+    }
+    
+    [HttpPost("start")]
+    [Authorize(Roles = AuthRole.Patient)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> StartConsultation(ConsultationDTO dto)
+    {
+        try
+        {
+            await _consultationsService.StartConsultation(dto.ConsultationId, dto.DeviceToken);
             return NoContent();
         }
         catch (UnauthorizedAccessException)
