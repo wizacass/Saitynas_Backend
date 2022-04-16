@@ -55,15 +55,8 @@ public class ConsultationsController : ApiControllerBase
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CancelConsultation(ConsultationDTO dto)
     {
-        try
-        {
-            await _consultationsService.CancelConsultation(dto.ConsultationId, dto.DeviceToken);
-            return NoContent();
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized(new ErrorDTO(401, ApiErrorSlug.UserUnauthorized));
-        }
+        await _consultationsService.CancelConsultation(dto.ConsultationId, dto.DeviceToken);
+        return NoContent();
     }
     
     [HttpPost("end")]
@@ -72,15 +65,8 @@ public class ConsultationsController : ApiControllerBase
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> EndConsultation(ConsultationDTO dto)
     {
-        try
-        {
-            await _consultationsService.EndConsultation(dto.ConsultationId, dto.DeviceToken);
-            return NoContent();
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized(new ErrorDTO(401, ApiErrorSlug.UserUnauthorized));
-        }
+        await _consultationsService.EndConsultation(dto.ConsultationId, dto.DeviceToken);
+        return NoContent();
     }
     
     [HttpPost("start")]
@@ -89,14 +75,7 @@ public class ConsultationsController : ApiControllerBase
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> StartConsultation(ConsultationDTO dto)
     {
-        try
-        {
-            await _consultationsService.StartConsultation(dto.ConsultationId, dto.DeviceToken);
-            return NoContent();
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized(new ErrorDTO(401, ApiErrorSlug.UserUnauthorized));
-        }
+        await _consultationsService.StartConsultation(dto.ConsultationId, dto.DeviceToken);
+        return NoContent();
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Entities.Consultation;
 using Saitynas_API.Repositories;
 
@@ -125,6 +126,11 @@ public class ConsultationsService : IConsultationsService
             throw new UnauthorizedAccessException();
         }
 
+        if (consultation.FinishedAt != null)
+        {
+            throw new InvalidOperationException("consultation_already_finished");
+        }
+
         consultation.FinishedAt = DateTime.UtcNow;
         // TODO: Set specialist back to available again
         
@@ -141,6 +147,17 @@ public class ConsultationsService : IConsultationsService
         if (consultation.PatientDeviceToken != deviceToken)
         {
             throw new UnauthorizedAccessException();
+        }
+
+        // if (consultation.SpecialistId == null)
+        // {
+        //     Console.WriteLine("No specialist in consultation!");
+        //     throw new InvalidOperationException("consultation_not_ready");
+        // }
+
+        if (consultation.StartedAt != null)
+        {
+            throw new InvalidOperationException("consultation_already_started");
         }
 
         consultation.StartedAt = DateTime.UtcNow;
