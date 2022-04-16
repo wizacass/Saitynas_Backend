@@ -12,5 +12,9 @@ public class PatientConfiguration : IEntityTypeConfiguration<Patient>
             .WithOne(u => u.Patient)
             .HasForeignKey<User.User>(u => u.PatientId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder
+            .HasMany(p => p.Consultations)
+            .WithOne(c => c.Patient);
     }
 }

@@ -44,6 +44,8 @@ public class Specialist
     public int UserId { get; set; }
     
     public User.User User { get; set; }
+    
+    public ICollection<Consultation.Consultation> Consultations { get; set; }
 
     public Specialist() { }
 
@@ -59,6 +61,7 @@ public class Specialist
         User = user;
         
         Evaluations = new List<Evaluation.Evaluation>();
+        Consultations = new List<Consultation.Consultation>();
     }
 
     public Specialist(int id, EditSpecialistDTO dto)

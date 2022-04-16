@@ -22,5 +22,13 @@ public class SpecialistConfiguration : IEntityTypeConfiguration<Specialist>
             .HasOne(s => s.Status)
             .WithMany(ss => ss.Specialists)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder
+            .HasMany(s => s.Consultations)
+            .WithOne(c => c.Specialist);
+
+        builder
+            .HasOne(s => s.Speciality)
+            .WithMany(s => s.Specialists);
     }
 }

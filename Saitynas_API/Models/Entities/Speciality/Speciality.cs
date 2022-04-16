@@ -14,9 +14,12 @@ public class Speciality
 
     public ICollection<Specialist.Specialist> Specialists { get; set; }
 
+    public ICollection<Consultation.Consultation> Consultations { get; set; }
+    
     public Speciality()
     {
         Specialists = new List<Specialist.Specialist>();
+        Consultations = new List<Consultation.Consultation>();
     }
     
     public Speciality(int id, string name) : this()

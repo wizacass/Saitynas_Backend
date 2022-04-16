@@ -4,9 +4,9 @@ namespace Saitynas_API.Models.DTO;
 
 public class RequestConsultationDTO
 {
-    [JsonProperty("device_token")]
+    [JsonProperty("deviceToken")]
     public string DeviceToken { get; set; } 
     
-    [JsonProperty("speciality_id")]
+    [JsonProperty("specialityId")]
     public int? SpecialityId { get; set; }
 }

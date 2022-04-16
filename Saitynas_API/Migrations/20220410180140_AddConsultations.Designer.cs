@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Saitynas_API.Models;
 
@@ -10,9 +11,10 @@ using Saitynas_API.Models;
 namespace Saitynas_API.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    partial class ApiContextModelSnapshot : ModelSnapshot
+    [Migration("20220410180140_AddConsultations")]
+    partial class AddConsultations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,9 +62,6 @@ namespace Saitynas_API.Migrations
                     b.Property<DateTime?>("FinishedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsCancelled")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("PatientDeviceToken")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -74,10 +73,8 @@ namespace Saitynas_API.Migrations
                     b.Property<DateTime>("RequestedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("RequestedSpecialityId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SpecialistDeviceToken")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
@@ -90,8 +87,6 @@ namespace Saitynas_API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PatientId");
-
-                    b.HasIndex("RequestedSpecialityId");
 
                     b.HasIndex("SpecialistId");
 
@@ -391,17 +386,11 @@ namespace Saitynas_API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Saitynas_API.Models.Entities.Speciality.Speciality", "RequestedSpeciality")
-                        .WithMany("Consultations")
-                        .HasForeignKey("RequestedSpecialityId");
-
                     b.HasOne("Saitynas_API.Models.Entities.Specialist.Specialist", "Specialist")
                         .WithMany("Consultations")
                         .HasForeignKey("SpecialistId");
 
                     b.Navigation("Patient");
-
-                    b.Navigation("RequestedSpeciality");
 
                     b.Navigation("Specialist");
                 });
@@ -503,8 +492,6 @@ namespace Saitynas_API.Migrations
 
             modelBuilder.Entity("Saitynas_API.Models.Entities.Speciality.Speciality", b =>
                 {
-                    b.Navigation("Consultations");
-
                     b.Navigation("Specialists");
                 });
 
