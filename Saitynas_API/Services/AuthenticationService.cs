@@ -22,7 +22,7 @@ public interface IAuthenticationService
 
     Task ChangePassword(ChangePasswordDTO dto, User user);
 
-    Task Logout(User user);
+    Task Logout(User user, string deviceToken);
 }
 
 public class AuthenticationService : IAuthenticationService
@@ -31,18 +31,21 @@ public class AuthenticationService : IAuthenticationService
     private readonly UserManager<User> _userManager;
     private readonly IApiUserStore _userStore;
     private readonly ISpecialistsRepository _specialistsRepository;
+    private readonly IConsultationsService _consultationsService;
 
     public AuthenticationService(
         UserManager<User> userManager,
-        IApiUserStore userStore, 
-        IJwtService jwt , 
-        ISpecialistsRepository specialistsRepository
-        )
+        IApiUserStore userStore,
+        IJwtService jwt,
+        ISpecialistsRepository specialistsRepository,
+        IConsultationsService consultationsService
+    )
     {
         _userManager = userManager;
         _userStore = userStore;
         _jwt = jwt;
         _specialistsRepository = specialistsRepository;
+        _consultationsService = consultationsService;
     }
 
     public async Task<AuthenticationDTO> Signup(SignupDTO dto)
@@ -139,20 +142,35 @@ public class AuthenticationService : IAuthenticationService
         string error = result.Errors.First().Description;
         throw new AuthenticationException(error);
     }
-    
-    public async Task Logout(User user)
+
+    public async Task Logout(User user, string deviceToken)
     {
-        await UpdateActivityStatus(user, SpecialistStatusId.Offline);
+        await UpdateActivityStatus(user, SpecialistStatusId.Offline, deviceToken);
     }
 
-    private async Task UpdateActivityStatus(User user, SpecialistStatusId activityStatus)
+    private async Task UpdateActivityStatus(User user, SpecialistStatusId activityStatus, string deviceToken = null)
     {
-        if (user.RoleId == RoleId.Specialist)
+        if (user.RoleId != RoleId.Specialist) return;
+
+        var specialist = user.Specialist;
+
+        specialist.SpecialistStatusId = activityStatus;
+        await _specialistsRepository.UpdateAsync(specialist.Id, specialist);
+
+        if(deviceToken == null) return;
+
+        await UpdateSpecialistQueue(specialist, deviceToken);
+    }
+
+    private async Task UpdateSpecialistQueue(Specialist specialist, string deviceToken)
+    {
+        if (specialist.SpecialistStatusId == SpecialistStatusId.Available)
         {
-            var specialist = user.Specialist;
-            
-            specialist.SpecialistStatusId = activityStatus;
-            await _specialistsRepository.UpdateAsync(specialist.Id, specialist);
+            await _consultationsService.EnqueueSpecialist(deviceToken, specialist.SpecialityId ?? 0);
+        }
+        else
+        {
+            await _consultationsService.DequeueSpecialist(deviceToken);
         }
     }
 }
