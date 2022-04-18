@@ -11,6 +11,7 @@ using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.Entities.Evaluation;
 using Saitynas_API.Models.Entities.Evaluation.DTO;
 using Saitynas_API.Models.Entities.Role;
+using Saitynas_API.Models.Entities.Specialist;
 using Saitynas_API.Models.Entities.Specialist.DTO;
 using Saitynas_API.Models.Entities.User;
 using Saitynas_API.Models.Entities.User.DTO;
@@ -27,6 +28,7 @@ public class UsersController : ApiControllerBase
     private readonly IEvaluationsRepository _evaluationsRepository;
     private readonly ISpecialistsRepository _specialistsRepository;
     private readonly IPatientsRepository _patientsRepository;
+    private readonly IConsultationsService _consultationsService;
 
     private readonly IApiUserStore _userStore;
     protected override string ModelName => "user";
@@ -36,13 +38,15 @@ public class UsersController : ApiControllerBase
         UserManager<User> userManager,
         IEvaluationsRepository evaluationsRepository,
         ISpecialistsRepository specialistsRepository,
-        IPatientsRepository patientsRepository
+        IPatientsRepository patientsRepository,
+        IConsultationsService consultationsService
     ) : base(userManager)
     {
         _userStore = userStore;
         _evaluationsRepository = evaluationsRepository;
         _specialistsRepository = specialistsRepository;
         _patientsRepository = patientsRepository;
+        _consultationsService = consultationsService;
     }
 
     [HttpGet]
@@ -161,6 +165,14 @@ public class UsersController : ApiControllerBase
         await _specialistsRepository.UpdateAsync(specialist.Id, specialist);
 
         // TODO: Ping Queue
+        if (specialist.SpecialistStatusId == SpecialistStatusId.Available)
+        {
+            await _consultationsService.EnqueueSpecialist(dto.DeviceToken, specialist.SpecialityId ?? 0);
+        }
+        else
+        {
+            await _consultationsService.DequeueSpecialist(dto.DeviceToken);
+        }
         
         return NoContent();
     }

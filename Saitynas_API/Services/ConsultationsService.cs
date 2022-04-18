@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Entities.Consultation;
 using Saitynas_API.Repositories;
 
@@ -16,11 +15,14 @@ public interface IConsultationsService
     public Task CancelConsultation(int consultationId, string deviceToken);
     public Task EndConsultation(int consultationId, string deviceToken);
     public Task StartConsultation(int consultationId, string deviceToken);
+    public Task EnqueueSpecialist(string deviceToken, int specialityId);
+    public Task DequeueSpecialist(string deviceToken);
 }
 
 public class ConsultationsService : IConsultationsService
 {
     private readonly Dictionary<int, Queue<string>> _patientsQueue;
+    private readonly Dictionary<string, int> _specialistsQueue;
 
     private readonly IApplePushNotificationService _apnService;
     private readonly IServiceScopeFactory _scopeFactory;
@@ -30,7 +32,8 @@ public class ConsultationsService : IConsultationsService
         IServiceScopeFactory serviceScopeFactory
     )
     {
-        _patientsQueue = new Dictionary<int, Queue<string>> {{ 0, new Queue<string>() }};
+        _patientsQueue = new Dictionary<int, Queue<string>> {{0, new Queue<string>()}};
+        _specialistsQueue = new Dictionary<string, int>();
 
         _apnService = apnService;
         _scopeFactory = serviceScopeFactory;
@@ -54,7 +57,7 @@ public class ConsultationsService : IConsultationsService
 
         return consultation;
     }
-    
+
     private void EnqueuePatient(string deviceToken, int specialityId)
     {
         if (!_patientsQueue.ContainsKey(specialityId))
@@ -63,10 +66,10 @@ public class ConsultationsService : IConsultationsService
         }
 
         _patientsQueue[specialityId].Enqueue(deviceToken);
-        
+
         var _ = SendNotification(specialityId);
     }
-    
+
     private async Task SendNotification(int specialityId)
     {
         const string message = "Consultation is about to start!";
@@ -97,7 +100,7 @@ public class ConsultationsService : IConsultationsService
 
         consultation.IsCancelled = true;
         consultation.FinishedAt = DateTime.UtcNow;
-        
+
         await repository.UpdateAsync(consultationId, consultation);
 
         DequeuePatient(consultation.PatientDeviceToken, consultation.RequestedSpecialityId);
@@ -106,14 +109,14 @@ public class ConsultationsService : IConsultationsService
     private void DequeuePatient(string deviceToken, int? specialityId)
     {
         int key = specialityId ?? 0;
-        
+
         var queue = new Queue<string>(_patientsQueue[key].Where(
             token => !string.Equals(token, deviceToken, StringComparison.Ordinal))
         );
 
         _patientsQueue[key] = queue;
     }
-    
+
     public async Task EndConsultation(int consultationId, string deviceToken)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -126,6 +129,11 @@ public class ConsultationsService : IConsultationsService
             throw new UnauthorizedAccessException();
         }
 
+        if (consultation.StartedAt == null)
+        {
+            throw new InvalidOperationException("consultation_not_started");
+        }
+
         if (consultation.FinishedAt != null)
         {
             throw new InvalidOperationException("consultation_already_finished");
@@ -133,7 +141,7 @@ public class ConsultationsService : IConsultationsService
 
         consultation.FinishedAt = DateTime.UtcNow;
         // TODO: Set specialist back to available again
-        
+
         await repository.UpdateAsync(consultationId, consultation);
     }
 
@@ -149,11 +157,11 @@ public class ConsultationsService : IConsultationsService
             throw new UnauthorizedAccessException();
         }
 
-        // if (consultation.SpecialistId == null)
-        // {
-        //     Console.WriteLine("No specialist in consultation!");
-        //     throw new InvalidOperationException("consultation_not_ready");
-        // }
+        if (consultation.SpecialistId == null)
+        {
+            Console.WriteLine("No specialist in consultation!");
+            throw new InvalidOperationException("consultation_not_ready");
+        }
 
         if (consultation.StartedAt != null)
         {
@@ -162,7 +170,19 @@ public class ConsultationsService : IConsultationsService
 
         consultation.StartedAt = DateTime.UtcNow;
         // TODO: Set specialist back to busy
-        
+
         await repository.UpdateAsync(consultationId, consultation);
+    }
+
+    public Task EnqueueSpecialist(string deviceToken, int specialityId)
+    {
+        _specialistsQueue.Add(deviceToken, specialityId);
+        return Task.CompletedTask;
+    }
+
+    public Task DequeueSpecialist(string deviceToken)
+    {
+        _specialistsQueue.Remove(deviceToken);
+        return Task.CompletedTask;
     }
 }

@@ -89,11 +89,11 @@ public class AuthController : ApiControllerBase
     [HttpPost("logout")]
     [Authorize(Roles = AuthRole.AnyRole)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<NoContentResult> Logout()
+    public async Task<NoContentResult> Logout([FromBody] DeviceTokenDTO dto)
     {
         var user = await GetCurrentUser();
 
-        await _authService.Logout(user);
+        await _authService.Logout(user, dto.DeviceToken);
         
         return NoContent();
     }

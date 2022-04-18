@@ -6,4 +6,7 @@ public class SpecialistStatusDto
 {
     [JsonProperty("specialistStatus")]
     public SpecialistStatusId StatusId { get; set; }
+    
+    [JsonProperty("deviceToken")]
+    public string DeviceToken { get; set; }
 }
