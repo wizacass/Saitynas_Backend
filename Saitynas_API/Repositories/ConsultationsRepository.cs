@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
@@ -6,7 +7,10 @@ using Saitynas_API.Models.Entities.Consultation;
 
 namespace Saitynas_API.Repositories;
 
-public interface IConsultationsRepository : IRepository<Consultation> { }
+public interface IConsultationsRepository : IRepository<Consultation>
+{
+    Task<Consultation> FindRequestedBySpecialistDeviceToken(string specialistDeviceToken);
+}
 
 public class ConsultationsRepository: IConsultationsRepository
 {
@@ -17,9 +21,11 @@ public class ConsultationsRepository: IConsultationsRepository
         _context = context;
     }
     
-    public Task<IEnumerable<Consultation>> GetAllAsync()
+    public async Task<IEnumerable<Consultation>> GetAllAsync()
     {
-        throw new System.NotImplementedException();
+        var consultations = await _context.Consultations.ToListAsync();
+
+        return consultations;
     }
 
     public async Task<Consultation> GetAsync(int id)
@@ -45,5 +51,18 @@ public class ConsultationsRepository: IConsultationsRepository
     public Task DeleteAsync(int id)
     {
         throw new System.NotImplementedException();
+    }
+
+    public async Task<Consultation> FindRequestedBySpecialistDeviceToken(string specialistDeviceToken)
+    {
+        var consultation = await _context.Consultations.Where(c =>
+            c.SpecialistDeviceToken == specialistDeviceToken &&
+            c.IsCancelled == false &&
+            c.StartedAt == null &&
+            c.FinishedAt == null &&
+            c.SpecialistId == null
+        ).FirstOrDefaultAsync();
+
+        return consultation;
     }
 }
