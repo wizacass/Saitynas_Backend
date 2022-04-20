@@ -18,7 +18,7 @@ public class AccessTokenTest
     public void TestGenerateDynamicKey()
     {
         const string expected = "006970CA35de60c44645bbae8a215061b33IACV0fZUBw+72cVoL9eyGGh3Q6Poi8bgjwVLnyKSJyOXR7dIfRBXoFHlEAABAAAAR/QQAAEAAQCvKDdW";
-        var token = new AccessToken(AppId, AppCertificate, ChannelName, Uid, Ts, Salt)
+        var token = new AgoraAccessToken(AppId, AppCertificate, ChannelName, Uid, Ts, Salt)
         {
             Message =
             {

@@ -6,7 +6,7 @@ using Saitynas_API.Services.AgoraIO.Utils;
 
 namespace Saitynas_API.Services.AgoraIO.Media;
 
-public class AccessToken
+public class AgoraAccessToken
 {
     private readonly string _appCertificate;
     private readonly string _appId;
@@ -20,7 +20,7 @@ public class AccessToken
     private readonly string _uid;
     public readonly PrivilegeMessage Message = new();
 
-    public AccessToken(string appId, string appCertificate, string channelName, string uid)
+    public AgoraAccessToken(string appId, string appCertificate, string channelName, string uid)
     {
         _appId = appId;
         _appCertificate = appCertificate;
@@ -28,7 +28,7 @@ public class AccessToken
         _uid = uid;
     }
 
-    public AccessToken(string appId, string appCertificate, string channelName, string uid, uint ts, uint salt)
+    public AgoraAccessToken(string appId, string appCertificate, string channelName, string uid, uint ts, uint salt)
     {
         _appId = appId;
         _appCertificate = appCertificate;

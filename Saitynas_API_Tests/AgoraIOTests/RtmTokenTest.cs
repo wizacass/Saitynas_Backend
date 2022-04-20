@@ -17,7 +17,7 @@ public class RtmTokenTest
     public void TestRtmToken()
     {
         const string expected = "006970CA35de60c44645bbae8a215061b33IAB/luJx7c3zCxag46cPAwofHXnoslvPjP1rvRJIgxemHFegUeUAAAAAEAABAAAAR/QQAAEA6AMAAAAA";
-        var token = new AccessToken(AppId, AppCertificate, Uid, "", Ts, Salt)
+        var token = new AgoraAccessToken(AppId, AppCertificate, Uid, "", Ts, Salt)
         {
             Message =
             {
