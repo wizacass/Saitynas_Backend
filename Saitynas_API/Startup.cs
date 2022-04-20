@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
 using Saitynas_API.Middleware;
 using Saitynas_API.Models;
+using Saitynas_API.Models.Agora;
 using Saitynas_API.Models.Authentication;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.Common.Interfaces;
@@ -57,9 +58,9 @@ public class Startup
         services.AddHttpClient<ApnSender>();
 
         CreateApnSettings(services);
+        CreateAgoraSettings(services);
 
         RegisterCustomServices(services);
-
         RegisterRepositories(services);
     }
 
@@ -128,6 +129,17 @@ public class Startup
         };
 
         services.AddSingleton(apnSettings);
+    }
+
+    private void CreateAgoraSettings(IServiceCollection services)
+    {
+        var agoraSettings = new AgoraSettings
+        {
+            AppId = GetEnvVar("AgoraAppId"),
+            AppCertificate = GetEnvVar("AgoraAppCertificate")
+        };
+
+        services.AddSingleton(agoraSettings);
     }
 
     private static void RegisterCustomServices(IServiceCollection services)

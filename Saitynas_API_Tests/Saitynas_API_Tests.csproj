@@ -33,4 +33,8 @@
         <ProjectReference Include="..\Saitynas_API\Saitynas_API.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="AgoraIOTests" />
+    </ItemGroup>
+
 </Project>
