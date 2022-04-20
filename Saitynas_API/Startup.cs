@@ -57,9 +57,9 @@ public class Startup
         services.AddHttpClient<ApnSender>();
 
         CreateApnSettings(services);
+        CreateAgoraSettings(services);
 
         RegisterCustomServices(services);
-
         RegisterRepositories(services);
     }
 
@@ -128,6 +128,17 @@ public class Startup
         };
 
         services.AddSingleton(apnSettings);
+    }
+
+    private void CreateAgoraSettings(IServiceCollection services)
+    {
+        var agoraSettings = new AgoraSettings
+        {
+            AppId = GetEnvVar("AgoraAppId"),
+            AppCertificate = GetEnvVar("AgoraAppCertificate")
+        };
+
+        services.AddSingleton(agoraSettings);
     }
 
     private static void RegisterCustomServices(IServiceCollection services)
