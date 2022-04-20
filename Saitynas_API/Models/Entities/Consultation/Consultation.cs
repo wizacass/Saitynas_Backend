@@ -1,14 +1,19 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace Saitynas_API.Models.Entities.Consultation;
 
+[Index(nameof(PublicId), IsUnique = true)]
 public class Consultation
 {
     [Key]
     [Required]
     public int Id { get; init; }
+    
+    [Required]
+    public Guid PublicId { get; set; }
 
     [Required]
     [StringLength(255)]
@@ -43,6 +48,7 @@ public class Consultation
 
     public Consultation()
     {
+        PublicId = new Guid();
         RequestedAt = DateTime.UtcNow;
     }
 }
