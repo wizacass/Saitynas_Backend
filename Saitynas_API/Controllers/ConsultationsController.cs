@@ -47,8 +47,8 @@ public class ConsultationsController : ApiControllerBase
         }
 
         var consultation = await _consultationsService.RequestConsultation(
-                (int) user.PatientId, dto.DeviceToken, dto.SpecialityId
-                );
+            (int) user.PatientId, dto.DeviceToken, dto.SpecialityId
+        );
         var responseDto = new IdDTO {Id = consultation.PublicId};
 
         return ApiCreated(new GetObjectDTO<IdDTO>(responseDto));
@@ -92,12 +92,14 @@ public class ConsultationsController : ApiControllerBase
     public async Task<IActionResult> AcceptConsultation(DeviceTokenDTO dto)
     {
         var user = await GetCurrentUser();
-        
+
         var consultation = await _consultationsRepository.FindRequestedBySpecialistDeviceToken(dto.DeviceToken);
 
         if (consultation == null) return ApiNotFound();
 
-        await _consultationsService.AcceptConsultation(consultation.PublicId, dto.DeviceToken, (int) user.SpecialistId!);
+        await _consultationsService.AcceptConsultation(
+            consultation.PublicId, dto.DeviceToken, (int) user.SpecialistId!
+        );
 
         var responseDto = new IdDTO {Id = consultation.PublicId};
 
