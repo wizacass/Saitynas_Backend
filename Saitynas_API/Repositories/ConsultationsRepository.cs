@@ -53,7 +53,7 @@ public class ConsultationsRepository: IConsultationsRepository
 
     public Task DeleteAsync(int id)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public async Task<Consultation> FindRequestedBySpecialistDeviceToken(string specialistDeviceToken)
