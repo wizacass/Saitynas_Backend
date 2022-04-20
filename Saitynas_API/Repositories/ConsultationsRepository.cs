@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace Saitynas_API.Repositories;
 public interface IConsultationsRepository : IRepository<Consultation>
 {
     Task<Consultation> FindRequestedBySpecialistDeviceToken(string specialistDeviceToken);
+
+    Task<Consultation> FindByPublicID(Guid publicId);
 }
 
 public class ConsultationsRepository: IConsultationsRepository
@@ -50,7 +53,7 @@ public class ConsultationsRepository: IConsultationsRepository
 
     public Task DeleteAsync(int id)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public async Task<Consultation> FindRequestedBySpecialistDeviceToken(string specialistDeviceToken)
@@ -62,6 +65,13 @@ public class ConsultationsRepository: IConsultationsRepository
             c.FinishedAt == null &&
             c.SpecialistId == null
         ).FirstOrDefaultAsync();
+
+        return consultation;
+    }
+
+    public async Task<Consultation> FindByPublicID(Guid publicId)
+    {
+        var consultation = await _context.Consultations.FirstOrDefaultAsync(c => c.PublicId == publicId);
 
         return consultation;
     }

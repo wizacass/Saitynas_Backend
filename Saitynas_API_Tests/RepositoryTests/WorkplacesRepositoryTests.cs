@@ -7,20 +7,20 @@ using Saitynas_API.Models.Entities.Workplace;
 using Saitynas_API.Repositories;
 using static NUnit.Framework.Assert;
 
-namespace Saitynas_API_Tests;
+namespace Saitynas_API_Tests.RepositoryTests;
 
 [TestFixture]
 public class WorkplacesRepositoryTests
 {
+    private ApiContext _context;
+    private IWorkplacesRepository _repository;
+
     [SetUp]
     public void SetUp()
     {
         _context = new ApiContextMock();
         _repository = new WorkplacesRepository(_context);
     }
-
-    private ApiContext _context;
-    private IWorkplacesRepository _repository;
 
     [Test]
     public async Task TestGetAll()

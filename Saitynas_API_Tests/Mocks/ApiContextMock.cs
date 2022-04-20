@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
+using Saitynas_API.Models.Entities.Patient;
 using Saitynas_API.Models.Entities.Workplace;
 
 namespace Saitynas_API_Tests.Mocks;
@@ -20,5 +21,6 @@ public class ApiContextMock : ApiContext
     private void SeedDb()
     {
         new WorkplaceSeed(this).EnsureCreated();
+        new PatientSeed(this).EnsureCreated();
     }
 }

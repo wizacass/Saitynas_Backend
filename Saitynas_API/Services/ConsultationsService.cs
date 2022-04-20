@@ -14,10 +14,10 @@ namespace Saitynas_API.Services;
 public interface IConsultationsService
 {
     public Task<Consultation> RequestConsultation(int patientId, string deviceToken, int? specialityId);
-    public Task CancelConsultation(int consultationId, string deviceToken);
-    public Task EndConsultation(int consultationId, string deviceToken);
-    public Task StartConsultation(int consultationId, string deviceToken);
-    public Task AcceptConsultation(int consultationId, string deviceToken, int specialistId);
+    public Task CancelConsultation(Guid consultationId, string deviceToken);
+    public Task EndConsultation(Guid consultationId, string deviceToken);
+    public Task StartConsultation(Guid consultationId, string deviceToken);
+    public Task AcceptConsultation(Guid consultationId, string deviceToken, int specialistId);
     public Task EnqueueSpecialist(string deviceToken, int specialityId);
     public Task DequeueSpecialist(string deviceToken);
 }
@@ -50,6 +50,7 @@ public class ConsultationsService : IConsultationsService
         var consultation = new Consultation
         {
             PatientId = patientId,
+            PublicId = Guid.NewGuid(),
             PatientDeviceToken = deviceToken,
             RequestedSpecialityId = specialityId
         };
@@ -108,12 +109,12 @@ public class ConsultationsService : IConsultationsService
         );
     }
 
-    public async Task CancelConsultation(int consultationId, string deviceToken)
+    public async Task CancelConsultation(Guid consultationId, string deviceToken)
     {
         using var scope = _scopeFactory.CreateScope();
         var repository = scope.ServiceProvider.GetService<IConsultationsRepository>()!;
 
-        var consultation = await repository.GetAsync(consultationId);
+        var consultation = await repository.FindByPublicID(consultationId);
 
         if (consultation.PatientDeviceToken != deviceToken)
         {
@@ -123,7 +124,7 @@ public class ConsultationsService : IConsultationsService
         consultation.IsCancelled = true;
         consultation.FinishedAt = DateTime.UtcNow;
 
-        await repository.UpdateAsync(consultationId, consultation);
+        await repository.UpdateAsync(consultation.Id, consultation);
 
         DequeuePatient(consultation.PatientDeviceToken, consultation.RequestedSpecialityId);
     }
@@ -139,13 +140,13 @@ public class ConsultationsService : IConsultationsService
         _patientsQueue[key] = queue;
     }
 
-    public async Task EndConsultation(int consultationId, string deviceToken)
+    public async Task EndConsultation(Guid consultationId, string deviceToken)
     {
         using var scope = _scopeFactory.CreateScope();
         var repository = scope.ServiceProvider.GetService<IConsultationsRepository>()!;
         var specialistsRepository = scope.ServiceProvider.GetService<ISpecialistsRepository>()!;
 
-        var consultation = await repository.GetAsync(consultationId);
+        var consultation = await repository.FindByPublicID(consultationId);
 
         if (consultation.PatientDeviceToken != deviceToken)
         {
@@ -163,7 +164,7 @@ public class ConsultationsService : IConsultationsService
         }
 
         consultation.FinishedAt = DateTime.UtcNow;
-        await repository.UpdateAsync(consultationId, consultation);
+        await repository.UpdateAsync(consultation.Id, consultation);
 
         int specialistId = (int) consultation.SpecialistId!;
         var specialist = await specialistsRepository.GetAsync(specialistId);
@@ -171,13 +172,13 @@ public class ConsultationsService : IConsultationsService
         await specialistsRepository.UpdateAsync(specialistId, specialist);
     }
 
-    public async Task StartConsultation(int consultationId, string deviceToken)
+    public async Task StartConsultation(Guid consultationId, string deviceToken)
     {
         using var scope = _scopeFactory.CreateScope();
         var consultationsRepository = scope.ServiceProvider.GetService<IConsultationsRepository>()!;
         var specialistsRepository = scope.ServiceProvider.GetService<ISpecialistsRepository>()!;
 
-        var consultation = await consultationsRepository.GetAsync(consultationId);
+        var consultation = await consultationsRepository.FindByPublicID(consultationId);
 
         if (consultation.PatientDeviceToken != deviceToken)
         {
@@ -196,7 +197,7 @@ public class ConsultationsService : IConsultationsService
         }
         
         consultation.StartedAt = DateTime.UtcNow;
-        await consultationsRepository.UpdateAsync(consultationId, consultation);
+        await consultationsRepository.UpdateAsync(consultation.Id, consultation);
 
         int specialistId = (int) consultation.SpecialistId!;
         var specialist = await specialistsRepository.GetAsync(specialistId);
@@ -204,12 +205,12 @@ public class ConsultationsService : IConsultationsService
         await specialistsRepository.UpdateAsync(specialistId, specialist);
     }
 
-    public async Task AcceptConsultation(int consultationId, string deviceToken, int specialistId)
+    public async Task AcceptConsultation(Guid consultationId, string deviceToken, int specialistId)
     {
         using var scope = _scopeFactory.CreateScope();
         var consultationsRepository = scope.ServiceProvider.GetService<IConsultationsRepository>()!;
 
-        var consultation = await consultationsRepository.GetAsync(consultationId);
+        var consultation = await consultationsRepository.FindByPublicID(consultationId);
 
         if (consultation.SpecialistDeviceToken != deviceToken)
         {
@@ -217,7 +218,7 @@ public class ConsultationsService : IConsultationsService
         }
 
         consultation.SpecialistId = specialistId;
-        await consultationsRepository.UpdateAsync(consultationId, consultation);
+        await consultationsRepository.UpdateAsync(consultation.Id, consultation);
 
         DequeuePatient(consultation.PatientDeviceToken, consultation.RequestedSpecialityId);
         await _apnService.PublishNotification(consultation.PatientDeviceToken, ApnMessage.PatientMessage).ConfigureAwait(false);
