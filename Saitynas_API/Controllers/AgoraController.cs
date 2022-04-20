@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Saitynas_API.Models;
 using Saitynas_API.Models.Agora;
 using Saitynas_API.Models.Agora.DTO;
 using Saitynas_API.Models.DTO;
@@ -43,12 +42,14 @@ public class AgoraController : ApiControllerBase
 
     private string BuildAgoraToken(string channel)
     {
+        const int expiredTs = 0;
+        
         var tokenBuilder = new AgoraAccessToken(_settings.AppId, _settings.AppCertificate, channel, "0");
-        tokenBuilder.AddPrivilege(Privileges.KJoinChannel, 0);
-        tokenBuilder.AddPrivilege(Privileges.KPublishAudioStream, 0);
-        tokenBuilder.AddPrivilege(Privileges.KPublishVideoStream, 0);
-        tokenBuilder.AddPrivilege(Privileges.KPublishDataStream,0);
-        tokenBuilder.AddPrivilege(Privileges.KRtmLogin, 0);
+        tokenBuilder.AddPrivilege(Privileges.KJoinChannel, expiredTs);
+        tokenBuilder.AddPrivilege(Privileges.KPublishAudioStream, expiredTs);
+        tokenBuilder.AddPrivilege(Privileges.KPublishVideoStream, expiredTs);
+        tokenBuilder.AddPrivilege(Privileges.KPublishDataStream, expiredTs);
+        tokenBuilder.AddPrivilege(Privileges.KRtmLogin, expiredTs);
 
         return tokenBuilder.Build();
     }
