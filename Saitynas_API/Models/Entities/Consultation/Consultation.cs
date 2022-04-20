@@ -48,7 +48,7 @@ public class Consultation
 
     public Consultation()
     {
-        PublicId = new Guid();
+        PublicId = Guid.NewGuid();
         RequestedAt = DateTime.UtcNow;
     }
 }

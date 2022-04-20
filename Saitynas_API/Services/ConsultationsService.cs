@@ -50,6 +50,7 @@ public class ConsultationsService : IConsultationsService
         var consultation = new Consultation
         {
             PatientId = patientId,
+            PublicId = Guid.NewGuid(),
             PatientDeviceToken = deviceToken,
             RequestedSpecialityId = specialityId
         };
