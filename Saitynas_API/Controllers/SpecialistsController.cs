@@ -114,7 +114,7 @@ public class SpecialistsController : ApiControllerBase
         var user = await GetCurrentUser();
 
         if (user.HasProfile) return ApiBadRequest(ApiErrorSlug.EntityExists, ModelName);
-        
+
         _validator.ValidateCreateSpecialistDTO(dto);
         var specialist = new Specialist(dto, user);
         await _specialistsRepository.InsertAsync(specialist);
@@ -144,5 +144,16 @@ public class SpecialistsController : ApiControllerBase
         await _specialistsRepository.DeleteAsync(id);
 
         return NoContent();
+    }
+
+    [HttpGet("active")]
+    [Authorize(Roles = AuthRole.Patient)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<GetObjectDTO<CountDTO>>> GetActiveSpecialistsCount()
+    {
+        int count = await _specialistsRepository.GetOnlineSpecialistsCount();
+
+        var dto = new CountDTO {Count = count};
+        return Ok(new GetObjectDTO<CountDTO>(dto));
     }
 }
