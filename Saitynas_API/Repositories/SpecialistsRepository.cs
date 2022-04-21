@@ -11,6 +11,7 @@ public interface ISpecialistsRepository : IRepository<Specialist>
 {
     public Task<IEnumerable<Specialist>> GetByWorkplace(int workplaceId);
     public Task<Specialist> GetByUserId(int userId);
+    public Task<int> GetOnlineSpecialistsCount();
 }
 
 public class SpecialistsRepository : ISpecialistsRepository
@@ -83,5 +84,12 @@ public class SpecialistsRepository : ISpecialistsRepository
             .FirstOrDefaultAsync(s => s.UserId == userId);
 
         return await specialistTask;
+    }
+
+    public Task<int> GetOnlineSpecialistsCount()
+    {
+        int count = _context.Specialists.Count(s => s.SpecialistStatusId == SpecialistStatusId.Available);
+
+        return Task.FromResult(count);
     }
 }
