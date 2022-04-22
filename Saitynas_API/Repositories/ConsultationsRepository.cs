@@ -13,6 +13,8 @@ public interface IConsultationsRepository : IRepository<Consultation>
     Task<Consultation> FindRequestedBySpecialistDeviceToken(string specialistDeviceToken);
 
     Task<Consultation> FindByPublicID(Guid publicId);
+
+    Task<IEnumerable<Consultation>> GetFinishedBySpecialistId(int? specialistId);
 }
 
 public class ConsultationsRepository: IConsultationsRepository
@@ -74,5 +76,15 @@ public class ConsultationsRepository: IConsultationsRepository
         var consultation = await _context.Consultations.FirstOrDefaultAsync(c => c.PublicId == publicId);
 
         return consultation;
+    }
+
+    public async Task<IEnumerable<Consultation>> GetFinishedBySpecialistId(int? specialistId)
+    {
+        var consultations = await _context.Consultations.Where(c =>
+            c.SpecialistId == specialistId &&
+            c.FinishedAt != null
+        ).Include(c=> c.Patient).ToListAsync();
+
+        return consultations;
     }
 }

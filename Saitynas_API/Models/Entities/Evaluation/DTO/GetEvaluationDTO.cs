@@ -23,6 +23,6 @@ public class GetEvaluationDTO : EvaluationDTO
         Id = e.Id;
         Specialist = $"{e.Specialist?.FirstName} {e.Specialist?.LastName}";
         Author = e.User?.Email;
-        CreatedAt = e.CreatedAt.ToString("O");
+        CreatedAt = e.CreatedAt.ToString("u");
     }
 }

@@ -13,7 +13,8 @@ namespace Saitynas_API_Tests.RepositoryTests;
 [TestFixture]
 public class ConsultationsRepositoryTests
 {
-    private ApiContext _context;
+    private readonly ApiContext _context;
+
     private IConsultationsRepository _repository;
 
     private const string TestPatientDeviceToken = "Patient123";
@@ -39,24 +40,31 @@ public class ConsultationsRepositoryTests
             PatientDeviceToken = TestPatientDeviceToken,
             RequestedAt = new DateTime(2022, 04, 20, 18, 00, 00),
             SpecialistDeviceToken = TestSpecialistDeviceToken
+        },
+        new()
+        {
+            Id = 3,
+            PublicId = TestGuid2,
+            SpecialistId = 1,
+            PatientDeviceToken = TestPatientDeviceToken,
+            PatientId = 1,
+            RequestedAt = new DateTime(2022, 04, 22, 18, 00, 00),
+            StartedAt = new DateTime(2022, 04, 22, 18, 10, 00),
+            FinishedAt = new DateTime(2022, 04, 22, 18, 30, 00),
+            SpecialistDeviceToken = TestSpecialistDeviceToken
         }
     };
+
+    public ConsultationsRepositoryTests()
+    {
+        _context = new ApiContextMock();
+        SeedConsultations();
+    }
 
     [SetUp]
     public void SetUp()
     {
-        _context = new ApiContextMock();
-        SeedConsultations();
-
         _repository = new ConsultationsRepository(_context);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _context.Database.EnsureDeleted();
-        _context.Dispose();
-        _context = null;
     }
 
     private void SeedConsultations()
@@ -102,28 +110,28 @@ public class ConsultationsRepositoryTests
 
         AreEqual(_testConsultations.Length + 1, consultations.Count());
     }
-    
+
     [Test]
     public async Task TestUpdate()
     {
         const int targetId = 2;
-        
+
         var consultation = await _repository.GetAsync(targetId);
         IsFalse(consultation.IsCancelled);
-        
+
         consultation.IsCancelled = true;
 
         await _repository.UpdateAsync(targetId, consultation);
         consultation = await _repository.GetAsync(targetId);
-        
+
         IsTrue(consultation.IsCancelled);
     }
-    
+
     [Test]
     public async Task TestFindByPublicID()
     {
         var consultation = await _repository.FindByPublicID(TestGuid1);
-       
+
         AreEqual(TestGuid1, consultation.PublicId);
     }
 
@@ -131,7 +139,17 @@ public class ConsultationsRepositoryTests
     public async Task TestFindRequestedBySpecialistDeviceToken()
     {
         var consultation = await _repository.FindRequestedBySpecialistDeviceToken(TestSpecialistDeviceToken);
-       
+
         AreEqual(TestSpecialistDeviceToken, consultation.SpecialistDeviceToken);
+    }
+
+    [Test]
+    public async Task TestGetFinishedBySpecialistId()
+    {
+        const int specialistId = 1;
+
+        var consultations = await _repository.GetFinishedBySpecialistId(specialistId);
+
+        AreEqual(1, consultations.Count());
     }
 }
