@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.Common;
 using Saitynas_API.Models.DTO;
+using Saitynas_API.Models.Entities.Consultation.DTO;
 using Saitynas_API.Models.Entities.Evaluation;
 using Saitynas_API.Models.Entities.Evaluation.DTO;
 using Saitynas_API.Models.Entities.Role;
@@ -20,7 +20,7 @@ using Saitynas_API.Services;
 
 namespace Saitynas_API.Controllers;
 
-[Route($"{RoutePrefix}/[Controller]")]
+[Route($"{RoutePrefix}/[Controller]/me")]
 [ApiController]
 [Produces(ApiContentType)]
 public class UsersController : ApiControllerBase
@@ -29,40 +29,27 @@ public class UsersController : ApiControllerBase
     private readonly ISpecialistsRepository _specialistsRepository;
     private readonly IPatientsRepository _patientsRepository;
     private readonly IConsultationsService _consultationsService;
+    private readonly IConsultationsRepository _consultationsRepository;
 
-    private readonly IApiUserStore _userStore;
-    protected override string ModelName => "user";
+    protected override string ModelName => nameof(User);
 
     public UsersController(
-        IApiUserStore userStore,
         UserManager<User> userManager,
         IEvaluationsRepository evaluationsRepository,
         ISpecialistsRepository specialistsRepository,
         IPatientsRepository patientsRepository,
-        IConsultationsService consultationsService
+        IConsultationsService consultationsService,
+        IConsultationsRepository consultationsRepository
     ) : base(userManager)
     {
-        _userStore = userStore;
         _evaluationsRepository = evaluationsRepository;
         _specialistsRepository = specialistsRepository;
         _patientsRepository = patientsRepository;
         _consultationsService = consultationsService;
+        _consultationsRepository = consultationsRepository;
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin")]
-    [Obsolete]
-    public async Task<ActionResult<GetListDTO<UserDTO>>> GetUsers()
-    {
-        var users = (await _userStore.GetAllUsers())
-            .Select(u => new UserDTO(u));
-
-        var dto = new GetListDTO<UserDTO>(users);
-
-        return Ok(dto);
-    }
-
-    [HttpGet("me")]
     [Authorize(Roles = AuthRole.AnyRole)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
@@ -76,7 +63,7 @@ public class UsersController : ApiControllerBase
         return Ok(new GetObjectDTO<UserDTO>(dto));
     }
 
-    [HttpGet("me/profile")]
+    [HttpGet("profile")]
     [Authorize(Roles = AuthRole.AnyRole)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status400BadRequest)]
@@ -106,7 +93,7 @@ public class UsersController : ApiControllerBase
         };
     }
 
-    [HttpGet("me/evaluations")]
+    [HttpGet("evaluations")]
     [Authorize(Roles = AuthRole.AnyRole)]
     public async Task<ActionResult<GetListDTO<GetUserEvaluationDTO>>> GetUserEvaluations()
     {
@@ -131,7 +118,7 @@ public class UsersController : ApiControllerBase
         };
     }
 
-    [HttpGet("me/status")]
+    [HttpGet("status")]
     [Authorize(Roles = AuthRole.Specialist)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
@@ -152,7 +139,7 @@ public class UsersController : ApiControllerBase
         return Ok(dto);
     }
 
-    [HttpPut("me/status")]
+    [HttpPut("status")]
     [Authorize(Roles = AuthRole.Specialist)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<NoContentResult> UpdateSpecialistStatus([FromBody] SpecialistStatusDto dto)
@@ -173,7 +160,25 @@ public class UsersController : ApiControllerBase
         {
             await _consultationsService.DequeueSpecialist(dto.DeviceToken);
         }
-        
+
         return NoContent();
+    }
+
+    [HttpGet("consultations")]
+    [Authorize(Roles = AuthRole.Specialist)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<GetListDTO<GetConsultationDTO>>> GetSpecialistConsultations()
+    {
+        int? specialistId = (await GetCurrentUser()).SpecialistId;
+
+        if (specialistId == null) return ApiNotFound(ApiErrorSlug.ResourceNotFound, nameof(Specialist));
+
+        var consultations = (await _consultationsRepository.GetFinishedBySpecialistId(specialistId))
+            .Select(c => new GetConsultationDTO(c));
+
+        var dto = new GetListDTO<GetConsultationDTO>(consultations);
+
+        return Ok(dto);
     }
 }
