@@ -1,6 +1,8 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Saitynas_API.Models.DTO;
@@ -18,17 +20,20 @@ namespace Saitynas_API.Controllers;
 [Produces(ApiContentType)]
 public class EvaluationsController : ApiControllerBase
 {
-    private readonly IEvaluationsRepository _repository;
+    private readonly IEvaluationsRepository _evaluationsRepository;
+    private readonly IConsultationsRepository _consultationsRepository;
     private readonly IEvaluationDTOValidator _validator;
     protected override string ModelName => "evaluation";
 
     public EvaluationsController(
-        IEvaluationsRepository repository,
+        IEvaluationsRepository evaluationsRepository,
+        IConsultationsRepository consultationsRepository,
         IEvaluationDTOValidator validator,
         UserManager<User> userManager
     ) : base(userManager)
     {
-        _repository = repository;
+        _evaluationsRepository = evaluationsRepository;
+        _consultationsRepository = consultationsRepository;
         _validator = validator;
     }
 
@@ -36,7 +41,7 @@ public class EvaluationsController : ApiControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<GetListDTO<GetEvaluationDTO>>> GetEvaluations()
     {
-        var evaluations = (await _repository.GetAllAsync())
+        var evaluations = (await _evaluationsRepository.GetAllAsync())
             .Select(e => new GetEvaluationDTO(e));
 
         return Ok(new GetListDTO<GetEvaluationDTO>(evaluations));
@@ -46,7 +51,7 @@ public class EvaluationsController : ApiControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<GetObjectDTO<GetEvaluationDTO>>> GetEvaluation(int id)
     {
-        var evaluation = await _repository.GetAsync(id);
+        var evaluation = await _evaluationsRepository.GetAsync(id);
 
         if (evaluation == null) return ApiNotFound();
 
@@ -55,8 +60,11 @@ public class EvaluationsController : ApiControllerBase
         return Ok(dto);
     }
 
-    [HttpPost]
-    [Authorize(Roles = "Patient")]
+    [HttpPost("")]
+    [Authorize(Roles = AuthRole.Patient)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
     public async Task<NoContentResult> CreateEvaluation([FromBody] EvaluationDTO dto)
     {
         _validator.ValidateCreateEvaluationDTO(dto);
@@ -64,38 +72,45 @@ public class EvaluationsController : ApiControllerBase
         var user = await GetCurrentUser();
         var evaluation = new Evaluation(user, dto);
 
-        await _repository.InsertAsync(evaluation);
+        if (dto.ConsultationId != null)
+        {
+            var consultation = await _consultationsRepository.FindByPublicID(new Guid(dto.ConsultationId));
+            evaluation.ConsultationId = consultation.Id;
+            evaluation.SpecialistId = consultation.SpecialistId;
+        }
+        
+        await _evaluationsRepository.InsertAsync(evaluation);
 
         return NoContent();
     }
 
     [HttpPut("{id:int}")]
-    [Authorize(Roles = "Patient, Admin")]
+    [Authorize(Roles = AuthRole.Patient)]
     public async Task<IActionResult> EditEvaluation(int id, [FromBody] EditEvaluationDTO dto)
     {
         var user = await GetCurrentUser();
-        var evaluation = await _repository.GetAsync(id);
+        var evaluation = await _evaluationsRepository.GetAsync(id);
 
         if (!CanDelete(user, evaluation)) return NotFound();
 
         _validator.ValidateEditEvaluationDTO(dto);
         var data = new Evaluation(dto);
 
-        await _repository.UpdateAsync(id, data);
+        await _evaluationsRepository.UpdateAsync(id, data);
 
         return NoContent();
     }
 
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Patient,Admin")]
+    [Authorize(Roles = AuthRole.Patient)]
     public async Task<IActionResult> DeleteEvaluation(int id)
     {
         var user = await GetCurrentUser();
-        var evaluation = await _repository.GetAsync(id);
+        var evaluation = await _evaluationsRepository.GetAsync(id);
 
         if (!CanDelete(user, evaluation)) return NotFound();
 
-        await _repository.DeleteAsync(id);
+        await _evaluationsRepository.DeleteAsync(id);
 
         return NoContent();
     }

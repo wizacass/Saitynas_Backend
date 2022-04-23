@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 
 namespace Saitynas_API.Models.Entities.Evaluation.DTO;
@@ -11,7 +12,7 @@ public class EvaluationDTO
     public string Comment { get; set; }
 
     [JsonProperty("specialistId")]
-    public int SpecialistId { get; set; }
+    public int? SpecialistId { get; set; }
     
     [JsonProperty("consultationId")]
     public string ConsultationId { get; set; }

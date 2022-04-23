@@ -15,7 +15,7 @@ public class EvaluationDTOValidatorTests
     [SetUp]
     public void SetUp()
     {
-        _validator = new EvaluationDTOValidator(EntityValidatorMock);
+        _validator = new EvaluationDTOValidator();
     }
 
     private IEvaluationDTOValidator _validator;
@@ -68,15 +68,6 @@ public class EvaluationDTOValidatorTests
     {
         var dto = ValidCreateDTO;
         dto.Value = value;
-
-        Throws<DTOValidationException>(() => _validator.ValidateCreateEvaluationDTO(dto));
-    }
-
-    [Test]
-    public void TestInvalidCreateSpecialistId()
-    {
-        var dto = ValidCreateDTO;
-        dto.SpecialistId = 0;
 
         Throws<DTOValidationException>(() => _validator.ValidateCreateEvaluationDTO(dto));
     }

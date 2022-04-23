@@ -13,18 +13,10 @@ public interface IEvaluationDTOValidator
 
 public class EvaluationDTOValidator : DTOValidator, IEvaluationDTOValidator
 {
-    private readonly IEntityValidator _entityValidator;
-
-    public EvaluationDTOValidator(IEntityValidator validator)
-    {
-        _entityValidator = validator;
-    }
-
     public void ValidateCreateEvaluationDTO(EvaluationDTO dto)
     {
         ValidateEvaluationValue(dto.Value, "value");
         ValidateStringLength(dto.Comment, "comment");
-        ValidateEntityId(_entityValidator.IsSpecialistIdValid(dto.SpecialistId), "specialistId");
     }
 
     public void ValidateEditEvaluationDTO(EditEvaluationDTO dto)

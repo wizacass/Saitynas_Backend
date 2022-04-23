@@ -18,10 +18,8 @@ public class Evaluation
 
     public DateTime CreatedAt { get; set; }
 
-    [Required]
-    public int SpecialistId { get; set; }
+    public int? SpecialistId { get; set; }
 
-    [Required]
     public Specialist.Specialist Specialist { get; set; }
 
     [Required]
