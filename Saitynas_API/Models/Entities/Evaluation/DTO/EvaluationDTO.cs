@@ -12,6 +12,9 @@ public class EvaluationDTO
 
     [JsonProperty("specialistId")]
     public int SpecialistId { get; set; }
+    
+    [JsonProperty("consultationId")]
+    public string ConsultationId { get; set; }
 
     public EvaluationDTO() { }
 
