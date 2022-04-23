@@ -95,16 +95,16 @@ public class UsersController : ApiControllerBase
 
     [HttpGet("evaluations")]
     [Authorize(Roles = AuthRole.AnyRole)]
-    public async Task<ActionResult<GetListDTO<GetUserEvaluationDTO>>> GetUserEvaluations()
+    public async Task<ActionResult<GetListDTO<GetEvaluationDTO>>> GetUserEvaluations()
     {
         var user = await GetCurrentUser();
 
         if (user == null) return ApiNotFound(ApiErrorSlug.ResourceNotFound, ModelName);
 
         var evaluations = (await RetrieveEvaluations(user))
-            .Select(e => new GetUserEvaluationDTO(e));
+            .Select(e => new GetEvaluationDTO(e));
 
-        var dto = new GetListDTO<GetUserEvaluationDTO>(evaluations);
+        var dto = new GetListDTO<GetEvaluationDTO>(evaluations);
         return Ok(dto);
     }
 
@@ -113,7 +113,7 @@ public class UsersController : ApiControllerBase
         return u.RoleId switch
         {
             RoleId.Patient => await _evaluationsRepository.GetByUserId(u.Id),
-            RoleId.Specialist => await _evaluationsRepository.GetBySpecialistId(u.Id),
+            RoleId.Specialist => await _evaluationsRepository.GetBySpecialistId(u.SpecialistId ?? 0),
             _ => null
         };
     }

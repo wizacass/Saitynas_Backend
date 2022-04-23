@@ -18,5 +18,10 @@ public class ConsultationConfiguration: IEntityTypeConfiguration<Consultation>
         builder
             .HasOne(c => c.RequestedSpeciality)
             .WithMany(s => s.Consultations);
+
+        builder
+            .HasMany(c => c.Evaluations)
+            .WithOne(e => e.Consultation)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

@@ -14,7 +14,7 @@ namespace Saitynas_API.Migrations
                 table: "Consultations",
                 type: "char(36)",
                 nullable: false,
-                defaultValue: new Guid(),
+                defaultValue: Guid.NewGuid(),
                 collation: "ascii_general_ci");
 
             migrationBuilder.CreateIndex(

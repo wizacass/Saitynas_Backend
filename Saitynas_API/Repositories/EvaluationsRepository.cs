@@ -68,6 +68,7 @@ public class EvaluationsRepository : IEvaluationsRepository
             .Where(e => e.SpecialistId == id)
             .Include(e => e.Specialist)
             .Include(e => e.User)
+            .Include(e => e.Consultation)
             .ToListAsync();
 
         return evaluations;
@@ -79,6 +80,7 @@ public class EvaluationsRepository : IEvaluationsRepository
             .Where(e => e.UserId == id)
             .Include(e => e.Specialist)
             .Include(e => e.User)
+            .Include(e => e.Consultation)
             .ToListAsync();
 
         return evaluations;

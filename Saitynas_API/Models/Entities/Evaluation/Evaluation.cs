@@ -29,6 +29,10 @@ public class Evaluation
 
     [Required]
     public User.User User { get; set; }
+    
+    public int? ConsultationId { get; set; }
+
+    public Consultation.Consultation Consultation { get; set; }
 
     public Evaluation()
     {
