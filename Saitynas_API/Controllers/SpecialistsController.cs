@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +11,6 @@ using Saitynas_API.Models.Entities.Role;
 using Saitynas_API.Models.Entities.Specialist;
 using Saitynas_API.Models.Entities.Specialist.DTO;
 using Saitynas_API.Models.Entities.User;
-using Saitynas_API.Models.Entities.Visit.DTO;
 using Saitynas_API.Repositories;
 using Saitynas_API.Services.Validators;
 
@@ -76,35 +73,6 @@ public class SpecialistsController : ApiControllerBase
         return Ok(new GetListDTO<GetEvaluationDTO>(evaluations));
     }
 
-    [Obsolete("This is a mock implementation")]
-    [HttpGet("{id:int}/visits")]
-    public ActionResult<GetListDTO<GetVisitDTO>> GetSpecialistVisits(int id)
-    {
-        var evaluations = new List<GetVisitDTO>
-        {
-            new()
-            {
-                Id = 1,
-                SpecialistName = "Good Doctor",
-                PatientName = "John Doe",
-                VisitStart = DateTime.Now.ToString("O"),
-                VisitEnd = DateTime.Now.AddHours(1).ToString("O")
-            },
-            new()
-            {
-                Id = 2,
-                SpecialistName = "Good Doctor",
-                PatientName = "John Doe",
-                VisitStart = DateTime.Now.ToString("O"),
-                VisitEnd = DateTime.Now.AddHours(1).ToString("O")
-            }
-        };
-
-        var dto = new GetListDTO<GetVisitDTO>(evaluations);
-
-        return Ok(dto);
-    }
-
     [HttpPost]
     [Authorize(Roles = AuthRole.Specialist)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -118,30 +86,6 @@ public class SpecialistsController : ApiControllerBase
         _validator.ValidateCreateSpecialistDTO(dto);
         var specialist = new Specialist(dto, user);
         await _specialistsRepository.InsertAsync(specialist);
-
-        return NoContent();
-    }
-
-    [HttpPut("{id:int}")]
-    [Authorize(Roles = "Admin")]
-    [Obsolete]
-    public async Task<IActionResult> EditSpecialist(
-        int id,
-        [FromBody] EditSpecialistDTO dto
-    )
-    {
-        _validator.ValidateEditSpecialistDTO(dto);
-        await _specialistsRepository.UpdateAsync(id, new Specialist(id, dto));
-
-        return NoContent();
-    }
-
-    [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Admin")]
-    [Obsolete]
-    public async Task<IActionResult> DeleteSpecialist(int id)
-    {
-        await _specialistsRepository.DeleteAsync(id);
 
         return NoContent();
     }
