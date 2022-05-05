@@ -5,6 +5,92 @@
     "version": "v1"
   },
   "paths": {
+    "/api/v1/ActivityStatuses": {
+      "get": {
+        "tags": [
+          "ActivityStatuses"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEnumDTOGetListDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Agora/tokens": {
+      "post": {
+        "tags": [
+          "Agora"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgoraTokenRequestDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgoraTokenRequestDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgoraTokenRequestDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgoraTokenRequestDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgoraTokenResponseDTOGetObjectDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/signup": {
       "post": {
         "tags": [
@@ -47,12 +133,22 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuthenticationDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
                 }
               }
             }
@@ -102,12 +198,22 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuthenticationDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
                 }
               }
             }
@@ -157,12 +263,22 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuthenticationDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
                 }
               }
             }
@@ -212,8 +328,363 @@
           }
         },
         "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceTokenDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceTokenDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceTokenDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceTokenDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/Consultations": {
+      "post": {
+        "tags": [
+          "Consultations"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestConsultationDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestConsultationDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestConsultationDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestConsultationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdDTOGetObjectDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Consultations/cancel": {
+      "post": {
+        "tags": [
+          "Consultations"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Consultations/end": {
+      "post": {
+        "tags": [
+          "Consultations"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Consultations/start": {
+      "post": {
+        "tags": [
+          "Consultations"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Consultations/accept": {
+      "post": {
+        "tags": [
+          "Consultations"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceTokenDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceTokenDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceTokenDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceTokenDTO"
+              }
+            }
+          }
+        },
+        "responses": {
           "200": {
             "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
           }
         }
       }
@@ -289,8 +760,28 @@
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
           }
         }
       }
@@ -421,6 +912,64 @@
         }
       }
     },
+    "/api/v1/Patients": {
+      "post": {
+        "tags": [
+          "Patients"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/Roles": {
       "get": {
         "tags": [
@@ -533,8 +1082,18 @@
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
           }
         }
       }
@@ -575,92 +1134,6 @@
                 }
               }
             }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Specialists"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "X-Api-Request",
-            "in": "header",
-            "description": "Api Request Header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "true"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditSpecialistDTO"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditSpecialistDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditSpecialistDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditSpecialistDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Specialists"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "X-Api-Request",
-            "in": "header",
-            "description": "Api Request Header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "true"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
           }
         }
       }
@@ -705,21 +1178,12 @@
         }
       }
     },
-    "/api/v1/Specialists/{id}/visits": {
+    "/api/v1/Specialists/active": {
       "get": {
         "tags": [
           "Specialists"
         ],
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
           {
             "name": "X-Api-Request",
             "in": "header",
@@ -737,13 +1201,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetVisitDTOGetListDTO"
+                  "$ref": "#/components/schemas/CountDTOGetObjectDTO"
                 }
               }
             }
           }
-        },
-        "deprecated": true
+        }
       }
     },
     "/api/v1/Specialities": {
@@ -769,270 +1232,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetEnumDTOGetListDTO"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      },
-      "post": {
-        "tags": [
-          "Specialities"
-        ],
-        "parameters": [
-          {
-            "name": "X-Api-Request",
-            "in": "header",
-            "description": "Api Request Header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "true"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnumDTO"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnumDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnumDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnumDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetEnumDTOGetObjectDTO"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/v1/Specialities/{id}": {
-      "get": {
-        "tags": [
-          "Specialities"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "X-Api-Request",
-            "in": "header",
-            "description": "Api Request Header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "true"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EnumDTOGetObjectDTO"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      },
-      "put": {
-        "tags": [
-          "Specialities"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "X-Api-Request",
-            "in": "header",
-            "description": "Api Request Header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "true"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnumDTO"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnumDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnumDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnumDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetEnumDTOGetObjectDTO"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      },
-      "delete": {
-        "tags": [
-          "Specialities"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "X-Api-Request",
-            "in": "header",
-            "description": "Api Request Header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "true"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/v1/Specialities/{id}/specialists": {
-      "get": {
-        "tags": [
-          "Specialities"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "X-Api-Request",
-            "in": "header",
-            "description": "Api Request Header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "true"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetSpecialistDTOGetListDTO"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/v1/Users": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "parameters": [
-          {
-            "name": "X-Api-Request",
-            "in": "header",
-            "description": "Api Request Header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "true"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserDTOGetListDTO"
+                  "$ref": "#/components/schemas/GetSpecialityDTOGetListDTO"
                 }
               }
             }
@@ -1067,6 +1267,67 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Users/me/profile": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "X-Api-Request",
+            "in": "header",
+            "description": "Api Request Header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "true"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileDTOGetObjectDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
           }
         }
       }
@@ -1094,7 +1355,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetUserEvaluationDTOGetListDTO"
+                  "$ref": "#/components/schemas/GetEvaluationDTOGetListDTO"
                 }
               }
             }
@@ -1102,10 +1363,10 @@
         }
       }
     },
-    "/api/v1/Visits": {
+    "/api/v1/Users/me/status": {
       "get": {
         "tags": [
-          "Visits"
+          "Users"
         ],
         "parameters": [
           {
@@ -1125,123 +1386,28 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetVisitDTOGetListDTO"
+                  "$ref": "#/components/schemas/GetEnumDTOGetObjectDTO"
                 }
               }
-            }
-          }
-        },
-        "deprecated": true
-      },
-      "post": {
-        "tags": [
-          "Visits"
-        ],
-        "parameters": [
-          {
-            "name": "X-Api-Request",
-            "in": "header",
-            "description": "Api Request Header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "true"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/VisitDTO"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VisitDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VisitDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/VisitDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetVisitDTOGetObjectDTO"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/v1/Visits/{id}": {
-      "get": {
-        "tags": [
-          "Visits"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
             }
           },
-          {
-            "name": "X-Api-Request",
-            "in": "header",
-            "description": "Api Request Header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "true"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetVisitDTOGetObjectDTO"
+                  "$ref": "#/components/schemas/ErrorDTO"
                 }
               }
             }
           }
-        },
-        "deprecated": true
+        }
       },
       "put": {
         "tags": [
-          "Visits"
+          "Users"
         ],
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
           {
             "name": "X-Api-Request",
             "in": "header",
@@ -1257,54 +1423,39 @@
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/VisitDTO"
+                "$ref": "#/components/schemas/SpecialistStatusDto"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VisitDTO"
+                "$ref": "#/components/schemas/SpecialistStatusDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/VisitDTO"
+                "$ref": "#/components/schemas/SpecialistStatusDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/VisitDTO"
+                "$ref": "#/components/schemas/SpecialistStatusDto"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VisitDTOGetObjectDTO"
-                }
-              }
-            }
+          "204": {
+            "description": "Success"
           }
-        },
-        "deprecated": true
-      },
-      "delete": {
+        }
+      }
+    },
+    "/api/v1/Users/me/consultations": {
+      "get": {
         "tags": [
-          "Visits"
+          "Users"
         ],
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
           {
             "name": "X-Api-Request",
             "in": "header",
@@ -1318,10 +1469,26 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetConsultationDTOGetListDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
           }
-        },
-        "deprecated": true
+        }
       }
     },
     "/api/v1": {
@@ -1601,6 +1768,46 @@
   },
   "components": {
     "schemas": {
+      "AgoraTokenRequestDTO": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AgoraTokenResponseDTO": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "nullable": true
+          },
+          "uid": {
+            "type": "string",
+            "nullable": true
+          },
+          "token": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AgoraTokenResponseDTOGetObjectDTO": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AgoraTokenResponseDTO"
+          }
+        },
+        "additionalProperties": false
+      },
       "AuthenticationDTO": {
         "type": "object",
         "properties": {
@@ -1629,6 +1836,42 @@
         },
         "additionalProperties": false
       },
+      "ConsultationDTO": {
+        "type": "object",
+        "properties": {
+          "consultationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountDTO": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountDTOGetObjectDTO": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CountDTO"
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateSpecialistDTO": {
         "type": "object",
         "properties": {
@@ -1640,18 +1883,13 @@
             "type": "string",
             "nullable": true
           },
-          "specialityId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "address": {
+          "city": {
             "type": "string",
             "nullable": true
           },
-          "workplaceId": {
+          "specialityId": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1664,6 +1902,16 @@
             "nullable": true
           },
           "city": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceTokenDTO": {
+        "type": "object",
+        "properties": {
+          "deviceToken": {
             "type": "string",
             "nullable": true
           }
@@ -1685,34 +1933,6 @@
         },
         "additionalProperties": false
       },
-      "EditSpecialistDTO": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "specialityId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "workplaceId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "EditWorkplaceDTO": {
         "type": "object",
         "properties": {
@@ -1727,24 +1947,20 @@
         },
         "additionalProperties": false
       },
-      "EnumDTO": {
+      "ErrorDTO": {
         "type": "object",
         "properties": {
-          "name": {
+          "type": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "EnumDTOGetObjectDTO": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/Meta"
           },
-          "data": {
-            "$ref": "#/components/schemas/EnumDTO"
+          "details": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1762,7 +1978,46 @@
           },
           "specialistId": {
             "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "consultationId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetConsultationDTO": {
+        "type": "object",
+        "properties": {
+          "patientName": {
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "duration": {
+            "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetConsultationDTOGetListDTO": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetConsultationDTO"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1838,7 +2093,12 @@
           },
           "specialistId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
+          },
+          "consultationId": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1925,63 +2185,21 @@
         },
         "additionalProperties": false
       },
-      "GetUserEvaluationDTO": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetUserEvaluationDTOGetListDTO": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/Meta"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetUserEvaluationDTO"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetVisitDTO": {
+      "GetSpecialityDTO": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32"
           },
-          "patientName": {
-            "type": "string",
-            "nullable": true
-          },
-          "specialistName": {
-            "type": "string",
-            "nullable": true
-          },
-          "visitStart": {
-            "type": "string",
-            "nullable": true
-          },
-          "visitEnd": {
+          "name": {
             "type": "string",
             "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "GetVisitDTOGetListDTO": {
+      "GetSpecialityDTOGetListDTO": {
         "type": "object",
         "properties": {
           "meta": {
@@ -1990,21 +2208,9 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GetVisitDTO"
+              "$ref": "#/components/schemas/GetSpecialityDTO"
             },
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetVisitDTOGetObjectDTO": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/Meta"
-          },
-          "data": {
-            "$ref": "#/components/schemas/GetVisitDTO"
           }
         },
         "additionalProperties": false
@@ -2055,6 +2261,28 @@
         },
         "additionalProperties": false
       },
+      "IdDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "IdDTOGetObjectDTO": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/IdDTO"
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginDTO": {
         "type": "object",
         "properties": {
@@ -2095,11 +2323,74 @@
         "type": "object",
         "additionalProperties": false
       },
+      "PatientDTO": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "birthDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProfileDTO": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProfileDTOGetObjectDTO": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ProfileDTO"
+          }
+        },
+        "additionalProperties": false
+      },
       "RefreshTokenDTO": {
         "type": "object",
         "properties": {
           "refreshToken": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RequestConsultationDTO": {
+        "type": "object",
+        "properties": {
+          "deviceToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "specialityId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },
@@ -2123,6 +2414,28 @@
         },
         "additionalProperties": false
       },
+      "SpecialistStatusDto": {
+        "type": "object",
+        "properties": {
+          "specialistStatus": {
+            "$ref": "#/components/schemas/SpecialistStatusId"
+          },
+          "deviceToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SpecialistStatusId": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
       "UserDTO": {
         "type": "object",
         "properties": {
@@ -2130,25 +2443,12 @@
             "type": "string",
             "nullable": true
           },
-          "registrationDate": {
+          "role": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UserDTOGetListDTO": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/Meta"
           },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserDTO"
-            },
-            "nullable": true
+          "hasProfile": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -2161,40 +2461,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/UserDTO"
-          }
-        },
-        "additionalProperties": false
-      },
-      "VisitDTO": {
-        "type": "object",
-        "properties": {
-          "patientName": {
-            "type": "string",
-            "nullable": true
-          },
-          "specialistName": {
-            "type": "string",
-            "nullable": true
-          },
-          "visitStart": {
-            "type": "string",
-            "nullable": true
-          },
-          "visitEnd": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "VisitDTOGetObjectDTO": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/Meta"
-          },
-          "data": {
-            "$ref": "#/components/schemas/VisitDTO"
           }
         },
         "additionalProperties": false
