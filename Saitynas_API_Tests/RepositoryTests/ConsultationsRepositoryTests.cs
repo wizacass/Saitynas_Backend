@@ -103,7 +103,7 @@ public class ConsultationsRepositoryTests
     {
         await _repository.InsertAsync(new Consultation
         {
-            PatientDeviceToken = TestPatientDeviceToken,
+            PatientDeviceToken = TestPatientDeviceToken
         });
 
         var consultations = await _repository.GetAllAsync();

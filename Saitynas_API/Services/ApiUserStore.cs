@@ -14,8 +14,6 @@ namespace Saitynas_API.Services;
 public interface IApiUserStore
 {
     public Task<User> GetUserByRefreshToken(string token);
-
-    public Task<IEnumerable<User>> GetAllUsers();
 }
 
 public class ApiUserStore : IUserPasswordStore<User>, IUserEmailStore<User>,
