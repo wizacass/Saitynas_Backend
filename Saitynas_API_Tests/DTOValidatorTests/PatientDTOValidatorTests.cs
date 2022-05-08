@@ -23,7 +23,7 @@ public class PatientDTOValidatorTests
         FirstName = "Test",
         LastName = "User",
         City = "Kaunas",
-        BirthDate = "1990-04-12",
+        BirthDate = "1990-04-12"
     };
     
     [Test]

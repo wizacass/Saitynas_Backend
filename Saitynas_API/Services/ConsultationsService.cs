@@ -93,22 +93,6 @@ public class ConsultationsService : IConsultationsService
         _patientsQueue[specialityId].Enqueue(deviceToken);
     }
 
-    private async Task SendNotification(int specialityId)
-    {
-        const string message = "Consultation is about to start!";
-
-        await Task.Factory.StartNew(() =>
-            {
-                Thread.Sleep(5000);
-
-                if (_patientsQueue.Count <= 0) return;
-
-                string token = _patientsQueue[specialityId].Dequeue();
-                _apnService.PublishNotification(token, message);
-            }
-        );
-    }
-
     public async Task CancelConsultation(Guid consultationId, string deviceToken)
     {
         using var scope = _scopeFactory.CreateScope();

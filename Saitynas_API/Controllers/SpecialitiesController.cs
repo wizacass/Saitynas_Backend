@@ -43,20 +43,4 @@ public class SpecialitiesController : ApiControllerBase
 
         return Ok(dto);
     }
-
-    [HttpGet("{id:int}/specialists")]
-    [Obsolete]
-    public ActionResult<GetListDTO<GetSpecialistDTO>> GetSpecialitySpecialists(int id)
-    {
-        // TODO: Implement logic to retrieve specialists based on Speciality
-        return ApiNotImplemented();
-    }
-
-    [HttpPost]
-    [Obsolete]
-    public ActionResult<GetObjectDTO<GetEnumDTO>> CreateSpeciality([FromBody] EnumDTO dto)
-    {
-        // TODO: Implement logic to allow for specialists to create new specialities
-        return ApiNotImplemented();
-    }
 }

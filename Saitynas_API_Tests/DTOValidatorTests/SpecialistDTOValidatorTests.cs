@@ -53,7 +53,7 @@ public class SpecialistDTOValidatorTests
         FirstName = "Test",
         LastName = "User",
         SpecialityId = 1,
-        City = "Test City",
+        City = "Test City"
     };
 
     private static EditSpecialistDTO ValidEditDTO => new()
