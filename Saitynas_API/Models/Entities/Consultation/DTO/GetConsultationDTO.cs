@@ -7,6 +7,9 @@ public class GetConsultationDTO
     [JsonProperty("patientName")]
     public string PatientName { get; set; }
     
+    [JsonProperty("specialistName")]
+    public string SpecialistName { get; set; }
+    
     [JsonProperty("startDate")]
     public string StartDate { get; set; }
     
@@ -18,7 +21,9 @@ public class GetConsultationDTO
     public GetConsultationDTO(Consultation c)
     {
         PatientName = $"{c.Patient.FirstName} {c.Patient.LastName}";
+        SpecialistName = $"{c.Specialist.FirstName} {c.Specialist.LastName}";
         StartDate = c.StartedAt?.ToString("u");
-        Seconds = (c.FinishedAt! - c.StartedAt!).Value.Seconds;
+
+        Seconds = c.FinishedAt != null && c.StartedAt != null ? (c.FinishedAt - c.StartedAt).Value.Seconds : 0;
     }
 }
