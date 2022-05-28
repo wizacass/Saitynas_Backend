@@ -29,6 +29,8 @@ public class ConsultationsRepositoryTests
         {
             Id = 1,
             PublicId = TestGuid1,
+            SpecialistId = 1,
+            PatientId = 1,
             PatientDeviceToken = TestPatientDeviceToken,
             RequestedAt = new DateTime(2022, 04, 20, 16, 00, 00),
             IsCancelled = true

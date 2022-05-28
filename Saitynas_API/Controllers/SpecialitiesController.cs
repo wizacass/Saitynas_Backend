@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Saitynas_API.Models;
 using Saitynas_API.Models.DTO;
 using Saitynas_API.Models.Entities.Role;
-using Saitynas_API.Models.Entities.Specialist.DTO;
 using Saitynas_API.Models.Entities.Speciality;
 using Saitynas_API.Models.Entities.Speciality.DTO;
 
@@ -20,7 +17,7 @@ namespace Saitynas_API.Controllers;
 [Produces(ApiContentType)]
 public class SpecialitiesController : ApiControllerBase
 {
-    protected override string ModelName => "speciality";
+    protected override string ModelName => nameof(Speciality);
 
     private readonly ApiContext _context;
 
@@ -35,6 +32,7 @@ public class SpecialitiesController : ApiControllerBase
     public async Task<ActionResult<GetListDTO<GetSpecialityDTO>>> GetSpecialities()
     {
         var specialitiesTask = _context.Specialities
+            .Include(s => s.Specialists)
             .OrderBy(s => s.Name)
             .Select(s => new GetSpecialityDTO(s))
             .ToListAsync();
