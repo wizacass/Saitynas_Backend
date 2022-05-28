@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -52,6 +53,24 @@ public class ConsultationsController : ApiControllerBase
         var responseDto = new IdDTO {Id = consultation.PublicId};
 
         return ApiCreated(new GetObjectDTO<IdDTO>(responseDto));
+    }
+
+    [HttpGet("{id}")]
+    [Authorize(Roles = AuthRole.AnyRole)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorDTO), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<GetObjectDTO<GetConsultationDTO>>> GetConsultation(Guid id)
+    {
+        var consultation = await _consultationsRepository.FindByPublicID(id);
+
+        if (consultation == null)
+        {
+            return ApiNotFound();
+        }
+        
+        var dto = new GetConsultationDTO(consultation);
+
+        return Ok(new GetObjectDTO<GetConsultationDTO>(dto));
     }
 
     [HttpPost("cancel")]

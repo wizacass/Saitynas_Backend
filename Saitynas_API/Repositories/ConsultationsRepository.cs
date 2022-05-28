@@ -73,17 +73,25 @@ public class ConsultationsRepository: IConsultationsRepository
 
     public async Task<Consultation> FindByPublicID(Guid publicId)
     {
-        var consultation = await _context.Consultations.FirstOrDefaultAsync(c => c.PublicId == publicId);
+        var consultation = await _context.Consultations
+            .Where(c => c.PublicId == publicId)
+            .Include(c => c.Patient)
+            .Include(c => c.Specialist)
+            .FirstOrDefaultAsync();
 
         return consultation;
     }
 
     public async Task<IEnumerable<Consultation>> GetFinishedBySpecialistId(int? specialistId)
     {
-        var consultations = await _context.Consultations.Where(c =>
-            c.SpecialistId == specialistId &&
-            c.FinishedAt != null
-        ).Include(c=> c.Patient).ToListAsync();
+        var consultations = await _context.Consultations
+            .Where(c =>
+                c.SpecialistId == specialistId &&
+                c.FinishedAt != null
+            )
+            .Include(c => c.Patient)
+            .Include(c => c.Specialist)
+            .ToListAsync();
 
         return consultations;
     }
