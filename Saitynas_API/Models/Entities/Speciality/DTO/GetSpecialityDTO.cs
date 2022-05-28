@@ -1,4 +1,6 @@
+using System.Linq;
 using Newtonsoft.Json;
+using Saitynas_API.Models.Entities.Specialist;
 
 namespace Saitynas_API.Models.Entities.Speciality.DTO;
 
@@ -9,6 +11,9 @@ public class GetSpecialityDTO
     
     [JsonProperty("name")]
     public string Name { get; set; }
+    
+    [JsonProperty("activeSpecialists")]
+    public int Count { get; set; }
 
     public GetSpecialityDTO() { }
 
@@ -16,5 +21,6 @@ public class GetSpecialityDTO
     {
         Id = s.Id;
         Name = s.Name;
+        Count = s.Specialists.Count(s => s.SpecialistStatusId == SpecialistStatusId.Available);
     }
 }
